@@ -1,0 +1,414 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T18:27:05.584715Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "google/gemma-2-2b",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "batch_size": 4,
+        "max_length": 1024,
+        "seed": 0,
+        "layers": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sae_release": "gemma-scope-2b-pt-res-canonical",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 64,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 2000,
+        "perm_N": 10000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run.yaml",
+        "layer": 24,
+        "innov_jsonl": "data/processed/dinnov_test.jsonl",
+        "selection_tag": "train_k32",
+        "topk_safe_json": "results/polarization/layer24_train_topk_safe.json",
+        "delta_csv": "results/polarization/layer24_train_delta.csv",
+        "features_npz": "results/polarization/layer24_train_features.npz",
+        "k": 32,
+        "alphas": "0.5,1.0,1.5",
+        "max_samples": 200,
+        "sae_npz": null,
+        "bootstrap_B": null,
+        "perm_N": null,
+        "seed": null
+      }
+    }
+  },
+  "layer": 24,
+  "selection_tag": "train_k32",
+  "k": 32,
+  "alphas": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "safe_feature_ids": [
+    6711,
+    245,
+    11139,
+    4773,
+    14371,
+    5081,
+    7016,
+    5946,
+    14448,
+    11529,
+    16043,
+    11008,
+    108,
+    261,
+    13528,
+    7344,
+    12575,
+    3923,
+    1388,
+    15053,
+    748,
+    3973,
+    13404,
+    14162,
+    7515,
+    3606,
+    468,
+    12976,
+    2299,
+    9063,
+    11691,
+    15851
+  ],
+  "random_feature_ids": [
+    15309,
+    10414,
+    4542,
+    1233,
+    272,
+    10347,
+    9166,
+    4413,
+    15888,
+    13868,
+    9926,
+    672,
+    12527,
+    6455,
+    8898,
+    5036,
+    14936,
+    44,
+    14041,
+    13356,
+    553,
+    10982,
+    11951,
+    13304,
+    10623,
+    8242,
+    2868,
+    2879,
+    11939,
+    13909,
+    9079,
+    8360
+  ],
+  "neutral_feature_ids": [
+    2968,
+    5306,
+    5307,
+    5308,
+    858,
+    10745,
+    10741,
+    15385,
+    854,
+    10737,
+    10732,
+    5317,
+    10742,
+    10778,
+    5301,
+    7850,
+    856,
+    5304,
+    5303,
+    5282,
+    10837,
+    5244,
+    15374,
+    15376,
+    871,
+    10810,
+    10828,
+    10777,
+    10824,
+    5253,
+    10818,
+    7855
+  ],
+  "summary_rows": [
+    {
+      "alpha": 0.5,
+      "condition": "neutral",
+      "n": 200,
+      "mean_delta_prob_inc": -0.0022341275190008274,
+      "ci95_delta_prob_inc": [
+        -0.009209274655477355,
+        0.002197372097194662
+      ],
+      "mean_delta_logprob_inc": -0.06203125,
+      "ci95_delta_logprob_inc": [
+        -0.3456953125,
+        0.22041796874999942
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008027984236832708,
+        -0.0006612447360530495
+      ]
+    },
+    {
+      "alpha": 0.5,
+      "condition": "random",
+      "n": 200,
+      "mean_delta_prob_inc": -0.002101908967343963,
+      "ci95_delta_prob_inc": [
+        -0.009043937098613097,
+        0.002384165940176233
+      ],
+      "mean_delta_logprob_inc": 0.08328125,
+      "ci95_delta_logprob_inc": [
+        -0.19065625,
+        0.36769140624999985
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008027984236832708,
+        -0.0006612447360530495
+      ]
+    },
+    {
+      "alpha": 0.5,
+      "condition": "safe",
+      "n": 200,
+      "mean_delta_prob_inc": -0.0010112802027220627,
+      "ci95_delta_prob_inc": [
+        -0.007780247446675515,
+        0.004006072128244504
+      ],
+      "mean_delta_logprob_inc": -2.57046875,
+      "ci95_delta_logprob_inc": [
+        -2.92001953125,
+        -2.20843359375
+      ],
+      "mean_delta_mass": -0.0007306832950780517,
+      "ci95_delta_mass": [
+        -0.0008046216746242863,
+        -0.0006628776287498113
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "neutral",
+      "n": 200,
+      "mean_delta_prob_inc": -0.0022341275190008274,
+      "ci95_delta_prob_inc": [
+        -0.008592413785529185,
+        0.002038026464435365
+      ],
+      "mean_delta_logprob_inc": -0.06203125,
+      "ci95_delta_logprob_inc": [
+        -0.34734765625,
+        0.21533593749999985
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008064925554208457,
+        -0.0006616542742121965
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "random",
+      "n": 200,
+      "mean_delta_prob_inc": -0.002101908967343963,
+      "ci95_delta_prob_inc": [
+        -0.008455089172118797,
+        0.002182697032327302
+      ],
+      "mean_delta_logprob_inc": 0.08328125,
+      "ci95_delta_logprob_inc": [
+        -0.1957890625,
+        0.3553281249999999
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008064925554208457,
+        -0.0006616542742121965
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "safe",
+      "n": 200,
+      "mean_delta_prob_inc": -0.0022200526022424466,
+      "ci95_delta_prob_inc": [
+        -0.008664693371639559,
+        0.0020786599759770796
+      ],
+      "mean_delta_logprob_inc": -0.18796875,
+      "ci95_delta_logprob_inc": [
+        -0.46938671875,
+        0.08988281249999978
+      ],
+      "mean_delta_mass": -0.0007290002517402173,
+      "ci95_delta_mass": [
+        -0.0008065156047232448,
+        -0.0006616899772780016
+      ]
+    },
+    {
+      "alpha": 1.5,
+      "condition": "neutral",
+      "n": 200,
+      "mean_delta_prob_inc": -0.0022341275190008274,
+      "ci95_delta_prob_inc": [
+        -0.008724335622244693,
+        0.0020841713076567535
+      ],
+      "mean_delta_logprob_inc": -0.06203125,
+      "ci95_delta_logprob_inc": [
+        -0.3257890625,
+        0.2127265624999996
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008034506674157456,
+        -0.0006629879790125415
+      ]
+    },
+    {
+      "alpha": 1.5,
+      "condition": "random",
+      "n": 200,
+      "mean_delta_prob_inc": -0.002101908967343963,
+      "ci95_delta_prob_inc": [
+        -0.008627505939342434,
+        0.002202978454426323
+      ],
+      "mean_delta_logprob_inc": 0.08328125,
+      "ci95_delta_logprob_inc": [
+        -0.17736328125,
+        0.36112109374999984
+      ],
+      "mean_delta_mass": -0.0007289769733324646,
+      "ci95_delta_mass": [
+        -0.0008034506674157456,
+        -0.0006629879790125415
+      ]
+    },
+    {
+      "alpha": 1.5,
+      "condition": "safe",
+      "n": 200,
+      "mean_delta_prob_inc": -0.002240785862284307,
+      "ci95_delta_prob_inc": [
+        -0.008736291101474601,
+        0.0020792995683321233
+      ],
+      "mean_delta_logprob_inc": -0.07890625,
+      "ci95_delta_logprob_inc": [
+        -0.33984375,
+        0.19719531249999994
+      ],
+      "mean_delta_mass": -0.0007289768429473043,
+      "ci95_delta_mass": [
+        -0.0008034505370305852,
+        -0.0006629879790125415
+      ]
+    }
+  ],
+  "paired_tests_primary_metric": [
+    {
+      "alpha": 0.5,
+      "compare": "safe_minus_random",
+      "n": 200,
+      "mean_delta": 0.0010906287646219003,
+      "ci95": [
+        9.877734558022305e-05,
+        0.002270222854954232
+      ],
+      "perm_p": 0.044795520447955206
+    },
+    {
+      "alpha": 0.5,
+      "compare": "safe_minus_neutral",
+      "n": 200,
+      "mean_delta": 0.001222847316278765,
+      "ci95": [
+        0.0002368462774709646,
+        0.002414010570895019
+      ],
+      "perm_p": 0.0188981101889811
+    },
+    {
+      "alpha": 1.0,
+      "compare": "safe_minus_random",
+      "n": 200,
+      "mean_delta": -0.00011814363489848377,
+      "ci95": [
+        -0.00024786997385250803,
+        5.682595132291123e-05
+      ],
+      "perm_p": 0.09199080091990801
+    },
+    {
+      "alpha": 1.0,
+      "compare": "safe_minus_neutral",
+      "n": 200,
+      "mean_delta": 1.4074916758380646e-05,
+      "ci95": [
+        -9.393095001520259e-05,
+        0.00018782443444862493
+      ],
+      "perm_p": 0.9778022197780222
+    },
+    {
+      "alpha": 1.5,
+      "compare": "safe_minus_random",
+      "n": 200,
+      "mean_delta": -0.0001388768949403434,
+      "ci95": [
+        -0.0001996382417224085,
+        -8.466035677059923e-05
+      ],
+      "perm_p": 9.999000099990002e-05
+    },
+    {
+      "alpha": 1.5,
+      "compare": "safe_minus_neutral",
+      "n": 200,
+      "mean_delta": -6.658343283478989e-06,
+      "ci95": [
+        -1.679456424587939e-05,
+        2.8575058794129273e-06
+      ],
+      "perm_p": 0.21357864213578642
+    }
+  ],
+  "sample_csv": "results\\interference\\clamp_samples_layer24_train_k32.csv"
+}

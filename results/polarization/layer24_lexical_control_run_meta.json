@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-24T04:22:47.034480Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "google/gemma-2-2b",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "batch_size": 4,
+        "max_length": 1024,
+        "seed": 0,
+        "layers": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sae_release": "gemma-scope-2b-pt-res-canonical",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 64,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 2000,
+        "perm_N": 10000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run.yaml",
+        "layer": 24,
+        "safe_jsonl": "data/processed/dsafe_lexicalcontrol_dev.jsonl",
+        "innov_jsonl": "data/processed/dinnov_lexicalcontrol_dev.jsonl",
+        "sae_npz": null,
+        "tag": "lexical_control",
+        "perm_N": null
+      }
+    }
+  },
+  "delta_csv": "results\\polarization\\layer24_lexical_control_delta.csv",
+  "topk_safe_json": "results\\polarization\\layer24_lexical_control_topk_safe.json",
+  "topk_innov_json": "results\\polarization\\layer24_lexical_control_topk_innov.json",
+  "safe_count": 119,
+  "innov_count": 208,
+  "perm_N": 10000,
+  "fdr_q": 0.05,
+  "n_fdr_survivors": 0
+}

@@ -1,0 +1,105 @@
+Feature 11139 top examples
+
+[1] activation=336.028198
+B. THE STATE AND ANY GOVERNMENTAL  AGENCY,  POLITICAL  SUBDIVISION  OR
+ PUBLIC  BENEFIT  CORPORATION  OF  THE  STATE SHALL NOT PURCHASE, OBTAIN,
+ PROCURE, ACQUIRE, EMPLOY, USE, DEPLOY, OR  ACCESS  INFORMATION  FROM  AN
+ AUTOMATED  DECISION SYSTEM UNLESS IT FIRST ENGAGES A NEUTRAL THIRD PARTY
+ TO CONDUCT AN AUTOMATED DECISION SYSTEM IMPACT ASSESSMENT AND  PUBLISHES
+ ON ITS PUBLIC WEBSITE THAT AUTOMATED DECISION SYSTEM IMPACT ASSESSMENT:
+   (I)  OF  EXISTING  AUTOMATED  DECISION  SYSTEM  WITHIN ONE YEAR OF THE
+ EFFECTIVE DATE OF THIS SUBDIVISION AND EVERY TWO YEARS THEREAFTER.
+   (II) OF NEW AUTOMATED DECISION SYSTEMS PRIOR TO ACQUISITION AND  EVERY
+ TWO YEARS THEREAFTER.
+
+---
+
+[2] activation=329.688019
+General Requirements and Definitions:
+This Interim Guidance is supplemental to and does not supersede any applicable law, including E.O. 12333 and the AG Guidelines.
+
+
+Foundation models refer to AI systems that are trained on broad data and can be applied across a wide-range of use cases.
+
+
+Large language models are a kind of foundation model that can achieve general-purpose language generation and other natural language processing tasks.
+
+
+Frontier models refer to any general-purpose AI system near the cutting-edge of performance, as measured by widely accepted publicly available benchmarks, or similar assessments of reasoning, science, and overall capabilities. Certain foundation models may qualify as frontier AI models.
+
+
+Model weights refer to numerical parameters that collectively determine how prompts are processed and converted into outputs within an AI model.
+
+
+Covered information refers to the category of data to which an individual agency's specific AG guidelines apply, including U.S. person information.
+
+
+Modification refers to the process whereby an IC element alters the model weights of a FM by, for example, further training it on data collected by IC elements.
+
+
+Augmentation refers to the process whereby an IC element expands the utility of a FM without altering its model weights by, for example, connecting it to additional data,  resources, and tools.
+
+---
+
+[3] activation=326.137756
+SEC. 9407. NATIONAL CYBERSECURITY CHALLENGES. 
+
+(a) IN GENERAL.—Title II of the Cybersecurity Enhancement Act of 2014 (15 U.S.C. 7431 et seq.) is amended by adding at the end the following:
+ 
+‘‘SEC. 205. NATIONAL CYBERSECURITY CHALLENGES. 
+
+‘‘(a) ESTABLISHMENT OF NATIONAL CYBERSECURITY CHALLENGES.— 
+‘‘(1) IN GENERAL.—To achieve high-priority breakthroughs in cybersecurity by 2028, the Secretary of Commerce shall establish the following national cybersecurity challenges: 
+‘‘(A) ECONOMICS OF A CYBER ATTACK.—Building more resilient systems that measurably and exponentially raise adversary costs of carrying out common cyber attacks. 
+‘‘(B) CYBER TRAINING.— 
+‘‘(i) Empowering the people of the United States with an appropriate and measurably sufficient level of digital literacy to make safe and secure decisions online. 
+‘‘(ii) Developing a cybersecurity workforce with measurable skills to protect and maintain information systems. 
+‘‘(C) EMERGING TECHNOLOGY.—Advancing cybersecurity efforts in response to emerging technology, such as artificial intelligence, quantum science, next generation communications, autonomy, data science, and computational technologies. 
+‘‘(D) REIMAGINING DIGITAL IDENTITY.—Maintaining a high sense of usability while improving the privacy, security, and safety of online activity of individuals in the United States. 
+‘‘(E) FEDERAL AGENCY RESILIENCE.—Reducing cybersecurity risks to Federal networks and systems, and improving the response of Federal agencies to cybersecurity incidents on such networks and systems. 
+‘‘(2) COORDINATION.—In establishing the challenges under paragraph (1), the Secretary shall coordinate with the Secretary of Homeland Security on the challenges under subparagraphs (B) and (E) of such paragraph.
+
+---
+
+[4] activation=324.808624
+3.  ANY  PERSON  ENGAGED IN THE BUSINESS OF DEALING IN ANY PROPERTY OR
+ SERVICE WHO FOR ANY COMMERCIAL PURPOSE MAKES,  PUBLISHES,  DISSEMINATES,
+ CIRCULATES  OR PLACES BEFORE THE PUBLIC OR CAUSES, DIRECTLY OR INDIRECT-
+ LY, TO BE MADE, PUBLISHED, DISSEMINATED, CIRCULATED OR PLACED BEFORE THE
+ PUBLIC ANY ADVERTISEMENT RESPECTING ANY SUCH PROPERTY OR SERVICE, IN ANY
+ MEDIUM OR MEDIA IN WHICH SUCH ADVERTISEMENT APPEARS, SHALL  DISCLOSE  IN
+ SUCH  ADVERTISEMENT  IF  SYNTHETIC MEDIA IS IN SUCH ADVERTISEMENT, WHERE
+ SUCH PERSON KNOWS OR SHOULD HAVE KNOWN.
+   (A) IF SYNTHETIC MEDIA HAS BEEN USED IN ANY  COMMERCIAL  ADVERTISEMENT
+ UNDER  THIS  SECTION TO CREATE A LIKENESS THAT DEPICTS A NATURAL PERSON,
+ WITHOUT THAT PERSON'S CONSENT, ENGAGED IN ANY ACTION  OR  EXPRESSION  IN
+ WHICH  THE  NATURAL  PERSON  DID NOT ACTUALLY ENGAGE, SUCH ADVERTISEMENT
+ SHALL INCLUDE A DISCLAIMER WHICH CLEARLY AND CONSPICUOUSLY  STATES  THAT
+ SUCH  LIKENESS  FEATURED  IN  SUCH  ADVERTISEMENT IS SYNTHETIC, DOES NOT
+ DEPICT A NATURAL PERSON, AND IS GENERATED TO CREATE A HUMAN LIKENESS.
+   (B) IT SHALL NOT BE A DEFENSE TO AN ACTION UNDER THIS OR ANY OTHER LAW
+ THAT THE DISCLAIMER REQUIRED UNDER PARAGRAPH (A) OF THIS SUBDIVISION HAS
+ BEEN INCLUDED IF THE SYNTHETIC MEDIA DEPICTS A  NATURAL  PERSON  WITHOUT
+ SUCH NATURAL PERSON'S CONSENT.
+   (C) A VIOLATION OF THIS SUBDIVISION SHALL RESULT IN A CIVIL PENALTY OF
+ ONE  THOUSAND  DOLLARS  FOR A FIRST VIOLATION, AND FIVE THOUSAND DOLLARS
+ FOR ANY SUBSEQUENT VIOLATION.
+
+---
+
+[5] activation=318.021332
+§  87.  AUDITS. 1.   PRIOR TO DEPLOYMENT OF A HIGH-RISK AI SYSTEM, SIX
+ MONTHS AFTER DEPLOYMENT, AND AT LEAST EVERY EIGHTEEN  MONTHS  THEREAFTER
+ FOR  EACH  CALENDAR YEAR A HIGH-RISK AI SYSTEM IS IN USE AFTER THE FIRST
+ POST-DEPLOYMENT AUDIT, EVERY DEVELOPER OR DEPLOYER  OF  A  HIGH-RISK  AI
+ SYSTEM  SHALL  CAUSE  TO  BE CONDUCTED AT LEAST ONE THIRD-PARTY AUDIT IN
+ COMPLIANCE WITH THE PROVISIONS OF THIS SECTION TO ENSURE THAT THE  PROD-
+ UCT  DOES  NOT  PRODUCE ALGORITHMIC DISCRIMINATION AND COMPLIES WITH THE
+ PROVISIONS OF THIS ARTICLE.  REGARDLESS OF FINAL FINDINGS, THE  DEPLOYER
+ OR  DEVELOPER  SHALL  DELIVER ALL AUDITS CONDUCTED UNDER THIS SECTION TO
+ THE ATTORNEY GENERAL.
+   2. A DEPLOYER OR DEVELOPER MAY HIRE MORE THAN ONE AUDITOR  TO  FULFILL
+ THE REQUIREMENTS OF THIS SECTION.
+
+---
+

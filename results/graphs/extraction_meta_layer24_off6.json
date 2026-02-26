@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-24T02:07:32.134741Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "google/gemma-2-2b",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "batch_size": 4,
+        "max_length": 1024,
+        "seed": 0,
+        "layers": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sae_release": "gemma-scope-2b-pt-res-canonical",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 64,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 2000,
+        "perm_N": 10000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run.yaml",
+        "layer": 24,
+        "safe_jsonl": "data/processed/dsafe_train.jsonl",
+        "innov_jsonl": "data/processed/dinnov_train.jsonl",
+        "max_prompts": 1,
+        "offset": 6,
+        "transcoder_set": "mntss/gemma-scope-transcoders",
+        "node_threshold": 0.8,
+        "edge_threshold": 0.98,
+        "max_feature_nodes": 128
+      }
+    }
+  },
+  "layer": 24,
+  "n_safe_prompts": 1,
+  "n_innov_prompts": 0,
+  "node_threshold": 0.8,
+  "edge_threshold": 0.98,
+  "transcoder_set": "mntss/gemma-scope-transcoders",
+  "safe_graph_summary": {
+    "n_nodes": 115,
+    "n_edges": 3440,
+    "node_types": {
+      "feature": 115
+    }
+  },
+  "innov_graph_summary": null
+}

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-forge-circuits"
+version = "0.1.0"
+description = "CLI-driven research pipeline for safety vs innovation circuit analysis."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.1",
+  "torch>=2.2",
+  "transformers>=4.45",
+  "tqdm>=4.66",
+  "pyyaml>=6.0",
+  "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+sae = ["sae-lens>=4.0.0"]
+
+[project.scripts]
+aiforge = "aiforge.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,63 @@
+Feature 10 top examples
+
+[1] activation=0.243973
+(c) Disrupting The Outbound Flow Of Firearms And Currency From The United States.—There is appropriated, out of any money in the Treasury not otherwise appropriated, for U.S. Customs and Border Protection for the fiscal year ending September 30, 2025, $285,000,000, to remain available until September 30, 2027, for increasing outbound inspection capabilities, including disrupting the flow of firearms and currency out of the United States, of which—
+(1) $10,000,000 shall be for supporting the creation of a structured outbound inspection program within the Office of Field Operations that includes a comprehensive outbound inspection policy and performance metrics to measure the impact of outbound inspections; and
+(2) $275,000,000 shall be for outbound inspections infrastructure projects at the land borders of the United States, including—
+(A) technology and connectivity improvements at rural ports of entry; and
+(B) safety and technology upgrades to outbound inspection lanes at ports of entry.
+
+---
+
+[2] activation=0.243972
+(e) Annual submissions to Congress.—
+
+(1) IN GENERAL.—Not later than three years after the date of the enactment of this Act and not less frequently than once each year thereafter, the Secretary shall submit to Congress an annual submission that includes the following:
+
+(A) The ledger required by subsection (a).
+
+(B) An annual report on the findings of the Secretary with respect to the risk assessments conducted, in the year covered by the annual submission, pursuant to the risk assessment process established under subsection (b).
+
+(C) The annotations made under subsection (c) during the year covered by the annual submission.
+
+(2) FORM.—Each submission under paragraph (1) shall be, to the fullest extent possible, in unclassified form, but may include a classified annex to the degree the Secretary considers necessary.
+
+(3) PUBLIC AVAILABILITY.—The Secretary shall make available to the public the unclassified portion of each annual submission under paragraph (1).
+
+---
+
+[3] activation=0.243915
+The endorsing States believe that the following measures should be implemented in the development, deployment, or use of military AI capabilities, including those enabling autonomous functions and systems:
+
+- States should ensure their military organizations adopt and implement these principles for the responsible development, deployment, and use of AI capabilities.
+- States should take appropriate steps, such as legal reviews, to ensure that their military AI capabilities will be used consistent with their respective obligations under international law, in particular international humanitarian law. States should also consider how to use military AI capabilities to enhance their implementation of international humanitarian law and to improve the protection of civilians and civilian objects in armed conflict.
+- States should ensure that senior officials effectively and appropriately oversee the development and deployment of military AI capabilities with high-consequence applications, including, but not limited to, such weapon systems.
+
+---
+
+[4] activation=0.243915
+SEC. 862. KEY ADVANCED SYSTEM DEVELOPMENT INDUSTRY DAYS.
+
+(a) In General.--Not later than March 1, 2023, and every 180 days thereafter, the each Secretary of a military department shall ensure that such military department conducts an outreach event to--
+	(1) collaborate with the private sector on present current and future opportunities with respect to key advanced system development areas;
+	(2) raise awareness within the private sector of--
+		(A) key advanced system development areas; and
+		(B) capability needs and existing and potential requirements related to the key advanced system development areas; and
+	(3) raise awareness within such military department of potential material solutions for capability needs and existing and potential requirements related to key advanced system development areas.
+
+---
+
+[5] activation=0.243908
+SEC. 304. DATA ASSIMILATION, MANAGEMENT, AND SHARING PRACTICES.
+
+
+Title III of the Weather Research and Forecasting Innovation Act of 2017, as amended by section 303 of this Act, is further amended by adding at the end the following new section:
+
+
+“SEC. 305. DATA ASSIMILATION, MANAGEMENT, AND SHARING PRACTICES.
+
+
+“(a) Data Standards.—The Under Secretary, in collaboration with the weather enterprise, shall seek to establish consistent and open data and metadata standards to support open science, including simple cloud-optimized data formats and application programming interfaces that support findability, accessibility, usability, and preservability.
+
+---
+

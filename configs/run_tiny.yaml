@@ -1,0 +1,23 @@
+model_id: "sshleifer/tiny-gpt2"
+device: "cpu"
+dtype: "float32"
+batch_size: 4
+max_length: 256
+seed: 0
+layers: [1]
+
+sae_release: "unused"
+sae_id_template: "layer_{L}/width_16k/canonical"
+
+topk: 16
+delta_thresh: null
+edge_tau: 0.1
+bootstrap_B: 200
+perm_N: 1000
+fdr_q: 0.05
+
+input_dir: "data/raw/agora"
+processed_dir: "data/processed"
+results_dir: "results"
+logs_dir: "logs"
+prompt_config: "configs/prompt_templates.yaml"

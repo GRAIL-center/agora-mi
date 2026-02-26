@@ -1,0 +1,1388 @@
+[
+  {
+    "feature_id": 6711,
+    "mean_safe": 5.033686637878418,
+    "mean_innov": 1.7745546102523804,
+    "delta": 3.259131908416748,
+    "top5_contexts": [
+      {
+        "text": "5.   The providers of the general-purpose AI model concerned or its representative shall supply the information requested. In the case of legal persons, companies or firms, or where the provider has n",
+        "activation": 125.65109252929688,
+        "label": "INNOV"
+      },
+      {
+        "text": "2.   For the purposes of the prevention, investigation, detection or prosecution of criminal offences or the execution of criminal penalties, including safeguarding against and preventing threats to p",
+        "activation": 123.02928924560547,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 104: Amendment to Regulation (EU) No 168/2013\n\nIn Article 22(5) of Regulation (EU) No 168/2013, the following subparagraph is added:\n\n‘When adopting delegated acts pursuant to the first subpar",
+        "activation": 98.35760498046875,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 103: Amendment to Regulation (EU) No 167/2013\n\nIn Article 17(5) of Regulation (EU) No 167/2013, the following subparagraph is added:\n\n‘When adopting delegated acts pursuant to the first subpar",
+        "activation": 98.3575439453125,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 47: EU declaration of conformity\n\n1.   The provider shall draw up a written machine readable, physical or electronically signed EU declaration of conformity for each high-risk AI system, and k",
+        "activation": 89.06947326660156,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 245,
+    "mean_safe": 4.299464702606201,
+    "mean_innov": 1.1244614124298096,
+    "delta": 3.1750032901763916,
+    "top5_contexts": [
+      {
+        "text": "Data Protection Laws Provide Additional Broad Protections for Californians\nData is the bedrock underlying the massive growth in AI, and Californians’ broad privacy and data rights directly\nimpact AI s",
+        "activation": 123.01934814453125,
+        "label": "SAFE"
+      },
+      {
+        "text": "5. Long Beach will practice ethical data stewardship throughout the data lifecycle to\nminimize misuse of personal data.\na. Long Beach will anonymize, deidentify, and/or aggregate personal information ",
+        "activation": 115.13118743896484,
+        "label": "SAFE"
+      },
+      {
+        "text": "2.   Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be subject to administrative fines of up to EUR 1 500 000.\n\n3.   The non-compliance of the AI system with an",
+        "activation": 107.34065246582031,
+        "label": "SAFE"
+      },
+      {
+        "text": "4.\tA statement that the AI system is in conformity with this Regulation and, if applicable, with any other relevant Union law that provides for the issuing of the EU declaration of conformity referred",
+        "activation": 96.88787841796875,
+        "label": "SAFE"
+      },
+      {
+        "text": "DATA  PRIVACY\nYou should be protected from abusive data practices via built-in protections and you should have agency over how data about you is used. You should be protected from violations of privac",
+        "activation": 83.1322021484375,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 11139,
+    "mean_safe": 36.253990173339844,
+    "mean_innov": 33.154850006103516,
+    "delta": 3.099140167236328,
+    "top5_contexts": [
+      {
+        "text": "B. THE STATE AND ANY GOVERNMENTAL  AGENCY,  POLITICAL  SUBDIVISION  OR\n PUBLIC  BENEFIT  CORPORATION  OF  THE  STATE SHALL NOT PURCHASE, OBTAIN,\n PROCURE, ACQUIRE, EMPLOY, USE, DEPLOY, OR  ACCESS  INF",
+        "activation": 336.0281982421875,
+        "label": "SAFE"
+      },
+      {
+        "text": "General Requirements and Definitions:\nThis Interim Guidance is supplemental to and does not supersede any applicable law, including E.O. 12333 and the AG Guidelines.\n\n\nFoundation models refer to AI sy",
+        "activation": 329.6880187988281,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 9407. NATIONAL CYBERSECURITY CHALLENGES. \n\n(a) IN GENERAL.—Title II of the Cybersecurity Enhancement Act of 2014 (15 U.S.C. 7431 et seq.) is amended by adding at the end the following:\n \n‘‘SEC. 2",
+        "activation": 326.13775634765625,
+        "label": "INNOV"
+      },
+      {
+        "text": "3.  ANY  PERSON  ENGAGED IN THE BUSINESS OF DEALING IN ANY PROPERTY OR\n SERVICE WHO FOR ANY COMMERCIAL PURPOSE MAKES,  PUBLISHES,  DISSEMINATES,\n CIRCULATES  OR PLACES BEFORE THE PUBLIC OR CAUSES, DIR",
+        "activation": 324.8086242675781,
+        "label": "SAFE"
+      },
+      {
+        "text": "§  87.  AUDITS. 1.   PRIOR TO DEPLOYMENT OF A HIGH-RISK AI SYSTEM, SIX\n MONTHS AFTER DEPLOYMENT, AND AT LEAST EVERY EIGHTEEN  MONTHS  THEREAFTER\n FOR  EACH  CALENDAR YEAR A HIGH-RISK AI SYSTEM IS IN U",
+        "activation": 318.0213317871094,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 4773,
+    "mean_safe": 4.455184459686279,
+    "mean_innov": 1.5577454566955566,
+    "delta": 2.8974390029907227,
+    "top5_contexts": [
+      {
+        "text": "2.   Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be subject to administrative fines of up to EUR 1 500 000.\n\n3.   The non-compliance of the AI system with an",
+        "activation": 139.60398864746094,
+        "label": "SAFE"
+      },
+      {
+        "text": "(21)\t‘conformity assessment body’ means a body that performs third-party conformity assessment activities, including testing, certification and inspection;\n\n(22)\t‘notified body’ means a conformity ass",
+        "activation": 129.04244995117188,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 34: Operational obligations of notified bodies\n\n1.   Notified bodies shall verify the conformity of high-risk AI systems in accordance with the conformity assessment procedures set out in Arti",
+        "activation": 117.91484832763672,
+        "label": "SAFE"
+      },
+      {
+        "text": "6.   By 2 August 2028 and every four years thereafter, the Commission shall submit a report on the review of the progress on the development of standardisation deliverables on the energy-efficient dev",
+        "activation": 114.7876968383789,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 48: CE marking\n\n1.   The CE marking shall be subject to the general principles set out in Article 30 of Regulation (EC) No 765/2008.\n\n2.   For high-risk AI systems provided digitally, a digita",
+        "activation": 113.62700653076172,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 14371,
+    "mean_safe": 9.430782318115234,
+    "mean_innov": 6.857880115509033,
+    "delta": 2.572902202606201,
+    "top5_contexts": [
+      {
+        "text": "SEC. 10334. ONLINE RESOURCE.\n\nThe Director shall develop an online resource hosted on the Foundation's website containing up-to-date information, tailored for institutions and individual researchers, ",
+        "activation": 108.2249984741211,
+        "label": "INNOV"
+      },
+      {
+        "text": "(c) CONTENTS OF GUIDANCE.—At a minimum, the guidance required by subsection (a) shall— \n(1) instruct human resources professionals and hiring authorities to utilize available direct hiring authorities",
+        "activation": 99.00601959228516,
+        "label": "INNOV"
+      },
+      {
+        "text": "VI.\tStrengthening S&T Ethics Education and Propaganda\n\n(1)\tEmphasize S&T ethics education. S&T ethics education should be made a compulsory part of relevant undergraduate and postgraduate education, a",
+        "activation": 98.67939758300781,
+        "label": "INNOV"
+      },
+      {
+        "text": "(4) Systems of accountability and performance.--An evaluation of the following accountability and performance systems:\n\t\t(A) Student performance assessments.\n\t\t(B) The documentation of student perform",
+        "activation": 93.85781860351562,
+        "label": "INNOV"
+      },
+      {
+        "text": "2.  (a)  Beginning  on  January  first, two thousand twenty-seven, and except as provided in subdivision seven of this section,  each  deployer of  a  high-risk artificial intelligence decision system",
+        "activation": 91.73019409179688,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 5081,
+    "mean_safe": 8.292397499084473,
+    "mean_innov": 5.753281116485596,
+    "delta": 2.539116382598877,
+    "top5_contexts": [
+      {
+        "text": "e. Enabling an AI-Ready Federal Workforce Training the Federal workforce about AI improves efficiency and increases AI adoption. The Federal workforce has a responsibility to develop and maintain, at ",
+        "activation": 120.28097534179688,
+        "label": "INNOV"
+      },
+      {
+        "text": "(e)\tUsers should enhance their capabilities in areas such as network security and supply chain security to reduce the risk of AI systems being attacked and important data being stolen or leaked, as we",
+        "activation": 103.52468872070312,
+        "label": "SAFE"
+      },
+      {
+        "text": "§ 86. UNLAWFUL DISCRIMINATORY PRACTICES.   IT  SHALL  BE  AN  UNLAWFUL\n DISCRIMINATORY PRACTICE:\n   1.  FOR  A DEVELOPER OR DEPLOYER TO USE, SELL, OR SHARE A HIGH-RISK AI\n SYSTEM OR A PRODUCT FEATURIN",
+        "activation": 102.47759246826172,
+        "label": "SAFE"
+      },
+      {
+        "text": "(a)  The development of AI infrastructure should advance United States national security and leadership in AI.  Meeting this goal will require steps by the Federal Government, in collaboration with th",
+        "activation": 97.05358123779297,
+        "label": "INNOV"
+      },
+      {
+        "text": "(b) Transformational Models.--The Secretary of Energy shall--\n            (1) mobilize National Laboratories to partner with industry \n        sectors within the United States to curate the scientific",
+        "activation": 93.09353637695312,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 7016,
+    "mean_safe": 2.51409912109375,
+    "mean_innov": 0.2516024112701416,
+    "delta": 2.2624967098236084,
+    "top5_contexts": [
+      {
+        "text": "“(a) Offense.—Except as provided in subsection (b), whoever knowingly or recklessly produces or distributes, or causes to be produced or distributed, in or affecting interstate or foreign commerce or ",
+        "activation": 125.77395629882812,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 3. PROHIBITING USE OF ARTIFICIAL INTELLIGENCE TO DEPRIVE OR DEFRAUD INDIVIDUALS OF THE RIGHT TO VOTE IN ELECTIONS FOR PUBLIC OFFICE.\n(a) Prohibition.—A developer or deployer shall not use a cover",
+        "activation": 80.47492218017578,
+        "label": "SAFE"
+      },
+      {
+        "text": "(b)(1)\n(A)  No person in this state shall sell, dispense, or serve as a conduit for the sale or dispensing of contact lenses or spectacles to the ultimate user of such contact lenses or spectacles exc",
+        "activation": 75.29387664794922,
+        "label": "SAFE"
+      },
+      {
+        "text": "(g)  Definitions.--As used in this section, the following words and phrases shall have the meanings given to them in this subsection:\n\"Artificial intelligence.\"  As defined in section 3131.1 (relating",
+        "activation": 72.43817138671875,
+        "label": "SAFE"
+      },
+      {
+        "text": "CHAPTER II: PROHIBITED AI PRACTICES\n\nArticle 5: Prohibited AI practices\n\n1.   The following AI practices shall be prohibited:\n\n(a)\tthe placing on the market, the putting into service or the use of an ",
+        "activation": 57.63702392578125,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 5946,
+    "mean_safe": 3.629845380783081,
+    "mean_innov": 1.3790464401245117,
+    "delta": 2.2507989406585693,
+    "top5_contexts": [
+      {
+        "text": "GOVERN 1:\nPolicies, processes, procedures, and practices across the organization related to the mapping, measuring, and managing of AI risks are in place, transparent, and implemented effectively.\n\nGO",
+        "activation": 76.33829498291016,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 31: Requirements relating to notified bodies\n\n1.   A notified body shall be established under the national law of a Member State and shall have legal personality.\n\n2.   Notified bodies shall s",
+        "activation": 61.26813507080078,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 16: Obligations of providers of high-risk AI systems\n\nProviders of high-risk AI systems shall:\n\n(a)\tensure that their high-risk AI systems are compliant with the requirements set out in Sectio",
+        "activation": 58.93123245239258,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 56\tSecurity Emergency Response for Critical AI\n\nDevelopers and providers of critical AI shall establish a security emergency response plan, and in the event of an AI security incident, immedia",
+        "activation": 57.945701599121094,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 17: Quality management system\n\n1.   Providers of high-risk AI systems shall put a quality management system in place that ensures compliance with this Regulation. That system shall be document",
+        "activation": 56.644203186035156,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 14448,
+    "mean_safe": 125.08734893798828,
+    "mean_innov": 123.19609832763672,
+    "delta": 1.8912506103515625,
+    "top5_contexts": [
+      {
+        "text": "Section 1.  Title 18 of the Pennsylvania Consolidated Statutes is amended by adding a section to read:\n§ 3131.1.  Unlawful dissemination of artificially generated depiction.\n(a)  Offense defined.--Exc",
+        "activation": 366.7095031738281,
+        "label": "SAFE"
+      },
+      {
+        "text": "Ministry of Defence\n\nAMBITIOUS, SAFE, RESPONSIBLE \n\nOur approach to the delivery of AI-enabled capability in Defence \n\nJune 2022 \n\nThis policy statement should be read in conjunction with the Defence ",
+        "activation": 355.8810119628906,
+        "label": "INNOV"
+      },
+      {
+        "text": "(k) Combination of Studies Authorized.--The \nSecretary of Commerce and the Federal Trade Commission, after notifying \nthe Committee on Energy and Commerce of the House of Representatives and \nthe Comm",
+        "activation": 354.19012451171875,
+        "label": "INNOV"
+      },
+      {
+        "text": "II. The Human Authorship Requirement\n\nIn the Office's view, it is well-established that copyright can protect only material that is the product of human creativity. Most fundamentally, the term “autho",
+        "activation": 352.6395568847656,
+        "label": "SAFE"
+      },
+      {
+        "text": "(j) Definitions.—In this section:\n\n\n(1) ARTIFICIAL INTELLIGENCE.—The term “artificial intelligence” includes a machine-based system that uses data, references, or machine or human-based inputs to—\n\n\n(",
+        "activation": 349.938232421875,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 11529,
+    "mean_safe": 2.1782026290893555,
+    "mean_innov": 0.48135390877723694,
+    "delta": 1.696848750114441,
+    "top5_contexts": [
+      {
+        "text": "Data Protection Laws Provide Additional Broad Protections for Californians\nData is the bedrock underlying the massive growth in AI, and Californians’ broad privacy and data rights directly\nimpact AI s",
+        "activation": 63.218345642089844,
+        "label": "SAFE"
+      },
+      {
+        "text": "(k) (1) A health care service plan, including a specialized health care service plan that uses an artificial intelligence, algorithm, or other software tool for the purpose of utilization review or ut",
+        "activation": 47.405941009521484,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 87\tSafe Harbor (避风港) Rules for Service Providers\n\nWhere a user utilizes an AI service to commit a tortious act, the rights holder has the right to notify the provider of the AI service to take",
+        "activation": 40.75892639160156,
+        "label": "SAFE"
+      },
+      {
+        "text": "H. 1. Each developer of a high-risk generative artificial intelligence system that generates or substantially modifies synthetic content shall ensure that the outputs of such high-risk artificial inte",
+        "activation": 40.69034194946289,
+        "label": "SAFE"
+      },
+      {
+        "text": "(2) Assess whether the prospective customer intends to utilize the computing cluster to train a covered model.\n(3) If a customer repeatedly utilizes computer resources that would be sufficient to trai",
+        "activation": 39.920982360839844,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 16043,
+    "mean_safe": 1.755993127822876,
+    "mean_innov": 0.1628424972295761,
+    "delta": 1.5931506156921387,
+    "top5_contexts": [
+      {
+        "text": "(b) Enforcement.—\n\n\n(1) UNFAIR OR DECEPTIVE ACTS OR PRACTICES.—A violation of this section or a regulation promulgated thereunder shall be treated as a violation of a rule defining an unfair or decept",
+        "activation": 103.4371566772461,
+        "label": "SAFE"
+      },
+      {
+        "text": "Section 35. Enforcement.\n(a) The Attorney General may bring a civil action against\na developer that violates Sections 15 or 25. A developer found\nguilty of violating Sections 15 or 25 may be assessed ",
+        "activation": 74.98082733154297,
+        "label": "SAFE"
+      },
+      {
+        "text": "Entities Should Remain Vigilant About Other Laws and\nRegulations Which May Be Applicable to AI Technologies\nBeyond the laws and regulations discussed in this advisory, other California laws—including ",
+        "activation": 73.31726837158203,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 46\tRegarding conduct in S&T activities that violates S&T ethical norms or requirements, any work unit or individual shall be entitled to report complaints, in accordance with law, to the work ",
+        "activation": 59.61347961425781,
+        "label": "SAFE"
+      },
+      {
+        "text": "CHAPTER XII: PENALTIES\n\nArticle 99: Penalties\n\n1.   In accordance with the terms and conditions laid down in this Regulation, Member States shall lay down the rules on penalties and other enforcement ",
+        "activation": 50.132572174072266,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 11008,
+    "mean_safe": 4.0514421463012695,
+    "mean_innov": 2.463679790496826,
+    "delta": 1.5877623558044434,
+    "top5_contexts": [
+      {
+        "text": "b)\tMatching of training data from different sources:\n\n1）\tThe diversity of training data sources shall be increased, and there shall be multiple sources of training data for each language, such as Chin",
+        "activation": 103.34857177734375,
+        "label": "SAFE"
+      },
+      {
+        "text": "(f) Enforcement.—\n\n\n(1) IN GENERAL.—Notwithstanding any other provision of law, a covered entity described in subparagraph (B) or (C) of subsection (a)(2) that violates a prohibition under subsection ",
+        "activation": 103.2389907836914,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 49: Registration\n\n1.   Before placing on the market or putting into service a high-risk AI system listed in Annex III, with the exception of high-risk AI systems referred to in point 2 of Anne",
+        "activation": 103.16460418701172,
+        "label": "SAFE"
+      },
+      {
+        "text": "Align Protection Measures Globally\n\nAmerica must impose strong export controls on sensitive technologies. We should encourage partners and allies to follow U.S. controls, and not backfill. If they do,",
+        "activation": 103.14124298095703,
+        "label": "INNOV"
+      },
+      {
+        "text": "(b) Report.--\n\t(1) Submission.--Not later than January 1, 2024, the Director of National Intelligence, in coordination with heads of human capital from each element of the intelligence community, shal",
+        "activation": 102.92342376708984,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 108,
+    "mean_safe": 2.6298668384552,
+    "mean_innov": 1.047818660736084,
+    "delta": 1.5820481777191162,
+    "top5_contexts": [
+      {
+        "text": "(c) A business that uses automated decisionmaking technology as set forth in subsection (a) must provide two or more designated methods for submitting requests to opt-out of the business’s use of the ",
+        "activation": 56.047767639160156,
+        "label": "INNOV"
+      },
+      {
+        "text": "Entities Should Remain Vigilant About Other Laws and\nRegulations Which May Be Applicable to AI Technologies\nBeyond the laws and regulations discussed in this advisory, other California laws—including ",
+        "activation": 53.63786315917969,
+        "label": "SAFE"
+      },
+      {
+        "text": "AGENCY:\n\nU.S. Copyright Office, Library of Congress.\n\nACTION:\n\nStatement of policy.\n\nSUMMARY:\n\nThe Copyright Office issues this statement of policy to clarify its practices for examining and registeri",
+        "activation": 53.34352111816406,
+        "label": "SAFE"
+      },
+      {
+        "text": "Consistent with the Office's policies described above, applicants have a duty to disclose the inclusion of AI-generated content in a work submitted for registration and to provide a brief explanation ",
+        "activation": 43.92499542236328,
+        "label": "SAFE"
+      },
+      {
+        "text": "Given the essential role played by the AG Guidelines in ensuring that the IC can engage in lawful intelligence activities while appropriately protecting individual rights and interests of U.S. persons",
+        "activation": 43.5057373046875,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 261,
+    "mean_safe": 15.941633224487305,
+    "mean_innov": 14.504164695739746,
+    "delta": 1.4374685287475586,
+    "top5_contexts": [
+      {
+        "text": "Article 63: Derogations for specific operators\n\n1.   Microenterprises within the meaning of Recommendation 2003/361/EC may comply with certain elements of the quality management system required by Art",
+        "activation": 219.94674682617188,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d) Powers Of The Task Force.—\n\n\n(1) HEARINGS.—The Task Force may, for the purpose of carrying out this section, hold hearings, sit and act at times and places, take testimony, and receive evidence as",
+        "activation": 180.30520629882812,
+        "label": "INNOV"
+      },
+      {
+        "text": "(e) Operating Rules And Procedure.—\n\n\n(1) INITIAL MEETING.—The AI Task Force shall meet not later than 30 days after the date on which a majority of the members of the AI Task Force have been appointe",
+        "activation": 176.097412109375,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d) Grant Program for Processing of Critical Minerals and Development of Critical Minerals and Metals.--\n\t(1) Establishment.--The Secretary, in consultation with the Director, the Secretary of the Int",
+        "activation": 162.36279296875,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d)  To assist agencies in implementing the guidance to be established in subsection 10.1(b) of this section:\n\n          (i)   within 90 days of the issuance of the guidance, the Secretary of Commerce",
+        "activation": 152.5091552734375,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 13528,
+    "mean_safe": 1.908202886581421,
+    "mean_innov": 0.5429865717887878,
+    "delta": 1.3652162551879883,
+    "top5_contexts": [
+      {
+        "text": "3.   Importers shall indicate their name, registered trade name or registered trade mark, and the address at which they can be contacted on the high-risk AI system and on its packaging or its accompan",
+        "activation": 69.87297058105469,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 48: CE marking\n\n1.   The CE marking shall be subject to the general principles set out in Article 30 of Regulation (EC) No 765/2008.\n\n2.   For high-risk AI systems provided digitally, a digita",
+        "activation": 65.91281127929688,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 24: Obligations of distributors\n\n1.   Before making a high-risk AI system available on the market, distributors shall verify that it bears the required CE marking, that it is accompanied by a ",
+        "activation": 58.33749008178711,
+        "label": "SAFE"
+      },
+      {
+        "text": "Recommended Policy Actions\n\n• Establish regulatory sandboxes or AI Centers of Excellence around the country where researchers, startups, and established enterprises can rapidly deploy and test AI tool",
+        "activation": 55.193092346191406,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 17: Quality management system\n\n1.   Providers of high-risk AI systems shall put a quality management system in place that ensures compliance with this Regulation. That system shall be document",
+        "activation": 52.34635925292969,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 7344,
+    "mean_safe": 1.3782929182052612,
+    "mean_innov": 0.22141416370868683,
+    "delta": 1.1568787097930908,
+    "top5_contexts": [
+      {
+        "text": "4.2 Addressing safety risks in AI applications\n\n\n4.2.1 Addressing cyberspace risks\n\n(a)\tA security protection mechanism should be established to prevent model from being interfered and tampered during",
+        "activation": 122.50611877441406,
+        "label": "SAFE"
+      },
+      {
+        "text": "(c) The secretary shall develop a coordinated plan to accomplish all of the following:\n(1) Investigate the feasibility of, and obstacles to, developing standards and technologies for state departments",
+        "activation": 57.343719482421875,
+        "label": "INNOV"
+      },
+      {
+        "text": "(g)\tthe placing on the market, the putting into service for this specific purpose, or the use of biometric categorisation systems that categorise individually natural persons based on their biometric ",
+        "activation": 55.949241638183594,
+        "label": "SAFE"
+      },
+      {
+        "text": "Oversight of Frontier Models: \n \nI.\tHardware  \nTraining a frontier model would require tremendous computing resources. Entities that sell or rent the use of a large amount of computing hardware, poten",
+        "activation": 48.669490814208984,
+        "label": "SAFE"
+      },
+      {
+        "text": "Data Input Controls and Audit\nOpenAI’s large language models, including the models that power ChatGPT, are developed using three primary sources of information: (1) information that is publicly availa",
+        "activation": 36.9166145324707,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 12575,
+    "mean_safe": 13.154891967773438,
+    "mean_innov": 12.01230239868164,
+    "delta": 1.1425895690917969,
+    "top5_contexts": [
+      {
+        "text": "2.  IT  SHALL BE UNLAWFUL FOR AN EMPLOYER TO IMPLEMENT OR USE AN AUTO-\n MATED EMPLOYMENT DECISION TOOL THAT FAILS TO COMPLY WITH  THE  FOLLOWING\n PROVISIONS:\n   A.  NO    LESS   THAN   ANNUALLY, A DIS",
+        "activation": 237.7067108154297,
+        "label": "SAFE"
+      },
+      {
+        "text": "6-1-1702. Developer duty to avoid algorithmic discrimination - required documentation. \n\n(1) ON AND AFTER FEBRUARY 1, 2026, A DEVELOPER OF A HIGH-RISK ARTIFICIAL INTELLIGENCE SYSTEM SHALL USE\nREASONAB",
+        "activation": 138.77256774902344,
+        "label": "SAFE"
+      },
+      {
+        "text": "II. The Human Authorship Requirement\n\nIn the Office's view, it is well-established that copyright can protect only material that is the product of human creativity. Most fundamentally, the term “autho",
+        "activation": 72.88667297363281,
+        "label": "SAFE"
+      },
+      {
+        "text": "DATA INPUT CONTROLS AND AUDIT\nGenerative AI models take a large amount of data to effectively train, so a combination of sources are used for training, including information that’s publicly available ",
+        "activation": 72.36933135986328,
+        "label": "SAFE"
+      },
+      {
+        "text": "Ministry of Defence\n\nAMBITIOUS, SAFE, RESPONSIBLE \n\nOur approach to the delivery of AI-enabled capability in Defence \n\nJune 2022 \n\nThis policy statement should be read in conjunction with the Defence ",
+        "activation": 67.8515625,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 3923,
+    "mean_safe": 1.83488929271698,
+    "mean_innov": 0.6976735591888428,
+    "delta": 1.1372157335281372,
+    "top5_contexts": [
+      {
+        "text": "Article 30\tThe expert reconsideration panel shall conduct the reconsideration in an appropriate manner and may, if necessary, require the relevant S&T ethics (review) committee and scientific and tech",
+        "activation": 144.7729034423828,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 53\tRegistration of Critical AI\n\nProviders of critical AI shall, within 7 working days from the date of receiving a notice of determination [that they are indeed providers of critical AI], regi",
+        "activation": 107.45072174072266,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 33: Where providers of algorithmic recommendation services with public opinion properties or social mobilization capabilities obtain filing through hiding relevant circumstances when reporting",
+        "activation": 102.23932647705078,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 31\tDigital Literacy\n\nThe State implements national digital literacy and skills enhancement actions to enhance citizens’ digital access to production, use, evaluation, interaction, sharing, inn",
+        "activation": 85.27693939208984,
+        "label": "INNOV"
+      },
+      {
+        "text": "b)\tModel Output:\n\n1）\tAccuracy of the generated content: Technical measures shall be employed to improve the ability of the generated content to respond to the intent of users’ input, to improve the de",
+        "activation": 83.65716552734375,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 1388,
+    "mean_safe": 1.3219224214553833,
+    "mean_innov": 0.2559517025947571,
+    "delta": 1.0659706592559814,
+    "top5_contexts": [
+      {
+        "text": "SEC. 7. PRIVATE RIGHT OF ACTION.\nThe Children’s Online Privacy Protection Act of 1998 (15 U.S.C. 6501 et seq.) is amended—\n(1) by redesignating sections 1307 and 1308 as sections 1308 and 1309, respec",
+        "activation": 91.24229431152344,
+        "label": "SAFE"
+      },
+      {
+        "text": "Section 6. Enforcement by attorney general\n\n(a) the attorney general has exclusive authority to enforce this chapter.\n\n(b) except as provided in subsection (c) of this section, a violation of the requ",
+        "activation": 81.20687103271484,
+        "label": "SAFE"
+      },
+      {
+        "text": "(b) Enforcement.—\n\n\n(1) UNFAIR OR DECEPTIVE ACTS OR PRACTICES.—A violation of this section or a regulation promulgated thereunder shall be treated as a violation of a rule defining an unfair or decept",
+        "activation": 65.20670318603516,
+        "label": "SAFE"
+      },
+      {
+        "text": "(f)  Concurrent jurisdiction to prosecute.--In addition to the authority conferred upon the Attorney General by the act of October 15, 1980 (P.L.950, No.164), known as the Commonwealth Attorneys Act, ",
+        "activation": 57.334190368652344,
+        "label": "SAFE"
+      },
+      {
+        "text": "(4) PROTECTION OF REPORTING PARTIES.—\n\n\n(A) PROHIBITION AGAINST RETALIATION.—No employer may, directly or indirectly, discharge, demote, suspend, threaten, blacklist, harass, or in any other manner di",
+        "activation": 53.892974853515625,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 15053,
+    "mean_safe": 1.9793357849121094,
+    "mean_innov": 0.9859284162521362,
+    "delta": 0.9934073686599731,
+    "top5_contexts": [
+      {
+        "text": "§ 850.204\n\nCompletion date.\n\nThe term completion date means:\n\n(a) With respect to a covered transaction other than under § 850.210(a)(6), the earliest date upon which any interest, asset, property, or",
+        "activation": 153.44764709472656,
+        "label": "SAFE"
+      },
+      {
+        "text": "(h) Waiver.—The President may waive the application of sanctions under this section, for renewable periods of one year, if the President certifies in writing to the appropriate congressional committee",
+        "activation": 90.00399780273438,
+        "label": "SAFE"
+      },
+      {
+        "text": "3.3\tSecure and Resilient\n\nAI systems, as well as the ecosystems in which they are deployed, may be said to be resilient if they can withstand unexpected adverse events or unexpected changes in their e",
+        "activation": 78.01472473144531,
+        "label": "SAFE"
+      },
+      {
+        "text": "§ 850.303\n\nKnowingly directing an otherwise prohibited transaction.\n\n(a) A U.S. person is prohibited from knowingly directing a transaction by a non-U.S. person that the U.S. person knows at the time ",
+        "activation": 66.09967041015625,
+        "label": "SAFE"
+      },
+      {
+        "text": "(ii)   Within 90 days of the date of this order, the Secretary of Transportation shall direct appropriate Federal Advisory Committees of the DOT to provide advice on the safe and responsible use of AI",
+        "activation": 63.0015983581543,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 748,
+    "mean_safe": 1.3794169425964355,
+    "mean_innov": 0.3900018334388733,
+    "delta": 0.9894151091575623,
+    "top5_contexts": [
+      {
+        "text": "§  1552. Risk management. 1. (a) Beginning on January first, two thousand twenty-seven, each deployer of a high-risk artificial  intelligence decision  system shall use reasonable care to protect cons",
+        "activation": 73.97755432128906,
+        "label": "SAFE"
+      },
+      {
+        "text": "Deceptive Alignment \n\nThis section describes an initial approach for addressing risks of deceptive alignment. By \"deceptive alignment,\" we mean the risk that AI systems purposefully undermine human co",
+        "activation": 53.60282516479492,
+        "label": "SAFE"
+      },
+      {
+        "text": "(d) (1) Every person who knowingly sends or causes to be sent, or brings or causes to be brought, into this state for sale or distribution, or in this state possesses, prepares, publishes, produces, d",
+        "activation": 48.81637954711914,
+        "label": "SAFE"
+      },
+      {
+        "text": "§ 850.302\n\nActions of a controlled foreign entity.\n\n(a) A U.S. person shall take all reasonable steps to prohibit and prevent any transaction by its controlled foreign entity that would be a prohibite",
+        "activation": 46.7206916809082,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 87\tSafe Harbor (避风港) Rules for Service Providers\n\nWhere a user utilizes an AI service to commit a tortious act, the rights holder has the right to notify the provider of the AI service to take",
+        "activation": 44.15739822387695,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 3973,
+    "mean_safe": 1.1338279247283936,
+    "mean_innov": 0.16574755311012268,
+    "delta": 0.9680804014205933,
+    "top5_contexts": [
+      {
+        "text": "3.   Importers shall indicate their name, registered trade name or registered trade mark, and the address at which they can be contacted on the high-risk AI system and on its packaging or its accompan",
+        "activation": 87.62390899658203,
+        "label": "SAFE"
+      },
+      {
+        "text": "Deceptive Alignment \n\nThis section describes an initial approach for addressing risks of deceptive alignment. By \"deceptive alignment,\" we mean the risk that AI systems purposefully undermine human co",
+        "activation": 79.03611755371094,
+        "label": "SAFE"
+      },
+      {
+        "text": "Entities Should Remain Vigilant About Other Laws and\nRegulations Which May Be Applicable to AI Technologies\nBeyond the laws and regulations discussed in this advisory, other California laws—including ",
+        "activation": 67.62947845458984,
+        "label": "SAFE"
+      },
+      {
+        "text": "CHAPTER III: HIGH-RISK AI SYSTEMS\n\nSECTION 1\nClassification of AI systems as high-risk\n\nArticle 6: Classification rules for high-risk AI systems\n\n1.   Irrespective of whether an AI system is placed on",
+        "activation": 44.644351959228516,
+        "label": "SAFE"
+      },
+      {
+        "text": "CHAPTER II: PROHIBITED AI PRACTICES\n\nArticle 5: Prohibited AI practices\n\n1.   The following AI practices shall be prohibited:\n\n(a)\tthe placing on the market, the putting into service or the use of an ",
+        "activation": 44.16737747192383,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 13404,
+    "mean_safe": 2.5745835304260254,
+    "mean_innov": 1.6078922748565674,
+    "delta": 0.966691255569458,
+    "top5_contexts": [
+      {
+        "text": "(g) DEFINITIONS.—In this section: \n(1) The term ‘‘Defense science and technology enterprise’’ means— \n(A) the research organizations of the military departments; \n(B) the science and technology reinve",
+        "activation": 127.23152923583984,
+        "label": "INNOV"
+      },
+      {
+        "text": "``(E) Duties of council.--The duties of the Council are as follows:\n``(i) To streamline the organizational structure of the Department as such structure relates to the development, implementation, and",
+        "activation": 100.6783218383789,
+        "label": "INNOV"
+      },
+      {
+        "text": "(f) ANNUAL REPORTS.— \n(1) INITIAL REPORT.—Not later than 30 days after the conclusion of the first year of the program under subsection (a), the Secretary of Defense shall submit to the congressional ",
+        "activation": 97.60194396972656,
+        "label": "INNOV"
+      },
+      {
+        "text": "Category. “Category” means any component 1 category required to be reported by employers pursuant to subsection (c) of section 2000e-8 of title 42 of the United States Code as specified in part 1602.7",
+        "activation": 92.0333251953125,
+        "label": "SAFE"
+      },
+      {
+        "text": "(4) The auditor shall produce an audit report including all of the following:\n(A) A detailed assessment of the developer’s steps to comply with the requirements of this section.\n(B) If applicable, any",
+        "activation": 89.68791961669922,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 14162,
+    "mean_safe": 1.1576511859893799,
+    "mean_innov": 0.22304493188858032,
+    "delta": 0.9346062541007996,
+    "top5_contexts": [
+      {
+        "text": "CHAPTER III: HIGH-RISK AI SYSTEMS\n\nSECTION 1\nClassification of AI systems as high-risk\n\nArticle 6: Classification rules for high-risk AI systems\n\n1.   Irrespective of whether an AI system is placed on",
+        "activation": 82.93336486816406,
+        "label": "SAFE"
+      },
+      {
+        "text": "3.   The risks referred to in this Article shall concern only those which may be reasonably mitigated or eliminated through the development or design of the high-risk AI system, or the provision of ad",
+        "activation": 71.32913970947266,
+        "label": "INNOV"
+      },
+      {
+        "text": "Article 23: Obligations of importers\n\n1.   Before placing a high-risk AI system on the market, importers shall ensure that the system is in conformity with this Regulation by verifying that:\n\n(a)\tthe ",
+        "activation": 67.9969482421875,
+        "label": "SAFE"
+      },
+      {
+        "text": "Entities Should Remain Vigilant About Other Laws and\nRegulations Which May Be Applicable to AI Technologies\nBeyond the laws and regulations discussed in this advisory, other California laws—including ",
+        "activation": 48.9798469543457,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 24: Obligations of distributors\n\n1.   Before making a high-risk AI system available on the market, distributors shall verify that it bears the required CE marking, that it is accompanied by a ",
+        "activation": 44.948360443115234,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 7515,
+    "mean_safe": 1.1746535301208496,
+    "mean_innov": 0.24607418477535248,
+    "delta": 0.9285793304443359,
+    "top5_contexts": [
+      {
+        "text": "(c) The secretary shall develop a coordinated plan to accomplish all of the following:\n(1) Investigate the feasibility of, and obstacles to, developing standards and technologies for state departments",
+        "activation": 54.41269302368164,
+        "label": "INNOV"
+      },
+      {
+        "text": "H. 1. Each developer of a high-risk generative artificial intelligence system that generates or substantially modifies synthetic content shall ensure that the outputs of such high-risk artificial inte",
+        "activation": 54.210853576660156,
+        "label": "SAFE"
+      },
+      {
+        "text": "Consistent with the Office's policies described above, applicants have a duty to disclose the inclusion of AI-generated content in a work submitted for registration and to provide a brief explanation ",
+        "activation": 53.44996643066406,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 87\tSafe Harbor (避风港) Rules for Service Providers\n\nWhere a user utilizes an AI service to commit a tortious act, the rights holder has the right to notify the provider of the AI service to take",
+        "activation": 52.681427001953125,
+        "label": "SAFE"
+      },
+      {
+        "text": "Unauthorized Use of Likeness in the Entertainment Industry and Other Contexts\n• AB 2602 (Kalra) requires that contracts authorizing the use of an individual’s voice and likeness in a digital\nreplica c",
+        "activation": 40.81889343261719,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 3606,
+    "mean_safe": 1.1787971258163452,
+    "mean_innov": 0.2808220088481903,
+    "delta": 0.8979750871658325,
+    "top5_contexts": [
+      {
+        "text": "c.\tAfter IOT&E, as directed by the DOT&E, system data will be collected and any further changes to the system will undergo appropriate V&V and T&E to ensure that critical safety features have not been",
+        "activation": 70.61576080322266,
+        "label": "INNOV"
+      },
+      {
+        "text": "22603. (a) Before beginning to initially train a covered model, the developer shall do all of the following:\n(1) Implement reasonable administrative, technical, and physical cybersecurity protections ",
+        "activation": 60.68348693847656,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 12: Record-keeping\n\n1.   High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system.\n\n2.   In order to ensure a level of traceabi",
+        "activation": 48.983123779296875,
+        "label": "SAFE"
+      },
+      {
+        "text": "\"Intentional and substantial modification\" means any deliberate change made to (i) an artificial intelligence system that results, at the time when the change is implemented and any time thereafter, i",
+        "activation": 41.44956970214844,
+        "label": "SAFE"
+      },
+      {
+        "text": "(e)\tassessment of the human oversight measures needed in accordance with Article 14, including an assessment of the technical measures needed to facilitate the interpretation of the outputs of AI syst",
+        "activation": 36.12549591064453,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 468,
+    "mean_safe": 3.7467055320739746,
+    "mean_innov": 2.92702054977417,
+    "delta": 0.8196849822998047,
+    "top5_contexts": [
+      {
+        "text": "Principle 3: Evaluate the threats and manage the risks to your AI system  \nPrimarily applies to: Developers and System Operators   \n\n\n[OWASP 2024, WEF 2024, Nvidia 2023, ENISA 2023, Google 2023, G7 20",
+        "activation": 43.780025482177734,
+        "label": "SAFE"
+      },
+      {
+        "text": "5.   Surveillance of the approved quality management system.\t\n\n5.1.\tThe purpose of the surveillance carried out by the notified body referred to in Point 3 is to make sure that the provider duly compl",
+        "activation": 38.8023681640625,
+        "label": "INNOV"
+      },
+      {
+        "text": "4.   High-risk AI systems shall be as resilient as possible regarding errors, faults or inconsistencies that may occur within the system or the environment in which the system operates, in particular ",
+        "activation": 37.23228454589844,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 2. FINDINGS.\nCongress finds the following:\n(1) Multiple estimates indicate that the amount of computational power being used for artificial intelligence applications has increased rapidly over th",
+        "activation": 36.8654899597168,
+        "label": "INNOV"
+      },
+      {
+        "text": "(3) Testing standards shall be issued as a rulemaking under section 553 of title 5, United States Code.\n\n(4) The Director shall consult with outside experts in forensic science, bioethics, algorithmic",
+        "activation": 31.78661346435547,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 12976,
+    "mean_safe": 0.8527387976646423,
+    "mean_innov": 0.03536436706781387,
+    "delta": 0.8173744082450867,
+    "top5_contexts": [
+      {
+        "text": "Section 6. Enforcement by attorney general\n\n(a) the attorney general has exclusive authority to enforce this chapter.\n\n(b) except as provided in subsection (c) of this section, a violation of the requ",
+        "activation": 77.6944808959961,
+        "label": "SAFE"
+      },
+      {
+        "text": "(b) Enforcement.—\n\n\n(1) UNFAIR OR DECEPTIVE ACTS OR PRACTICES.—A violation of this section or a regulation promulgated thereunder shall be treated as a violation of a rule defining an unfair or decept",
+        "activation": 66.30256652832031,
+        "label": "SAFE"
+      },
+      {
+        "text": "(f)  Concurrent jurisdiction to prosecute.--In addition to the authority conferred upon the Attorney General by the act of October 15, 1980 (P.L.950, No.164), known as the Commonwealth Attorneys Act, ",
+        "activation": 55.47622299194336,
+        "label": "SAFE"
+      },
+      {
+        "text": "§  1552. Risk management. 1. (a) Beginning on January first, two thousand twenty-seven, each deployer of a high-risk artificial  intelligence decision  system shall use reasonable care to protect cons",
+        "activation": 33.08816909790039,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 7. PRIVATE RIGHT OF ACTION.\nThe Children’s Online Privacy Protection Act of 1998 (15 U.S.C. 6501 et seq.) is amended—\n(1) by redesignating sections 1307 and 1308 as sections 1308 and 1309, respec",
+        "activation": 28.93911361694336,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 2299,
+    "mean_safe": 2.5031862258911133,
+    "mean_innov": 1.69588041305542,
+    "delta": 0.8073058128356934,
+    "top5_contexts": [
+      {
+        "text": "SEC. 6. TRAINING TO PROMOTE SENSIBLE CLASSIFICATION.\n(a) Definitions.—In this section:\n(1) OVER-CLASSIFICATION.—The term “over-classification” means classification at a level that exceeds the minimum ",
+        "activation": 171.30335998535156,
+        "label": "INNOV"
+      },
+      {
+        "text": "Subtitle F--Research Infrastructure\n\nSEC. 10371. FACILITY OPERATION AND MAINTENANCE.\n\n(a) In General.--The Director shall continue the Facility Operation Transition pilot program for a total of 5 year",
+        "activation": 163.2454376220703,
+        "label": "INNOV"
+      },
+      {
+        "text": "SEC. 12. RESEARCH AND DEVELOPMENT PROJECT PILOT PROGRAM.\n(a) Pilot Program.—The head of an agency may carry out research and prototype projects in accordance with this section.\n(b) Purpose.—A pilot pr",
+        "activation": 136.73199462890625,
+        "label": "INNOV"
+      },
+      {
+        "text": "§  87.  AUDITS. 1.   PRIOR TO DEPLOYMENT OF A HIGH-RISK AI SYSTEM, SIX\n MONTHS AFTER DEPLOYMENT, AND AT LEAST EVERY EIGHTEEN  MONTHS  THEREAFTER\n FOR  EACH  CALENDAR YEAR A HIGH-RISK AI SYSTEM IS IN U",
+        "activation": 130.86195373535156,
+        "label": "SAFE"
+      },
+      {
+        "text": "Subtitle C--Information Technology and Data Management\n\nSEC. 1521. CONTROL AND MANAGEMENT OF DEPARTMENT OF DEFENSE DATA; ESTABLISHMENT OF CHIEF DIGITAL AND ARTIFICIAL INTELLIGENCE OFFICER GOVERNING CO",
+        "activation": 115.51513671875,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 9063,
+    "mean_safe": 3.0879106521606445,
+    "mean_innov": 2.2865777015686035,
+    "delta": 0.801332950592041,
+    "top5_contexts": [
+      {
+        "text": "SECTION 1. SHORT TITLE.\nThis Act may be cited as the “Literacy in Future Technologies Artificial Intelligence Act” or the “LIFT AI Act”.\nSEC. 2. PREPARING K–12 EDUCATORS AND STUDENTS FOR AN AI LITERAT",
+        "activation": 154.1494903564453,
+        "label": "INNOV"
+      },
+      {
+        "text": "(5) Staff.--\n\t\t(A) Executive director.--The Co-Chairs of the Commission may appoint and fix the rate of basic pay for an Executive Director in accordance with section 3161 of title 5, United States Co",
+        "activation": 153.92532348632812,
+        "label": "INNOV"
+      },
+      {
+        "text": "2. Regulation Statement\n\nUsage of Artificial Intelligence technologies within the City of Boise shall ensure that confidential City information is not compromised, that generated content is always val",
+        "activation": 153.9189910888672,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d) New York must establish that the burden of responsibility of prov-\n ing that AI products do not cause harm to New Yorkers will be shouldered\n by the developers and deployers of AI. While governmen",
+        "activation": 153.7254638671875,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 12. EFFECTIVE DATE.\nThe amendments made by this Act, except for subsection (d)(1) of section 1303 of the Children’s Online Privacy Protection Act of 1998 (15 U.S.C. 6502), shall take effect on th",
+        "activation": 153.4913787841797,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 11691,
+    "mean_safe": 1.0510132312774658,
+    "mean_innov": 0.2543447017669678,
+    "delta": 0.796668529510498,
+    "top5_contexts": [
+      {
+        "text": "3.  ANY  PERSON  ENGAGED IN THE BUSINESS OF DEALING IN ANY PROPERTY OR\n SERVICE WHO FOR ANY COMMERCIAL PURPOSE MAKES,  PUBLISHES,  DISSEMINATES,\n CIRCULATES  OR PLACES BEFORE THE PUBLIC OR CAUSES, DIR",
+        "activation": 146.2228546142578,
+        "label": "SAFE"
+      },
+      {
+        "text": "§  87.  AUDITS. 1.   PRIOR TO DEPLOYMENT OF A HIGH-RISK AI SYSTEM, SIX\n MONTHS AFTER DEPLOYMENT, AND AT LEAST EVERY EIGHTEEN  MONTHS  THEREAFTER\n FOR  EACH  CALENDAR YEAR A HIGH-RISK AI SYSTEM IS IN U",
+        "activation": 71.2063217163086,
+        "label": "SAFE"
+      },
+      {
+        "text": "§  89-B.  ENFORCEMENT.  1.  WHENEVER THERE SHALL BE A VIOLATION OF ANY\n PROVISION OF THIS ARTICLE, AN APPLICATION MAY BE MADE  BY  THE  ATTORNEY\n GENERAL  IN  THE  NAME  OF  THE  PEOPLE OF THE STATE O",
+        "activation": 70.686767578125,
+        "label": "SAFE"
+      },
+      {
+        "text": "6.  AN  AUDIT  CONDUCTED  UNDER THIS SECTION SHALL BE COMPLETED IN ITS\n ENTIRETY WITHOUT THE ASSISTANCE OF AN AI SYSTEM.\n   7. (A) AN AUDITOR SHALL BE AN INDEPENDENT  ENTITY  INCLUDING  BUT  NOT\n LIMI",
+        "activation": 63.845462799072266,
+        "label": "SAFE"
+      },
+      {
+        "text": "§ 86. UNLAWFUL DISCRIMINATORY PRACTICES.   IT  SHALL  BE  AN  UNLAWFUL\n DISCRIMINATORY PRACTICE:\n   1.  FOR  A DEVELOPER OR DEPLOYER TO USE, SELL, OR SHARE A HIGH-RISK AI\n SYSTEM OR A PRODUCT FEATURIN",
+        "activation": 53.849735260009766,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 15851,
+    "mean_safe": 1.7208408117294312,
+    "mean_innov": 0.9562273025512695,
+    "delta": 0.7646135091781616,
+    "top5_contexts": [
+      {
+        "text": "General Requirements and Definitions:\nThis Interim Guidance is supplemental to and does not supersede any applicable law, including E.O. 12333 and the AG Guidelines.\n\n\nFoundation models refer to AI sy",
+        "activation": 35.60226058959961,
+        "label": "SAFE"
+      },
+      {
+        "text": "(c) The secretary shall develop a coordinated plan to accomplish all of the following:\n(1) Investigate the feasibility of, and obstacles to, developing standards and technologies for state departments",
+        "activation": 34.054874420166016,
+        "label": "INNOV"
+      },
+      {
+        "text": "Given the essential role played by the AG Guidelines in ensuring that the IC can engage in lawful intelligence activities while appropriately protecting individual rights and interests of U.S. persons",
+        "activation": 32.67643356323242,
+        "label": "INNOV"
+      },
+      {
+        "text": "8. Regulations \n(1) Regulations under this Act are made by statutory instrument. \n\n\n(2) Regulations under this Act may create offences and require payment of fees, penalties and fines. \n\n\n(3) A statut",
+        "activation": 31.095216751098633,
+        "label": "SAFE"
+      },
+      {
+        "text": "Fifth principle: Reliability \n \nAI-enabled systems must be demonstrably reliable, robust and secure. \n \nThe MOD’s AI-enabled systems must be suitably reliable; they must fulfil their intended design a",
+        "activation": 31.037229537963867,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 14451,
+    "mean_safe": 1.2214926481246948,
+    "mean_innov": 0.47063103318214417,
+    "delta": 0.750861644744873,
+    "top5_contexts": [
+      {
+        "text": "DATA  PRIVACY\nYou should be protected from abusive data practices via built-in protections and you should have agency over how data about you is used. You should be protected from violations of privac",
+        "activation": 49.74123764038086,
+        "label": "SAFE"
+      },
+      {
+        "text": "(d)  To help ensure the responsible development and deployment of AI in the education sector, the Secretary of Education shall, within 365 days of the date of this order, develop resources, policies, ",
+        "activation": 38.568607330322266,
+        "label": "INNOV"
+      },
+      {
+        "text": "There are multiple approaches for enhancing contextual awareness in the AI lifecycle. For example, subject matter experts can assist in the evaluation of TEVV findings and work with product and deploy",
+        "activation": 38.56043243408203,
+        "label": "SAFE"
+      },
+      {
+        "text": "Section 05\nFuture work\n\n5.1\tUpdates to our framework\n\nAs outlined in the introduction, we expect to update our Frontier AI Framework to reflect developments in both the technology and our understandin",
+        "activation": 37.4449348449707,
+        "label": "INNOV"
+      },
+      {
+        "text": "(e)\tUsers should enhance their capabilities in areas such as network security and supply chain security to reduce the risk of AI systems being attacked and important data being stolen or leaked, as we",
+        "activation": 33.40199661254883,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 9335,
+    "mean_safe": 0.8000999093055725,
+    "mean_innov": 0.108324334025383,
+    "delta": 0.6917755603790283,
+    "top5_contexts": [
+      {
+        "text": "2\tIdentify and mitigate vulnerabilities, and, where appropriate, incidents and patterns of misuse, after deployment including placement on the market. \n \nOrganizations should use, as and when appropri",
+        "activation": 50.683135986328125,
+        "label": "SAFE"
+      },
+      {
+        "text": "Secure Development  \n\n\nPrinciple 5: Identify, track and protect your assets  \nPrimarily applies to: Developers, System Operators and Data Custodians \n\n\n[OWASP 2024, Nvidia 2023, NCSC 2023, BSI1 2023, ",
+        "activation": 39.071563720703125,
+        "label": "SAFE"
+      },
+      {
+        "text": "ENABLER 9: Trusted Environment\n\nTrust and safety underwrite confidence in Singapore’s AI landscape. They lie at the heart of our interventions to deliver AI for the Public Good.\n\n-\tWe will endeavour f",
+        "activation": 31.90915298461914,
+        "label": "SAFE"
+      },
+      {
+        "text": "Principle 9: Conduct appropriate testing and evaluation  \nPrimarily applies to: Developers and System Operators \n\n\n[OWASP 2024, WEF 2024, Nvidia 2023, NCSC 2023, ENISA 2023, Google 2023, G7 2023]  \n\n\n",
+        "activation": 30.144020080566406,
+        "label": "SAFE"
+      },
+      {
+        "text": "Researching Adversarial AI Use \nAI systems can help DHS defend against cyber threats, but AI systems also require protection from cyber threats. DHS emerging technology experts research, test, and dep",
+        "activation": 29.42788314819336,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 4685,
+    "mean_safe": 0.9183172583580017,
+    "mean_innov": 0.23831340670585632,
+    "delta": 0.6800038814544678,
+    "top5_contexts": [
+      {
+        "text": "Section 30. Algorithmic discrimination.\n    (a) A deployer shall not use an automated decision tool\nthat results in algorithmic discrimination.\n    (b) On and after January 1, 2028, a person may bring",
+        "activation": 160.23878479003906,
+        "label": "SAFE"
+      },
+      {
+        "text": "Section 6. Enforcement by attorney general\n\n(a) the attorney general has exclusive authority to enforce this chapter.\n\n(b) except as provided in subsection (c) of this section, a violation of the requ",
+        "activation": 83.65410614013672,
+        "label": "SAFE"
+      },
+      {
+        "text": "Section 35. Enforcement.\n(a) The Attorney General may bring a civil action against\na developer that violates Sections 15 or 25. A developer found\nguilty of violating Sections 15 or 25 may be assessed ",
+        "activation": 65.47581481933594,
+        "label": "SAFE"
+      },
+      {
+        "text": "(c) Personnel Matters.--\n\t(1) Status as federal employees.--Notwithstanding the requirements of section 2105 of title 5, United States Code, including the required supervision under subsection (a)(3) ",
+        "activation": 52.619972229003906,
+        "label": "INNOV"
+      },
+      {
+        "text": "(b) Enforcement.—\n\n\n(1) UNFAIR OR DECEPTIVE ACTS OR PRACTICES.—A violation of this section or a regulation promulgated thereunder shall be treated as a violation of a rule defining an unfair or decept",
+        "activation": 45.172332763671875,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 7780,
+    "mean_safe": 1.2685315608978271,
+    "mean_innov": 0.5896568298339844,
+    "delta": 0.6788747310638428,
+    "top5_contexts": [
+      {
+        "text": "There are multiple approaches for enhancing contextual awareness in the AI lifecycle. For example, subject matter experts can assist in the evaluation of TEVV findings and work with product and deploy",
+        "activation": 64.23115539550781,
+        "label": "SAFE"
+      },
+      {
+        "text": "We will continue to work closely with international allies and partners to address the opportunities and risks around autonomy in weapons systems. Global governance for such systems is a difficult tas",
+        "activation": 62.43556213378906,
+        "label": "INNOV"
+      },
+      {
+        "text": "DATA  PRIVACY\nYou should be protected from abusive data practices via built-in protections and you should have agency over how data about you is used. You should be protected from violations of privac",
+        "activation": 52.205299377441406,
+        "label": "SAFE"
+      },
+      {
+        "text": "e)\tSoftware and hardware environment:\n\n1）\tComputing systems used for model training and inference:\n\n— The supply chain security of the chips, software, tools, and computing power used in the system sh",
+        "activation": 51.359134674072266,
+        "label": "SAFE"
+      },
+      {
+        "text": "4.   The conformity assessment body concerned may perform the activities of a notified body only where no objections are raised by the Commission or the other Member States within two weeks of a notif",
+        "activation": 47.759883880615234,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 5131,
+    "mean_safe": 0.8830521106719971,
+    "mean_innov": 0.21107150614261627,
+    "delta": 0.671980619430542,
+    "top5_contexts": [
+      {
+        "text": "Article 30\tThe expert reconsideration panel shall conduct the reconsideration in an appropriate manner and may, if necessary, require the relevant S&T ethics (review) committee and scientific and tech",
+        "activation": 64.02071380615234,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 16\tThe S&T ethics (review) committee may decide to approve, approve with modifications, review again after modifications, or disapprove the reviewed S&T activity. Where the decision is to appr",
+        "activation": 48.091453552246094,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 12: Algorithmic recommendation service providers are encouraged to comprehensively use tactics such as content de-weighting, scattering interventions, etc., and optimize the transparency and u",
+        "activation": 47.36687469482422,
+        "label": "SAFE"
+      },
+      {
+        "text": "b)\tModel Output:\n\n1）\tAccuracy of the generated content: Technical measures shall be employed to improve the ability of the generated content to respond to the intent of users’ input, to improve the de",
+        "activation": 46.960243225097656,
+        "label": "SAFE"
+      },
+      {
+        "text": "3）\tWhen using commercial training data:\n\n— It is necessary to have a legally valid transaction contract, cooperation agreement, etc.;\n\n— When a counterparty or partner is unable to provide commitments",
+        "activation": 46.414939880371094,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 4387,
+    "mean_safe": 0.765644907951355,
+    "mean_innov": 0.09399672597646713,
+    "delta": 0.6716482043266296,
+    "top5_contexts": [
+      {
+        "text": "Avoid inappropriate, low-quality, or irrelevant data use and the compounded harm of its reuse \n\nRelevant and high-quality data. Data used as part of any automated system's creation, evaluation, or dep",
+        "activation": 50.364444732666016,
+        "label": "SAFE"
+      },
+      {
+        "text": "“(b) Definition.—For purposes of subsection (a)(4), the term ‘decision that produces a legal effect or similarly significant effect concerning a person’ includes denial or degradation of consequential",
+        "activation": 47.94405746459961,
+        "label": "SAFE"
+      },
+      {
+        "text": "“(D) PROHIBITION ON LIMITING OR DISCONTINUING SERVICE.—An operator of a children’s service may not refuse to provide a service, or discontinue a service provided, to a teenager or child, if the teenag",
+        "activation": 47.40191650390625,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 104.   GUIDANCE FOR AGENCY USE OF ARTIFICIAL INTELLIGENCE.\n\n    (a)   Guidance.--\nNot later than 270 days after the date of enactment of this Act, the \nDirector, in coordination with the Director",
+        "activation": 39.14434814453125,
+        "label": "INNOV"
+      },
+      {
+        "text": "(4) PROTECTION OF REPORTING PARTIES.—\n\n\n(A) PROHIBITION AGAINST RETALIATION.—No employer may, directly or indirectly, discharge, demote, suspend, threaten, blacklist, harass, or in any other manner di",
+        "activation": 34.703121185302734,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 12130,
+    "mean_safe": 1.3366707563400269,
+    "mean_innov": 0.6724311709403992,
+    "delta": 0.6642395853996277,
+    "top5_contexts": [
+      {
+        "text": "General Requirements and Definitions:\nThis Interim Guidance is supplemental to and does not supersede any applicable law, including E.O. 12333 and the AG Guidelines.\n\n\nFoundation models refer to AI sy",
+        "activation": 48.078880310058594,
+        "label": "SAFE"
+      },
+      {
+        "text": "6-59-5. Enforcement.\n(a) The attorney general shall promulgate and adopt rules and regulations for the purposes of implementing this chapter.\n\n\n(b) To remedy violations of this chapter and for other r",
+        "activation": 39.60988998413086,
+        "label": "INNOV"
+      },
+      {
+        "text": "1. OVERVIEW \n\n\nExecutive Order 13960, Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government, 1 charges Federal agencies with using safe and secure artificial intelligence ",
+        "activation": 38.68328857421875,
+        "label": "SAFE"
+      },
+      {
+        "text": "§  87.  AUDITS. 1.   PRIOR TO DEPLOYMENT OF A HIGH-RISK AI SYSTEM, SIX\n MONTHS AFTER DEPLOYMENT, AND AT LEAST EVERY EIGHTEEN  MONTHS  THEREAFTER\n FOR  EACH  CALENDAR YEAR A HIGH-RISK AI SYSTEM IS IN U",
+        "activation": 31.367225646972656,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 9407. NATIONAL CYBERSECURITY CHALLENGES. \n\n(a) IN GENERAL.—Title II of the Cybersecurity Enhancement Act of 2014 (15 U.S.C. 7431 et seq.) is amended by adding at the end the following:\n \n‘‘SEC. 2",
+        "activation": 30.959758758544922,
+        "label": "INNOV"
+      }
+    ]
+  },
+  {
+    "feature_id": 1027,
+    "mean_safe": 0.8387951850891113,
+    "mean_innov": 0.18688412010669708,
+    "delta": 0.6519110798835754,
+    "top5_contexts": [
+      {
+        "text": "ENABLER 9: Trusted Environment\n\nTrust and safety underwrite confidence in Singapore’s AI landscape. They lie at the heart of our interventions to deliver AI for the Public Good.\n\n-\tWe will endeavour f",
+        "activation": 59.5882453918457,
+        "label": "SAFE"
+      },
+      {
+        "text": "(d) Best practices.—Not later than 90 days after the date of enactment of this Act, the Director of the Cybersecurity and Infrastructure Security Agency shall, in collaboration with the Director of th",
+        "activation": 54.28836441040039,
+        "label": "INNOV"
+      },
+      {
+        "text": "(4) Clinical data must support the intended use and include the following:\n\n(i) The assessment must include a summary of the clinical data used, including source, patient demographics, and any techniq",
+        "activation": 46.57935333251953,
+        "label": "SAFE"
+      },
+      {
+        "text": "SEC. 104.   GUIDANCE FOR AGENCY USE OF ARTIFICIAL INTELLIGENCE.\n\n    (a)   Guidance.--\nNot later than 270 days after the date of enactment of this Act, the \nDirector, in coordination with the Director",
+        "activation": 38.79423141479492,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d) Notwithstanding the requirements of paragraphs (2) and (3) of subdivision (b) and paragraphs (3) and (4) of subdivision (c), an independent auditor may exclude a category that represents less than",
+        "activation": 31.10451889038086,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 2824,
+    "mean_safe": 4.50510835647583,
+    "mean_innov": 3.8626291751861572,
+    "delta": 0.6424791812896729,
+    "top5_contexts": [
+      {
+        "text": "Appendix I: Promoting Innovative Acquisition\n\nThis appendix builds upon actions taken by OMB and the CAO Council to create an innovation-friendly acquisition environment that empowers, enables, and en",
+        "activation": 151.89747619628906,
+        "label": "INNOV"
+      },
+      {
+        "text": "WHAT  SHOULD  BE  EXPECTED  OF  AUTOMATED  SYSTEMS\n\nAn automated system should provide demonstrably effective mechanisms to opt out in favor of a human alternative, where appropriate, as well as timel",
+        "activation": 148.11636352539062,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 30\tTalent Cultivation\n\nThe State promotes the construction of AI-related academic disciplines, encourages educational and scientific research institutions and enterprises to carry out AI-relat",
+        "activation": 146.2461700439453,
+        "label": "INNOV"
+      },
+      {
+        "text": "(b) In general.—Not later than 180 days after the date of enactment of this Act, the Director of the Cybersecurity and Infrastructure Security Agency shall—\n\n\n(1) initiate a process to update processe",
+        "activation": 137.00682067871094,
+        "label": "INNOV"
+      },
+      {
+        "text": "(d) The regulations identify categories of covered transactions that are prohibited transactions. A prohibited transaction is a transaction by a U.S. person with or resulting in the establishment of a",
+        "activation": 135.5119171142578,
+        "label": "SAFE"
+      }
+    ]
+  },
+  {
+    "feature_id": 8005,
+    "mean_safe": 1.5270867347717285,
+    "mean_innov": 0.8855283856391907,
+    "delta": 0.6415583491325378,
+    "top5_contexts": [
+      {
+        "text": "(e)\tUsers should enhance their capabilities in areas such as network security and supply chain security to reduce the risk of AI systems being attacked and important data being stolen or leaked, as we",
+        "activation": 37.102088928222656,
+        "label": "SAFE"
+      },
+      {
+        "text": "Align Protection Measures Globally\n\nAmerica must impose strong export controls on sensitive technologies. We should encourage partners and allies to follow U.S. controls, and not backfill. If they do,",
+        "activation": 32.616111755371094,
+        "label": "INNOV"
+      },
+      {
+        "text": "(f) Enforcement.—\n\n\n(1) IN GENERAL.—Notwithstanding any other provision of law, a covered entity described in subparagraph (B) or (C) of subsection (a)(2) that violates a prohibition under subsection ",
+        "activation": 32.580265045166016,
+        "label": "INNOV"
+      },
+      {
+        "text": "b)\tMatching of training data from different sources:\n\n1）\tThe diversity of training data sources shall be increased, and there shall be multiple sources of training data for each language, such as Chin",
+        "activation": 32.55817794799805,
+        "label": "SAFE"
+      },
+      {
+        "text": "Article 49: Registration\n\n1.   Before placing on the market or putting into service a high-risk AI system listed in Annex III, with the exception of high-risk AI systems referred to in point 2 of Anne",
+        "activation": 32.38395690917969,
+        "label": "SAFE"
+      }
+    ]
+  }
+]

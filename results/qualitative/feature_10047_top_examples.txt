@@ -1,0 +1,63 @@
+Feature 10047 top examples
+
+[1] activation=14.550551
+“(D) PROHIBITION ON LIMITING OR DISCONTINUING SERVICE.—An operator of a children’s service may not refuse to provide a service, or discontinue a service provided, to a teenager or child, if the teenager or parent of the child, as applicable, refuses to consent, or withdraws consent, to the processing of any covered information not technically required for the operator to provide such service.
+
+---
+
+[2] activation=12.895317
+SEC. 6. TRAINING TO PROMOTE SENSIBLE CLASSIFICATION.
+(a) Definitions.—In this section:
+(1) OVER-CLASSIFICATION.—The term “over-classification” means classification at a level that exceeds the minimum level of classification that is sufficient to protect the national security of the United States.
+(2) SENSIBLE CLASSIFICATION.—The term “sensible classification” means classification at a level that is the minimum level of classification that is sufficient to protect the national security of the United States.
+(b) Training Required.—Each head of an agency with classification authority shall conduct training for employees of the agency with classification authority to discourage over-classification and to promote sensible classification.
+
+---
+
+[3] activation=11.525464
+Article 58: Detailed arrangements for, and functioning of, AI regulatory sandboxes
+
+1.   In order to avoid fragmentation across the Union, the Commission shall adopt implementing acts specifying the detailed arrangements for the establishment, development, implementation, operation and supervision of the AI regulatory sandboxes. The implementing acts shall include common principles on the following issues:
+
+(a)	eligibility and selection criteria for participation in the AI regulatory sandbox;
+
+(b)	procedures for the application, participation, monitoring, exiting from and termination of the AI regulatory sandbox, including the sandbox plan and the exit report;
+
+(c)	the terms and conditions applicable to the participants.
+
+Those implementing acts shall be adopted in accordance with the examination procedure referred to in Article 98(2).
+
+---
+
+[4] activation=11.122659
+Data Protection Laws Provide Additional Broad Protections for Californians
+Data is the bedrock underlying the massive growth in AI, and Californians’ broad privacy and data rights directly
+impact AI systems, whether through the data used to build and train AI, or through the information that may be
+exposed by AI outputs.
+Californians possess a constitutional right to privacy that applies to both government and private entities. (Hill
+v. National Collegiate Athletic Assn. (1994) 7 Cal.4th 1, 20.) Informational privacy, i.e., the “interest in precluding
+the dissemination or misuse of sensitive and confidential information” is a core privacy interest protected by the
+California Constitution. (Id. at 35.) Developers and entities that use AI must carefully monitor AI systems’ training
+data, inputs, and outputs to ensure that Californians’ constitutional right to privacy is respected.
+The California Consumer Privacy Act (CCPA) broadly regulates the collection, use, sale, and sharing of consumers’
+personal information, including heightened protections for sensitive personal information. Personal information
+may also include inferences about consumers made by AI systems. (See Civ. Code, § 1798.140(v).) CCPA grants
+consumers important rights:
+• The right to know about the personal information a business collects about them, and how it is used and
+shared;
+• The right to correct inaccurate personal information that a business has about them;
+• The right to delete personal information collected about them (with some exceptions);
+• The right to opt out of the sale or sharing of their personal information; and
+• The right to limit the use and disclosure of their sensitive personal information. (Id. § 1798.100 et seq.)
+
+---
+
+[5] activation=10.866666
+(d)	the placing on the market, the putting into service for this specific purpose, or the use of an AI system for making risk assessments of natural persons in order to assess or predict the risk of a natural person committing a criminal offence, based solely on the profiling of a natural person or on assessing their personality traits and characteristics; this prohibition shall not apply to AI systems used to support the human assessment of the involvement of a person in a criminal activity, which is already based on objective and verifiable facts directly linked to a criminal activity;
+
+(e)	the placing on the market, the putting into service for this specific purpose, or the use of AI systems that create or expand facial recognition databases through the untargeted scraping of facial images from the internet or CCTV footage;
+
+(f)	the placing on the market, the putting into service for this specific purpose, or the use of AI systems to infer emotions of a natural person in the areas of workplace and education institutions, except where the use of the AI system is intended to be put in place or into the market for medical or safety reasons;
+
+---
+

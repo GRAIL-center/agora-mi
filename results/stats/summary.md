@@ -1,0 +1,9 @@
+# Stats Summary
+
+- Layer: 24
+
+- polarization_top_delta: 3.259132 (feature_id=6711)
+- fdr_survivors: 42.0 (42/16384 features (q<0.05))
+- quick_auc: 0.6035558795334718 (sanity check)
+- pilot_mean_effect: -1.1097771139705883 (ci=[-1.4351301946559873, -0.7811373670561975])
+- pilot_random_control_mean_effect: -0.9635963760504201 (ci=[-1.264029674369748, -0.680034631039916])

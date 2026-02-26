@@ -1,0 +1,70 @@
+Feature 14371 top examples
+
+[1] activation=108.224998
+SEC. 10334. ONLINE RESOURCE.
+
+The Director shall develop an online resource hosted on the Foundation's website containing up-to-date information, tailored for institutions and individual researchers, including--
+	(1) an explanation of Foundation research security policies;
+	(2) unclassified guidance on potential security risks that threaten research integrity and other risks to the research enterprise;
+	(3) examples of beneficial international collaborations and how such collaborations differ from foreign government interference efforts that threaten research integrity;
+	(4) best practices for mitigating security risks that threaten research integrity; and
+	(5) additional reference materials, including tools that assist organizations seeking Foundation funding and awardees in information disclosure to the Foundation.
+
+SEC. 10335. RESEARCH AWARDS.
+
+The Director shall continue to make awards, on a competitive basis, to institutions of higher education or non-profit organizations (or consortia of such institutions or organizations) to support research on the conduct of research and the research environment, including research on research misconduct or breaches of research integrity and detrimental research practices.
+
+---
+
+[2] activation=99.006020
+(c) CONTENTS OF GUIDANCE.—At a minimum, the guidance required by subsection (a) shall— 
+(1) instruct human resources professionals and hiring authorities to utilize available direct hiring authorities (including excepted service authorities) for the hiring of artificial intelligence professionals and other data science and software development personnel, to the maximum extent practicable; 
+(2) instruct hiring authorities, when using direct hiring authorities, to prioritize utilization of panels of subject matter experts over human resources professionals to assess applicant qualifications and determine which applicants are best qualified for a position; 
+(3) authorize and encourage the use of ePortfolio reviews to provide insight into the previous work of applicants as a tangible demonstration of capabilities and contribute to the assessment of applicant qualifications by subject matter experts; and 
+(4) encourage the use of referral bonuses for recruitment and hiring of highly qualified artificial intelligence professionals and other data science and software development personnel in accordance with volume 451 of Department of Defense Instruction 1400.25.
+
+---
+
+[3] activation=98.679398
+VI.	Strengthening S&T Ethics Education and Propaganda
+
+(1)	Emphasize S&T ethics education. S&T ethics education should be made a compulsory part of relevant undergraduate and postgraduate education, and S&T ethics education courses should be offered to educate young students so they establish a correct awareness of S&T ethics and comply with S&T ethics requirements. Mechanisms for training S&T ethics talent should be improved to accelerate the training of a high-quality, professional S&T ethics talent cadre with a background in both science and technology and ethics.
+
+(2)	Promote institutionalization of S&T ethics training. S&T ethics training should be integrated into activities of S&T personnel, such as new staff training, undertaking of scientific research tasks, and academic exchanges and seminars, to guide S&T personnel in consciously complying with S&T ethics requirements and conducting responsible research and innovation. Industrial main oversight departments, local governments, and relevant work units shall regularly carry out targeted training for members of S&T ethics (review) committees to enhance their ability to perform their duties and ensure the quality and efficiency of ethics reviews.
+
+(3)	Do a good job of S&T ethics propaganda. S&T ethics propaganda directed at the general public should be conducted to encourage the public to consciously raise awareness of S&T ethics and rationally deal with S&T ethics issues. S&T personnel shall take the initiative to communicate with the public about the ethical issues in technological innovation. For scientific research that may bring about S&T ethics challenges due to differences in public perception, relevant work units and S&T personnel shall strengthen science popularization and guide the public to view such matters scientifically. The news media shall improve their S&T ethics literacy and report on S&T ethics issues in a scientific, objective, and accurate manner. Societies, associations, research institutes, etc., are encouraged to set up S&T ethics propaganda platforms to disseminate knowledge of S&T ethics.
+
+---
+
+[4] activation=93.857819
+(4) Systems of accountability and performance.--An evaluation of the following accountability and performance systems:
+		(A) Student performance assessments.
+		(B) The documentation of student performance in military service records.
+		(C) Consideration of student performance records in the determination of assignments and promotions.
+		(D) Consideration of expertise or academic focus in the determination of assignments.
+	(5) Academic faculty and student review system.--A summary of current processes to review the following:
+		(A) The means by which faculty assigned to teach PME (including members of the Armed Forces and civilian personnel) are selected, managed, promoted, and evaluated.
+		(B) The academic freedom of faculty described in subparagraph (A).
+		(C) A review of how members are selected for residential and non-residential PME, including the consideration of student performance assessments during PME.
+	(6) Interactions of with institutions of pme civilian institutions.--
+		(A) Partnerships.--A review of existing academic partnerships between institutions of PME and civilian institutions, including--
+			(i) the scopes, purposes, and lengths of such partnerships;
+			(ii) any research, curriculum development, or sharing of faculty or students between institutions; and
+			(iii) any collaborations or exchanges by faculties or students.
+
+---
+
+[5] activation=91.730194
+2.  (a)  Beginning  on  January  first, two thousand twenty-seven, and except as provided in subdivision seven of this section,  each  deployer of  a  high-risk artificial intelligence decision system shall implement and maintain a  risk  management  policy  and  program  to  govern  such  deployer's  deployment of the high-risk artificial intelligence decision  system. The risk management policy and program shall specify and  incorporate  the principles, processes, and personnel that the deployer shall  use to identify, document, and mitigate any known or reasonably foreseeable risks of algorithmic discrimination.  The  risk  management  policy  shall  be  the  product  of  an  iterative  process, the risk management  program shall be an iterative process and both the risk management policy and program shall be planned, implemented, and regularly and  systematically  reviewed and updated over the lifecycle of the high-risk artificial intelligence decision system. Each  risk  management  policy  and  program implemented and maintained pursuant to this subdivision shall be  reasonable, considering:
+(i) the guidance and standards set forth in the latest version of:
+(A)  the "Artificial Intelligence Risk Management Framework" published by the national institute of standards and technology;
+(B) ISO or IEC 42001 of the international organization for  standardization; or
+(C)  a nationally or internationally recognized risk management frame- work for artificial intelligence decision systems, other than the  guidance  and  standards  specified  in clauses (A) and (B) of this subparagraph, that imposes requirements that are substantially  equivalent  to,and  at  least as stringent as, the requirements established pursuant to this section for risk management policies and programs;
+(ii) the size and complexity of the deployer;
+(iii) the nature and scope of the  high-risk  artificial  intelligence decision  systems  deployed  by the deployer, including, but not limited to, the intended uses of such high-risk artificial intelligence decision systems; and
+(iv) the sensitivity and volume of data processed in  connection  with the  high-risk  artificial intelligence decision systems deployed by the deployer.
+ 
+(b) A risk management policy and program  implemented  and  maintained pursuant  to  paragraph (a) of this subdivision may cover multiple high-risk artificial intelligence decision systems deployed by the deployer.
+
+---
+

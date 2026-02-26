@@ -1,0 +1,107 @@
+Feature 15978 top examples
+
+[1] activation=86.742661
+Ethical Principles
+
+49. The ASR policy [2] is clear that the MOD is committed to responsibly developing and deploying AI for purposes that are demonstrably beneficial whilst upholding human rights and democratic values. To support that it sets out five key principles9:
+a. Human-centricity. The impact of AI-enabled systems on humans must be assessed and considered, for a full range of effects both positive and negative across the entire system lifecycle.
+b. Responsibility. Human responsibility for AI-enabled systems must be clearly established, ensuring accountability for their outcomes, with clearly defined means by which human control is exercised throughout their lifecycles.
+c. Understanding. AI-enabled systems, and their outputs, must be appropriately understood by relevant individuals, with mechanisms to enable this understanding made an explicit part of system design.
+d. Bias and harm mitigation. Those responsible for AI-enabled systems must proactively mitigate the risk of unexpected or unintended biases or harms resulting from these systems, whether through their original rollout, or as they learn, change or are redeployed.
+e. Reliability. AI-enabled systems must be demonstrably reliable, robust and secure.
+Adoption of these principles is key to developing trust in our use of AI-based systems across the range of stakeholders, from the operator to system owners and our wider society. When speaking of trust, we do not suggest an abdication of all of our control to AI-based systems, rather we speak of building reliable systems operating under meaningful human control exercised through context-appropriate human involvement. Whilst it is tempting to treat the principles in isolation, they should be considered in the context of the wider ASR document (for example Legal and Governance aspects are considered separately in the ASR but are related to ethical values) as well as other relevant publications such as JSP 985 Human Security in Defence.
+
+50. In many respects, but not all, the MOD’s AI Ethical Principles can be considered as driving the safe10 adoption of AI across the entire business, from back office functions to front line operations. Organisations must consider these principles as early as
+practicable, for ease of implementation. Teams will almost always need to undertake a balancing and judgement exercise between principles in order to adopt them – what good looks like in terms of meeting the principles will look different for each use case.
+Additionally, teams will need to consider military requirements and operational effectiveness, recognising that developing AI responsibly by implementing the MOD AI Ethical Principles will ultimately result in more robust, reliable, and effective AI-enabled capabilities, thereby advancing our military edge.
+
+51. Whilst not directly related, [extant internal policy] may be relevant to AI ethics, particularly in relation to the reporting of ethical concerns. Where AI is in use and may impact human well-being, there must be clearly signposted avenues for redress as laid out in [extant internal policy].
+
+---
+
+[2] activation=76.775932
+SEC. 2. BASIC ALLOWANCE FOR HOUSING: PILOT PROGRAM TO OUTSOURCE RATE CALCULATION.
+(a) In General.—Not later than September 30, 2024, the Secretary of Defense shall seek to enter into an agreement with a covered entity pursuant to which the covered entity shall calculate, using industry standard machine learning and artificial intelligence algorithms, the monthly rates of BAH for not fewer than 15 MHAs.
+
+---
+
+[3] activation=75.985802
+3.2.	Comprehensive Assessment
+
+For models requiring comprehensive testing, we will assess whether the model is unlikely to reach any relevant Capability Thresholds absent surprising advances in widely accessible post-training enhancements. To make the required showing, we will need to satisfy the following criteria:
+
+1.	Threat model mapping: For each capability threshold, make a compelling case that we have mapped out the most likely and consequential threat models: combinations of actors (if relevant), attack pathways, model capability bottlenecks, and types of harms. We also make a compelling case that there does not exist a threat model that we are not evaluating that represents a substantial amount of risk.
+2.	Evaluations: Design and run empirical tests that provide strong evidence that the model does not have the requisite skills; explain why the tests yielded such results; and check at test time that the results are attributable to the model’s capabilities rather than issues with the test design. Findings from partner organizations and external evaluations of our models (or similar models) should also be incorporated into the ﬁnal assessment, when available.
+
+---
+
+[4] activation=57.230591
+Article 11: In the process of providing services, providers have the duty to protect information input by users and usage records. They may not illegally preserve input information from which it is possible to deduce the identity of users, they may not conduct profiling on the basis of information input by users and their usage details, and they may not provide information input by users to others. Where laws or regulations provide otherwise, those provisions are to be followed.
+
+---
+
+[5] activation=42.274517
+SEC. 2. CRITICAL SUPPLY CHAIN RESILIENCE PROGRAM.
+
+
+(a) Establishment.—There is established in the Office of the Secretary of Commerce a Supply Chain Resiliency and Crisis Response Office to carry out the Critical Supply Chain Resilience Program described in subsection (d).
+
+
+(b) Mission.—The mission of the Office shall be the following:
+
+
+(1) Help to promote the leadership of the United States with respect to critical industries and supply chains that—
+
+
+(A) strengthen the national security of the United States; and
+
+
+(B) have a significant effect on the economic security of the United States.
+
+
+(2) Encourage partnerships and collaboration with the Federal Government and the private sector, labor organizations, the governments of countries that are allies or key international partners of the United States, State governments and other political subdivisions of a State, and Tribal governments in order to—
+
+
+(A) promote the resilience of supply chains; and
+
+
+(B) respond to supply chain shocks to—
+
+
+(i) critical industries; and
+
+
+(ii) supply chains.
+
+
+(3) Support the development, maintenance, improvement, competitiveness, restoration, and expansion of the productive capacities, efficiency, and workforce of critical industries and domestic manufacturers of critical goods and services, industrial equipment, and manufacturing technology.
+
+
+(4) Prepare for and take appropriate steps to minimize the effects of supply chain shocks on critical industries and supply chains.
+
+
+(5) Support the creation of jobs with competitive wages in the manufacturing sector.
+
+
+(6) Encourage manufacturing growth and opportunities in economically distressed areas and communities of color.
+
+
+(7) Promote the health of the economy of the United States and the competitiveness of manufacturing in the United States.
+
+
+(8) Coordinate executive branch actions necessary to carry out the functions described in paragraphs (1) through (7).
+
+
+(c) Under Secretary Of The Office.—
+
+
+(1) APPOINTMENT AND TERM.—The head of the Office shall be the Under Secretary of the Office of Supply Chain Resiliency and Crisis Response, appointed by the President, by and with the advice and consent of the Senate, for a term of not more than 5 years.
+
+
+(2) PAY.—The Under Secretary shall be compensated at the rate in effect for level II of the Executive Schedule under section 5313 of title 5, United States Code.
+
+
+(3) ADMINISTRATIVE AUTHORITIES.—The Under Secretary may appoint officers and employees in accordance with chapter 51 and subchapter III of chapter 53 of title 5, United States Code.
+
+---
+

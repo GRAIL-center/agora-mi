@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T15:50:13.438225Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "sshleifer/tiny-gpt2",
+        "device": "cpu",
+        "dtype": "float32",
+        "batch_size": 4,
+        "max_length": 256,
+        "seed": 0,
+        "layers": [
+          1
+        ],
+        "sae_release": "unused",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 16,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 200,
+        "perm_N": 1000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run_tiny.yaml",
+        "layer": 1,
+        "safe_jsonl": "data/processed/dsafe_dev.jsonl",
+        "innov_jsonl": "data/processed/dinnov_dev.jsonl",
+        "features_npz": null,
+        "topk_safe_json": null,
+        "topk_innov_json": null
+      }
+    }
+  },
+  "sanity": {
+    "layer": 1,
+    "length_confound": {
+      "mean_a": 218.34453781512605,
+      "var_a": 2722.685372454067,
+      "mean_b": 226.54326923076923,
+      "var_b": 2021.3604375696766,
+      "mean_diff": -8.19873141564318
+    },
+    "top_feature_length_correlations": [
+      {
+        "feature_id": 15,
+        "pearson_corr_with_length": -0.49455205479559006
+      },
+      {
+        "feature_id": 27,
+        "pearson_corr_with_length": -0.49455204790575774
+      },
+      {
+        "feature_id": 10,
+        "pearson_corr_with_length": -0.4945520555593584
+      },
+      {
+        "feature_id": 40,
+        "pearson_corr_with_length": -0.4945520398823256
+      },
+      {
+        "feature_id": 54,
+        "pearson_corr_with_length": -0.4945520418655823
+      },
+      {
+        "feature_id": 8,
+        "pearson_corr_with_length": -0.49455204480231657
+      },
+      {
+        "feature_id": 12,
+        "pearson_corr_with_length": -0.49455201705641205
+      },
+      {
+        "feature_id": 25,
+        "pearson_corr_with_length": -0.4945520630254213
+      },
+      {
+        "feature_id": 52,
+        "pearson_corr_with_length": -0.49455206234834126
+      },
+      {
+        "feature_id": 14,
+        "pearson_corr_with_length": -0.4945520367127432
+      },
+      {
+        "feature_id": 62,
+        "pearson_corr_with_length": 0.4961956428485902
+      },
+      {
+        "feature_id": 41,
+        "pearson_corr_with_length": 0.49619564431145596
+      },
+      {
+        "feature_id": 39,
+        "pearson_corr_with_length": 0.4961956435237463
+      },
+      {
+        "feature_id": 5,
+        "pearson_corr_with_length": 0.49619563998127925
+      },
+      {
+        "feature_id": 44,
+        "pearson_corr_with_length": 0.4961956394593806
+      },
+      {
+        "feature_id": 19,
+        "pearson_corr_with_length": 0.4961956420002075
+      },
+      {
+        "feature_id": 42,
+        "pearson_corr_with_length": 0.4961956439886754
+      },
+      {
+        "feature_id": 46,
+        "pearson_corr_with_length": 0.49619564503147506
+      },
+      {
+        "feature_id": 48,
+        "pearson_corr_with_length": 0.4961956488860288
+      },
+      {
+        "feature_id": 47,
+        "pearson_corr_with_length": 0.4961956482458363
+      }
+    ],
+    "quick_auc": 0.5213922107304461,
+    "recommendation": "AUC < 0.60: try different layer index or wider SAE."
+  }
+}

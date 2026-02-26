@@ -1,0 +1,70 @@
+Feature 7541 top examples
+
+[1] activation=38.287399
+Principle 9: Conduct appropriate testing and evaluation  
+Primarily applies to: Developers and System Operators 
+
+
+[OWASP 2024, WEF 2024, Nvidia 2023, NCSC 2023, ENISA 2023, Google 2023, G7 2023]  
+
+
+9.1 Developers shall ensure that all models, applications and systems that are released to System Operators and/or End-users have been tested as part of a security assessment process.   
+
+
+9.2 System Operators shall conduct testing prior to the system being deployed with support from Developers.   
+
+
+9.2.1 For security testing, System Operators and Developers should use independent security testers with technical skills relevant to their AI systems. 
+
+
+9.3 Developers should ensure that the findings from the testing and evaluation are shared with System Operators, to inform their own testing and evaluation.   
+
+
+9.4 Developers should evaluate model outputs to ensure they do not allow System Operators or End-users to reverse engineer non-public aspects of the model or the training data.  
+
+
+9.4.1 Additionally, Developers should evaluate model outputs to ensure they do not provide System Operators or End-users with unintended influence over the system.
+
+---
+
+[2] activation=38.269630
+SEC. 10323. NSF EDDIE BERNICE JOHNSON INCLUDES INITIATIVE.
+
+(a) In General.--The Director shall make awards, on a competitive basis, to institutions of higher education or non-profit organizations (or consortia of such institutions or organizations) to carry out a comprehensive national initiative to facilitate the development of networks and partnerships to build on and scale up effective practices in broadening participation in STEM studies and careers of groups historically underrepresented in such studies and careers.
+(b) Change of Name.--The initiative under subsection (a) shall be known as the Eddie Bernice Johnson Inclusion across the Nation of Communities of Learners of Underrepresented Discoverers in Engineering and Science Initiative'' or the Eddie Bernice Johnson INCLUDES Initiative''.
+
+SEC. 10324. BROADENING PARTICIPATION ON MAJOR FACILITIES AWARDS.
+
+The Director shall require organizations seeking a cooperative agreement for the management of the operations and maintenance of a Foundation project to demonstrate prior experience and current capabilities in or to have a plan for employing best practices in broadening participation in science and engineering and ensure implementation of such practices is considered in oversight of the award.
+
+---
+
+[3] activation=37.884872
+(b) Pilot Program on Implementing Digital Content Provenance Standards.--
+	(1) Pilot program.--Not later than one year after the date of the enactment of this Act, the Director of the Defense Media Activity shall carry out a pilot program to assess the feasibility and advisability of implementing industry open technical standards for digital content provenance for official photographs and videos of the Department of Defense publicly released by the Defense Visual Information Distribution Service, or any successor operation, and other distribution platforms, systems, and services used by the Department of Defense (in this subsection referred to as the ``pilot program'').
+	(2) Elements.--In carrying out the pilot program, the Director of the Defense Media Activity shall--
+		(A) establish a process for using industry open technical standards to verify the digital content provenance of applicable Department media content;
+		(B) apply technology solutions that comport with industry open technical standard for digital content provenance to photographs and videos of the Department publicly released as described in paragraph (1) after the date of the enactment of this Act;
+		(C) assess the feasibility and advisability of applying an industry open technical standard for digital content provenance to historical visual information records of the Department stored at the Defense Visual Information Records Center; and
+		(D) develop and apply measure of effectiveness for the implementation of the pilot program.
+
+---
+
+[4] activation=37.824120
+There are multiple approaches for enhancing contextual awareness in the AI lifecycle. For example, subject matter experts can assist in the evaluation of TEVV findings and work with product and deployment teams to align TEVV parameters to requirements and deployment conditions. When properly resourced, increasing the breadth and diversity of input from interested parties and relevant AI actors throughout the AI lifecycle can enhance opportunities for informing contextually sensitive evaluations, and for identifying AI system benefits and positive impacts. These practices can increase the likelihood that risks arising in social contexts are managed appropriately.
+
+Understanding and treatment of trustworthiness characteristics depends on an AI actor’s particular role within the AI lifecycle. For any given AI system, an AI designer or developer may have a different perception of the characteristics than the deployer.
+
+Trustworthiness characteristics explained in this document influence each other. Highly secure but unfair systems, accurate but opaque and uninterpretable systems, and inaccurate but secure, privacy-enhanced, and transparent systems are all undesirable. A comprehensive approach to risk management calls for balancing tradeoffs among the trustworthiness characteristics. It is the joint responsibility of all AI actors to determine whether AI technology is an appropriate or necessary tool for a given context or purpose, and how to use it responsibly. The decision to commission or deploy an AI system should be based on a contextual assessment of trustworthiness characteristics and the relative risks, impacts, costs, and benefits, and informed by a broad set of interested parties.
+
+---
+
+[5] activation=37.413403
+SEC. 224. NEXT GENERATION AIR DOMINANCE FAMILY OF SYSTEMS DEVELOPMENT PROGRAM ACCOUNTABILITY MATRICES.
+
+(a) Submittal of Matrices.--Concurrent with the submission of the budget of the President to Congress pursuant to section 1105(a) of title 31, United States Code, for fiscal year 2025--
+	(1) the Secretary of the Air Force shall submit to the congressional defense committees and the Comptroller General of the United States the matrices described in subsection (b) relating to the Next Generation Air Dominance piloted fighter aircraft and the autonomous, uncrewed Collaborative Combat Aircraft programs of the Air Force; and
+	(2) the Secretary of the Navy shall submit to the congressional defense committees and the Comptroller General of the United States the matrices described in subsection (b) relating to the Next Generation Air Dominance piloted fighter aircraft and the autonomous, uncrewed Collaborative Combat Aircraft programs of the Navy and the Marine Corps.
+
+---
+

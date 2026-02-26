@@ -1,0 +1,90 @@
+Feature 4550 top examples
+
+[1] activation=114.729935
+Data Protection Laws Provide Additional Broad Protections for Californians
+Data is the bedrock underlying the massive growth in AI, and Californians’ broad privacy and data rights directly
+impact AI systems, whether through the data used to build and train AI, or through the information that may be
+exposed by AI outputs.
+Californians possess a constitutional right to privacy that applies to both government and private entities. (Hill
+v. National Collegiate Athletic Assn. (1994) 7 Cal.4th 1, 20.) Informational privacy, i.e., the “interest in precluding
+the dissemination or misuse of sensitive and confidential information” is a core privacy interest protected by the
+California Constitution. (Id. at 35.) Developers and entities that use AI must carefully monitor AI systems’ training
+data, inputs, and outputs to ensure that Californians’ constitutional right to privacy is respected.
+The California Consumer Privacy Act (CCPA) broadly regulates the collection, use, sale, and sharing of consumers’
+personal information, including heightened protections for sensitive personal information. Personal information
+may also include inferences about consumers made by AI systems. (See Civ. Code, § 1798.140(v).) CCPA grants
+consumers important rights:
+• The right to know about the personal information a business collects about them, and how it is used and
+shared;
+• The right to correct inaccurate personal information that a business has about them;
+• The right to delete personal information collected about them (with some exceptions);
+• The right to opt out of the sale or sharing of their personal information; and
+• The right to limit the use and disclosure of their sensitive personal information. (Id. § 1798.100 et seq.)
+
+---
+
+[2] activation=109.845573
+4.	A statement that the AI system is in conformity with this Regulation and, if applicable, with any other relevant Union law that provides for the issuing of the EU declaration of conformity referred to in Article 47;
+
+5.	Where an AI system involves the processing of personal data, a statement that that AI system complies with Regulations (EU) 2016/679 and (EU) 2018/1725 and Directive (EU) 2016/680;
+
+6.	References to any relevant harmonised standards used or any other common specification in relation to which conformity is declared;
+
+7.	Where applicable, the name and identification number of the notified body, a description of the conformity assessment procedure performed, and identification of the certificate issued;
+
+8.	The place and date of issue of the declaration, the name and function of the person who signed it, as well as an indication for, or on behalf of whom, that person signed, a signature.
+
+---
+
+[3] activation=74.962494
+(31)	‘validation data set’ means a separate data set or part of the training data set, either as a fixed or variable split;
+
+(32)	‘testing data’ means data used for providing an independent evaluation of the AI system in order to confirm the expected performance of that system before its placing on the market or putting into service;
+
+(33)	‘input data’ means data provided to or directly acquired by an AI system on the basis of which the system produces an output;
+
+(34)	‘biometric data’ means personal data resulting from specific technical processing relating to the physical, physiological or behavioural characteristics of a natural person, such as facial images or dactyloscopic data;
+
+(35)	‘biometric identification’ means the automated recognition of physical, physiological, behavioural, or psychological human features for the purpose of establishing the identity of a natural person by comparing biometric data of that individual to biometric data of individuals stored in a database;
+
+(36)	‘biometric verification’ means the automated, one-to-one verification, including authentication, of the identity of natural persons by comparing their biometric data to previously provided biometric data;
+
+(37)	‘special categories of personal data’ means the categories of personal data referred to in Article 9(1) of Regulation (EU) 2016/679, Article 10 of Directive (EU) 2016/680 and Article 10(1) of Regulation (EU) 2018/1725;
+
+(38)	‘sensitive operational data’ means operational data related to activities of prevention, detection, investigation or prosecution of criminal offences, the disclosure of which could jeopardise the integrity of criminal proceedings;
+
+(39)	‘emotion recognition system’ means an AI system for the purpose of identifying or inferring emotions or intentions of natural persons on the basis of their biometric data;
+
+(40)	‘biometric categorisation system’ means an AI system for the purpose of assigning natural persons to specific categories on the basis of their biometric data, unless it is ancillary to another commercial service and strictly necessary for objective technical reasons;
+
+---
+
+[4] activation=64.987602
+2.   Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be subject to administrative fines of up to EUR 1 500 000.
+
+3.   The non-compliance of the AI system with any requirements or obligations under this Regulation, other than those laid down in Article 5, shall be subject to administrative fines of up to EUR 750 000.
+
+4.   Before taking decisions pursuant to this Article, the European Data Protection Supervisor shall give the Union institution, body, office or agency which is the subject of the proceedings conducted by the European Data Protection Supervisor the opportunity of being heard on the matter regarding the possible infringement. The European Data Protection Supervisor shall base his or her decisions only on elements and circumstances on which the parties concerned have been able to comment. Complainants, if any, shall be associated closely with the proceedings.
+
+5.   The rights of defence of the parties concerned shall be fully respected in the proceedings. They shall be entitled to have access to the European Data Protection Supervisor’s file, subject to the legitimate interest of individuals or undertakings in the protection of their personal data or business secrets.
+
+6.   Funds collected by imposition of fines in this Article shall contribute to the general budget of the Union. The fines shall not affect the effective operation of the Union institution, body, office or agency fined.
+
+7.   The European Data Protection Supervisor shall, on an annual basis, notify the Commission of the administrative fines it has imposed pursuant to this Article and of any litigation or judicial proceedings it has initiated.
+
+---
+
+[5] activation=54.429443
+5. Long Beach will practice ethical data stewardship throughout the data lifecycle to
+minimize misuse of personal data.
+a. Long Beach will anonymize, deidentify, and/or aggregate personal information for
+any City purposes when access to individual records is not expressly needed.
+b. Long Beach will work to ensure residents can access and correct their personal
+data and provide individuals with the ability to opt out of data collection (without
+jeopardizing City service quality) when it is not required for a City service.
+c. Long Beach will securely retain and store data only as long as it is needed and in a
+manner that is consistent with both applicable laws and the context in which it was
+collected.
+
+---
+

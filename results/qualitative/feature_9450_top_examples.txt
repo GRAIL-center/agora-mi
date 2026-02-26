@@ -1,0 +1,81 @@
+Feature 9450 top examples
+
+[1] activation=87.971115
+SEC. 5. ARTIFICIAL INTELLIGENCE ENVIRONMENTAL IMPACTS CONSORTIUM.
+
+(a) In General.—The Director of the National Institute of Standards and Technology shall, in consultation with the Administrator of the Environmental Protection Agency, the Secretary of Energy, and such others as the Director considers appropriate, convene a consortium of stakeholders, including members from academia, civil society, and industry, to identify the future measurements, methodologies, standards, and other appropriate needs, in order to measure and report the full range of environmental impacts of artificial intelligence.
+(b) Location.—The Director may determine the location of the consortium within the National Institute of Standards and Technology.
+(c) Goals.—The goals of the consortium shall include the following:
+(1) Facilitating consistent, comparable reporting on the environmental impacts of the full lifecycle of artificial intelligence models, systems, and hardware.
+(2) According to technical feasibility, the development or cataloging of open source software and hardware tools and other resources designed to facilitate the measurement of environmental impacts of artificial intelligence models, systems, and hardware.
+(3) Providing recommendations on how to mitigate the negative, and promote the positive, environmental impacts of artificial intelligence.
+
+---
+
+[2] activation=86.065964
+(II) An evaluation and identification of combatant command demand and fleet size, including recommendations to support--
+(aa) readiness;
+(bb) training;
+(cc) routine ship maintenance;
+(dd) personnel;
+(ee) forward presence;
+(ff) depot level ship maintenance; and
+(gg) fleet modernization.
+		(III) A detailed review of the cost of the recapitalization of the Nuclear Triad in the Department of Defense and its effect on the Navy's budget.
+		(IV) A review of Navy personnel policies and training to determine changes needed across all personnel activities to improve training effectiveness and force tactical readiness and reduce operational stress.
+
+---
+
+[3] activation=85.736603
+(b) RESEARCH PROJECTS.— 
+(1) FACULTY.—A faculty member who is employed in position made available under subsection (a) shall, in the course of such employment, carry out a research project that— 
+(A) relates to a topic in the field of science, technology, engineering, or mathematics; and 
+(B) contributes to the objectives of the Department of Defense, as determined by the Secretary of Defense. 
+(2) STUDENTS.—A student employed in position made available under subsection (a) shall assist a faculty member with a research project described in paragraph (1).
+
+---
+
+[4] activation=58.974808
+(c) Priorities.—In awarding grants under this section, the Secretary shall—
+
+(1) first give priority to eligible partnerships that are located in areas with a high percentage of individuals from covered populations; and
+
+(2) to the extent amounts remain available for additional grants after carrying out paragraph (1), give priority to—
+
+(A) eligible partnerships that are located in an area with a high concentration of—
+
+(i) industries with a higher likelihood of being impacted by automation; or
+
+(ii) industries included in in-demand industry sectors, as determined under subparagraphs (A)(i) and (B) of section 3(23) of the Workforce Innovation and Opportunity Act (29 U.S.C. 3102(23));
+
+(B) eligible partnerships—
+
+(i) with a plan to provide incumbent worker training—
+
+(I) to assist workers in obtaining the skills necessary to retain employment or avert layoffs; or
+
+(II) that allows a worker working for an employer to acquire new skills that allow the worker to obtain a higher-skilled or higher-paid position with such employer; and
+
+(ii) that partner with local employers that intend to backfill the pre-training positions of the incumbent workers by hiring new workers to fill those positions;
+
+(C) eligible partnerships that will provide workers with a transportation stipend, paid sick leave, paid family and medical leave, access to child care services, or other employment benefits; or
+
+(D) eligible partnerships with a plan to develop a shared training curriculum that can be used across local and regional networks of employers and training providers.
+
+---
+
+[5] activation=58.959068
+(b) National Network for Microelectronics Education.--
+	(1) In general.--The Director, in coordination with the Secretary of Commerce, shall on a competitive, merit-reviewed basis, make awards to institutions of higher education and non-profit organizations (or consortia of such institutions and organizations) to establish partnerships to enhance and broaden participation in microelectronics education.
+	(2) Activities.--Awards made under this subsection shall be used for the following:
+		(A) To conduct training and education activities funded by awards under paragraph (1) and in coordination with the Network Coordination Hub established in paragraph (3), including curricula design, development, dissemination, and assessment, and the sharing of information and best practices across the network of awardees.
+		(B) To develop regional partnerships among associate-degree-granting colleges, bachelor-degree-
+granting institutions, workforce development programs, labor organizations, and industry to create a diverse national technical workforce trained in microelectronics and ensure education and training is meeting the evolving needs of industry.
+		(C) To develop local workforce pipelines that align with capacity investments made by industry and the Federal government, including vocational and high school training programs, community college degrees and certificates, veteran post service opportunities, and mentoring.
+		(D) To facilitate partnerships with employers, employer consortia or other private sector organizations that offer apprenticeships, internships, or applied learning experiences in the field of microelectronics.
+		(E) To develop shared infrastructure available to institutions of higher education, two-year colleges, and private organizations to enable experiential learning activities and provide physical or digital access to training facilities and industry-standard tools and processes.
+		(F) To create and disseminate public outreach to support awareness of microelectronics education and career opportunities, including through outreach to PreK-12 schools and STEM-related organizations.
+		(G) To collaborate and coordinate with industry and existing public and private organizations conducting microelectronics education and workforce development activities, as practicable.
+
+---
+

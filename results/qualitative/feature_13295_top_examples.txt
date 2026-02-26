@@ -1,0 +1,88 @@
+Feature 13295 top examples
+
+[1] activation=46.564095
+(c) Priorities.—In awarding grants under this section, the Secretary shall—
+
+(1) first give priority to eligible partnerships that are located in areas with a high percentage of individuals from covered populations; and
+
+(2) to the extent amounts remain available for additional grants after carrying out paragraph (1), give priority to—
+
+(A) eligible partnerships that are located in an area with a high concentration of—
+
+(i) industries with a higher likelihood of being impacted by automation; or
+
+(ii) industries included in in-demand industry sectors, as determined under subparagraphs (A)(i) and (B) of section 3(23) of the Workforce Innovation and Opportunity Act (29 U.S.C. 3102(23));
+
+(B) eligible partnerships—
+
+(i) with a plan to provide incumbent worker training—
+
+(I) to assist workers in obtaining the skills necessary to retain employment or avert layoffs; or
+
+(II) that allows a worker working for an employer to acquire new skills that allow the worker to obtain a higher-skilled or higher-paid position with such employer; and
+
+(ii) that partner with local employers that intend to backfill the pre-training positions of the incumbent workers by hiring new workers to fill those positions;
+
+(C) eligible partnerships that will provide workers with a transportation stipend, paid sick leave, paid family and medical leave, access to child care services, or other employment benefits; or
+
+(D) eligible partnerships with a plan to develop a shared training curriculum that can be used across local and regional networks of employers and training providers.
+
+---
+
+[2] activation=39.986160
+5. Transparency, IP obligations and labelling 
+(1) 35 The Secretary of State, after consulting the AI Authority and such other persons as he or she considers appropriate, must by regulations provide that— 
+(a) any person involved in training AI must— 
+(i) supply to the AI Authority a record of all third-party data and intellectual property (“IP”) used in that training; and 
+(ii) assure the AI Authority that— 
+(A) they use all such data and IP by informed consent;  and 
+(B) they comply with all applicable IP and copyright obligations; 
+(iii) any person supplying a product or service involving AI must give customers clear and unambiguous health warnings, labelling and opportunities to give or withhold informed consent in advance; and 
+(iv) any business which develops, deploys or uses AI must allow independent third parties accredited by the AI Authority to audit its processes and systems. 
+
+
+(2) Regulations under this section may provide for informed consent to be express (opt-in) or implied (opt-out) and may make different provision for different cases.
+
+---
+
+[3] activation=39.898262
+(b) National Network for Microelectronics Education.--
+	(1) In general.--The Director, in coordination with the Secretary of Commerce, shall on a competitive, merit-reviewed basis, make awards to institutions of higher education and non-profit organizations (or consortia of such institutions and organizations) to establish partnerships to enhance and broaden participation in microelectronics education.
+	(2) Activities.--Awards made under this subsection shall be used for the following:
+		(A) To conduct training and education activities funded by awards under paragraph (1) and in coordination with the Network Coordination Hub established in paragraph (3), including curricula design, development, dissemination, and assessment, and the sharing of information and best practices across the network of awardees.
+		(B) To develop regional partnerships among associate-degree-granting colleges, bachelor-degree-
+granting institutions, workforce development programs, labor organizations, and industry to create a diverse national technical workforce trained in microelectronics and ensure education and training is meeting the evolving needs of industry.
+		(C) To develop local workforce pipelines that align with capacity investments made by industry and the Federal government, including vocational and high school training programs, community college degrees and certificates, veteran post service opportunities, and mentoring.
+		(D) To facilitate partnerships with employers, employer consortia or other private sector organizations that offer apprenticeships, internships, or applied learning experiences in the field of microelectronics.
+		(E) To develop shared infrastructure available to institutions of higher education, two-year colleges, and private organizations to enable experiential learning activities and provide physical or digital access to training facilities and industry-standard tools and processes.
+		(F) To create and disseminate public outreach to support awareness of microelectronics education and career opportunities, including through outreach to PreK-12 schools and STEM-related organizations.
+		(G) To collaborate and coordinate with industry and existing public and private organizations conducting microelectronics education and workforce development activities, as practicable.
+
+---
+
+[4] activation=35.682758
+2	Identify and mitigate vulnerabilities, and, where appropriate, incidents and patterns of misuse, after deployment including placement on the market. 
+ 
+Organizations should use, as and when appropriate commensurate to the level of risk, AI systems as intended and monitor for vulnerabilities, incidents, emerging risks and misuse after deployment, and take appropriate action to address these. Organizations are encouraged to consider, for example, facilitating third-party and user discovery and reporting of issues and vulnerabilities after deployment such as through bounty systems, contests, or prizes to incentivize the responsible disclosure of weaknesses. Organizations are further encouraged to maintain appropriate documentation of reported incidents and to mitigate the identified risks and vulnerabilities, in collaboration with other stakeholders. Mechanisms to report vulnerabilities, where appropriate, should be accessible to a diverse set of stakeholders.
+
+---
+
+[5] activation=34.607914
+Article 59: Further processing of personal data for developing certain AI systems in the public interest in the AI regulatory sandbox
+
+1.   In the AI regulatory sandbox, personal data lawfully collected for other purposes may be processed solely for the purpose of developing, training and testing certain AI systems in the sandbox when all of the following conditions are met:
+
+(a)	AI systems shall be developed for safeguarding substantial public interest by a public authority or another natural or legal person and in one or more of the following areas:
+
+(i)	public safety and public health, including disease detection, diagnosis prevention, control and treatment and improvement of health care systems;
+
+(ii)	a high level of protection and improvement of the quality of the environment, protection of biodiversity, protection against pollution, green transition measures, climate change mitigation and adaptation measures;
+
+(iii)	energy sustainability;
+
+(iv)	safety and resilience of transport systems and mobility, critical infrastructure and networks;
+
+(v)	efficiency and quality of public administration and public services;
+
+---
+

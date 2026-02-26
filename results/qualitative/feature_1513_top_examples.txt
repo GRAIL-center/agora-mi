@@ -1,0 +1,73 @@
+Feature 1513 top examples
+
+[1] activation=25.082247
+(b) Content, form, and manner of response to BIS questions.
+
+(1) All information submitted under this section shall be filed with BIS in the form and manner that BIS will prescribe in instructions sent to the covered U.S. person after BIS has received a notification of `applicable activities.'
+
+(2) BIS will send questions to the covered U.S. person which must address, but may not be limited to, the following topics:
+
+(i) Any ongoing or planned activities related to training, developing, or producing dual-use foundation models, including the physical and cybersecurity protections taken to assure the integrity of that training process against sophisticated threats;
+
+(ii) The ownership and possession of the model weights of any dual-use foundation models, and the physical and cybersecurity measures taken to protect those model weights;
+
+(iii) The results of any developed dual-use foundation model's performance in relevant AI red-team testing, including a description of any associated measures the company has taken to meet safety objectives, such as mitigations to improve performance on these red-team tests and strengthen overall model security; and
+
+(iv) Other information pertaining to the safety and reliability of dual-use foundation models, or activities or risks that present concerns to U.S. national security.
+
+---
+
+[2] activation=21.574198
+2. Section 702.7 is added to read as follows: 
+
+§ 702.7
+
+Special requirements for on-going reporting regarding the development of advanced artificial intelligence models and computing clusters.
+
+(a) Reporting requirements.
+
+(1) Covered U.S. persons are required to submit a notification to the Department by emailing ai_reporting@bis.doc.gov on a quarterly basis as defined in paragraph (a)(2) of this section if the covered U.S. person engages in, or plans, within six months, to engage in `applicable activities,' defined as follows:
+
+(i) Conducting any AI model training run using more than 10^26 computational operations (e.g., integer or floating-point operations); or
+
+(ii) Acquiring, developing, or coming into possession of a computing cluster that has a set of machines transitively connected by data center networking of greater than 300 Gbit/s and having a theoretical maximum greater than 10^20 computational operations (e.g., integer or floating-point operations) per second (OP/s) for AI training, without sparsity.
+
+Note 1 to paragraph (a)(1): Consistent with industry conventions, one multiply-accumulate computation, D = A × B + C, should be counted as two operations.
+
+---
+
+[3] activation=20.231901
+“(C) USE OF TARGETED ALGORITHMIC AMPLIFICATION.—
+“(i) IN GENERAL.—If an interactive computer service provider with a dominant market share—
+“(I) amplifies information provided by an information content provider by using an algorithm or other automated computer process to target the information directly to users without the request of the sending or receiving user, the interactive computer service provider shall be deemed to be an information content provider with respect to that information; or
+“(II) engages in a pattern or practice of amplifying information provided by an information content provider by using an algorithm or other automated computer process to target the information directly to users without the request of the sending or receiving user, the interactive computer service provider shall be deemed to be an information content provider with respect to all information that is provided through the interactive computer service.
+
+---
+
+[4] activation=17.574505
+Article 19 [Re-Examination] Where adjustments to the implementation plan for an S&T activity may lead to changes in S&T ethical risks, the person in charge of the S&T activity shall promptly report to the S&T ethics (review) committee and cooperate with said committee in conducting assessments of the risks and benefits. When necessary, the S&T ethics (review) committee may conduct a new ethics review, and the S&T activity must pass the ethics review before its implementation may proceed.
+
+Article 20 [Review Cooperation] Where multiple work units cooperate to carry out S&T activities, the lead work unit shall establish an S&T ethics review cooperation mechanism to strengthen the coordinated management of S&T ethics reviews and promote mutual recognition of review results. The cooperating work units shall submit the review decision or approval opinion to the lead work unit in a timely manner.
+
+Article 21 [S&T Activities with International Cooperation] Where S&T activities with international cooperation fall within the scope of Article 3 of these Measures, such activities must pass the S&T ethics reviews prescribed by the countries where the cooperating parties are located before they may be conducted.
+
+Article 22 [Commissioned Review] Where a unit has not established an S&T ethics (review) committee or where the S&T ethics (review) committee fails to meet the requirements for review work, it shall commission in writing another S&T ethics (review) committee that satisfies the requirements to conduct the ethics review.
+
+---
+
+[5] activation=15.890534
+(e) (1) A large frontier developer shall provide a reasonable internal process through which a covered employee may anonymously disclose information to the large frontier developer if the covered employee
+	believes in good faith that the information indicates that the large frontier developer’s activities present a specific and substantial danger to the public health or safety resulting from a catastrophic
+	risk or that the large frontier developer violated Chapter 25.1 (commencing with Section 22757.10) of Division 8 of the Business and Professions Code, including a monthly update to the person who made the
+	disclosure regarding the status of the large frontier developer’s investigation of the disclosure and the actions taken by the large frontier developer in response to the disclosure.
+    (2) (A) Except as provided in subparagraph (B), the disclosures and responses of the process required by this subdivision shall be shared with officers and directors of the large frontier developer at least once
+	each quarter.
+	(B) If a covered employee has alleged wrongdoing by an officer or director of the large frontier developer in a disclosure or response, subparagraph (A) shall not apply with respect to that officer or
+	director.
+(f) The court is authorized to award reasonable attorney’s fees to a plaintiff who brings a successful action for a violation of this section.
+(g) In a civil action brought pursuant to this section, once it has been demonstrated by a preponderance of the evidence that an activity proscribed by this section was a contributing factor in the alleged
+	prohibited action against the covered employee, the frontier developer shall have the burden of proof to demonstrate by clear and convincing evidence that the alleged action would have occurred for
+	legitimate, independent reasons even if the covered employee had not engaged in activities protected by this section.
+
+---
+

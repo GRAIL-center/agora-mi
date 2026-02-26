@@ -1,0 +1,57 @@
+Feature 14077 top examples
+
+[1] activation=36.442688
+Article 4: The provision of algorithmic recommendation services shall abide by laws and regulations, observe social morality and ethics, abide by commercial ethics and professional ethics, and respect the principles of fairness and justice, openness and transparency, science and reason, and sincerity and trustworthiness.
+
+Article 5: Relevant sectoral organizations are encouraged to strengthen sectoral self-discipline, establish and complete sectoral standards, sectoral norms and self-discipline management structures, supervise and guide algorithmic recommendation service providers in formulating and perfecting service standards, providing services according to the law and accepting social supervision.
+ 
+Chapter II: Information Service Norms
+
+---
+
+[2] activation=35.932846
+Article 50 [Division of Investigation and Handling Responsibilities, Part One] Institutes of higher education, scientific research institutions, medical and health institutions, enterprises, etc., are the entities with primary responsibility for the internal investigation and handling of S&T ethics violations. They shall promptly and actively investigate S&T ethics violations and pursue liability according to law.
+
+Where a work unit and the persons responsible for it are suspected of an S&T ethics violation, the investigation and handling shall be done by the main oversight department (主管部门) at the next higher level, and where there is no main oversight department at the next higher level, the provincial-level S&T administrative department for the work unit’s location shall be responsible for organizing the investigation and handling.
+
+Article 51 [Division of Investigation and Handling Responsibilities, Part Two] Local and relevant main industrial oversight departments shall, in accordance with their respective duties and lines of authority, strengthen guidance and supervision of the investigation and handling of S&T ethics violations in their respective localities and systems, and organize and conduct the investigation and handling of major S&T ethics cases.
+
+Article 52 [Division of Investigation and Handling Responsibilities, Part Three] Where an S&T ethics violation involves an S&T project established with government funding, the project management department (work unit) shall organize the investigation and handling in accordance with relevant provisions on project management. A work unit undertaking (participating in) a project shall, at the request of the project management department (work unit), actively carry out and cooperate with the investigation, and deal with the person(s) responsible for the violation in accordance with their duties and powers.
+
+---
+
+[3] activation=28.169207
+Chapter 3	Review Procedures
+
+Section I General Review Procedures
+
+Article 10 [Application for Review] Ethical risk assessments shall be carried out for S&T activities. The S&T ethics (review) committee shall formulate S&T ethical risk assessment procedures and standards in accordance with the requirements of these Measures, so as to guide scientific researchers in conducting ethical risk assessments.
+
+For S&T activities that fall within the scope of Article 3 of these Measures, the person in charge of the S&T activity shall apply to the S&T ethics (review) committee of their work unit for an ethics review. The application materials shall mainly include:
+
+(1) An overview of the S&T activity, including the name, purpose, significance, necessity, and previous S&T ethics reviews of the S&T activity;
+
+(2) The implementation plan and related materials for the S&T activities, including the design of the S&T activity plan, possible S&T ethical risks and their prevention and control measures and emergency response plans, and the form in which the achievements of S&T activities are to be announced;
+
+(3) The legal qualification materials of the relevant institutions involved in the S&T activity, the relevant research experience of the participants in the S&T activity and their participation in S&T ethics training, the source of funding for the S&T activity, and conflict of interest declarations for the S&T activity;
+
+(4) Informed consent forms, materials explaining the sources of biological samples, information, and data, and materials explaining the sources of laboratory animals;
+
+(5) A written commitment to comply with the requirements of S&T ethics and scientific research integrity; and
+
+(6) Other materials that the S&T ethics (review) committee deems it necessary to submit.
+
+---
+
+[4] activation=28.021978
+Article 6: Before using generative AI products to provide services to the public, a security assessment must be submitted to the state cyberspace and information department [i.e., the Cyberspace Administration of China] in accordance with the Provisions on the Security Assessment of Internet Information Services With Public Opinion Properties or Social Mobilization Capacity, and the procedures of algorithm filing, modification, and cancellation of filing must be carried out in accordance with the Internet Information Service Algorithmic Recommendation Management Provisions.
+
+---
+
+[5] activation=20.758705
+Article 10: Algorithmic recommendation service providers shall strengthen user model and user tagging management and perfect norms for logging interests in user models and user tagging management norms. They may not enter unlawful or harmful information as keywords into user interests or make them into user tags to use them as a basis for recommending information content.
+
+Article 11: Algorithmic recommendation service providers shall strengthen algorithmic recommendation service display or page ecology management, establish and perfect mechanisms for manual intervention and autonomous user choice, and vigorously present information conform to mainstream value orientations in key segments such as front pages and main screens, hot search terms, selected topics, topic lists, pop-up windows, etc.
+
+---
+

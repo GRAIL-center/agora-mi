@@ -1,0 +1,66 @@
+Feature 5768 top examples
+
+[1] activation=40.641697
+SEC. 5. ARTIFICIAL INTELLIGENCE ENVIRONMENTAL IMPACTS CONSORTIUM.
+
+(a) In General.—The Director of the National Institute of Standards and Technology shall, in consultation with the Administrator of the Environmental Protection Agency, the Secretary of Energy, and such others as the Director considers appropriate, convene a consortium of stakeholders, including members from academia, civil society, and industry, to identify the future measurements, methodologies, standards, and other appropriate needs, in order to measure and report the full range of environmental impacts of artificial intelligence.
+(b) Location.—The Director may determine the location of the consortium within the National Institute of Standards and Technology.
+(c) Goals.—The goals of the consortium shall include the following:
+(1) Facilitating consistent, comparable reporting on the environmental impacts of the full lifecycle of artificial intelligence models, systems, and hardware.
+(2) According to technical feasibility, the development or cataloging of open source software and hardware tools and other resources designed to facilitate the measurement of environmental impacts of artificial intelligence models, systems, and hardware.
+(3) Providing recommendations on how to mitigate the negative, and promote the positive, environmental impacts of artificial intelligence.
+
+---
+
+[2] activation=40.536068
+(b) RESEARCH PROJECTS.— 
+(1) FACULTY.—A faculty member who is employed in position made available under subsection (a) shall, in the course of such employment, carry out a research project that— 
+(A) relates to a topic in the field of science, technology, engineering, or mathematics; and 
+(B) contributes to the objectives of the Department of Defense, as determined by the Secretary of Defense. 
+(2) STUDENTS.—A student employed in position made available under subsection (a) shall assist a faculty member with a research project described in paragraph (1).
+
+---
+
+[3] activation=40.534885
+(II) An evaluation and identification of combatant command demand and fleet size, including recommendations to support--
+(aa) readiness;
+(bb) training;
+(cc) routine ship maintenance;
+(dd) personnel;
+(ee) forward presence;
+(ff) depot level ship maintenance; and
+(gg) fleet modernization.
+		(III) A detailed review of the cost of the recapitalization of the Nuclear Triad in the Department of Defense and its effect on the Navy's budget.
+		(IV) A review of Navy personnel policies and training to determine changes needed across all personnel activities to improve training effectiveness and force tactical readiness and reduce operational stress.
+
+---
+
+[4] activation=32.328907
+§ 86. UNLAWFUL DISCRIMINATORY PRACTICES.   IT  SHALL  BE  AN  UNLAWFUL
+ DISCRIMINATORY PRACTICE:
+   1.  FOR  A DEVELOPER OR DEPLOYER TO USE, SELL, OR SHARE A HIGH-RISK AI
+ SYSTEM OR A PRODUCT FEATURING A HIGH-RISK AI SYSTEM THAT PRODUCES  ALGO-
+ RITHMIC DISCRIMINATION; OR
+   2.  FOR  A DEVELOPER TO USE, SELL, OR SHARE A HIGH-RISK AI SYSTEM OR A
+ PRODUCT FEATURING A HIGH-RISK AI SYSTEM THAT HAS NOT PASSED AN INDEPEND-
+ ENT AUDIT, IN ACCORDANCE WITH SECTION EIGHTY-SEVEN OF THIS ARTICLE, THAT
+ HAS FOUND THAT THE PRODUCT DOES NOT IN FACT PRODUCE ALGORITHMIC DISCRIM-
+ INATION.
+
+---
+
+[5] activation=31.541904
+(g)	the placing on the market, the putting into service for this specific purpose, or the use of biometric categorisation systems that categorise individually natural persons based on their biometric data to deduce or infer their race, political opinions, trade union membership, religious or philosophical beliefs, sex life or sexual orientation; this prohibition does not cover any labelling or filtering of lawfully acquired biometric datasets, such as images, based on biometric data or categorizing of biometric data in the area of law enforcement;
+
+(h)	the use of ‘real-time’ remote biometric identification systems in publicly accessible spaces for the purposes of law enforcement, unless and in so far as such use is strictly necessary for one of the following objectives:
+
+(i)	the targeted search for specific victims of abduction, trafficking in human beings or sexual exploitation of human beings, as well as the search for missing persons;
+
+(ii)	the prevention of a specific, substantial and imminent threat to the life or physical safety of natural persons or a genuine and present or genuine and foreseeable threat of a terrorist attack;
+
+(iii)	the localisation or identification of a person suspected of having committed a criminal offence, for the purpose of conducting a criminal investigation or prosecution or executing a criminal penalty for offences referred to in Annex II and punishable in the Member State concerned by a custodial sentence or a detention order for a maximum period of at least four years.
+
+Point (h) of the first subparagraph is without prejudice to Article 9 of Regulation (EU) 2016/679 for the processing of biometric data for purposes other than law enforcement.
+
+---
+

@@ -1,0 +1,52 @@
+Feature 8811 top examples
+
+[1] activation=34.501793
+Ensure that the agency has adequate procedures to receive, investigate, respond to, and redress complaints about the agency’s use of AI, to include procedures to receive complaints anonymously, when appropriate.
+
+Perform responsibilities confidentially, when appropriate, so that agency personnel may raise concerns without fear of reprisal; confidentiality, however, shall not extend to significant misconduct, to include violations of law or government ethics, or when otherwise precluded by law.
+
+Document AI misuse, AI incidents, and lessons learned. 
+
+Transparency is essential to earning and retaining public trust. Consistent with this goal, the privacy and civil liberties officer or other relevant oversight official shall periodically, but not less frequently than annually, submit a report on their activities associated with AI oversight, including, for example, evaluations of risk management processes. The report shall be delivered to, at a minimum, the head of the agency. It shall:
+
+Be in unclassified form to the greatest extent practicable, with a classified annex when necessary.
+
+Integrate into existing reporting requirements on privacy and civil liberties, such as Section 803 of the Implementing Recommendations of the 9/11 Commission Act of 2007 (Public Law No. 110-53), as applicable, for issues related to privacy and civil liberties.
+
+Be made available to the public to the greatest extent that is consistent with the protection of classified or controlled information, and applicable law. Department Heads shall ensure that relevant oversight officials have sufficient information expertise, training, and adequate funding to effectively carry out these functions.
+
+---
+
+[2] activation=34.028431
+Article 10: Providers shall explicitly disclose the user groups, occasions, and uses for their services, and adopt appropriate measures to prevent users from excessive reliance on or addiction to generated content.
+
+---
+
+[3] activation=33.952667
+5. THE ATTORNEY GENERAL SHALL:
+   (A) PROMULGATE RULES FOR A PROCESS WHEREBY  DEVELOPERS  AND  DEPLOYERS
+ MAY REQUEST REDACTION OF PORTIONS OF REPORTS REQUIRED UNDER THIS SECTION
+ TO ENSURE THAT THEY ARE NOT REQUIRED TO DISCLOSE SENSITIVE AND PROTECTED
+ INFORMATION; AND
+   (B)  MAINTAIN  AN  ONLINE  DATABASE  THAT IS ACCESSIBLE TO THE GENERAL
+ PUBLIC WITH REPORTS, REDACTED IN ACCORDANCE WITH THIS  SUBDIVISION,  AND
+ AUDITS REQUIRED BY THIS ARTICLE WHICH SHALL BE UPDATED BIANNUALLY.
+
+---
+
+[4] activation=33.836067
+(5) Software verification, validation, and hazard analysis must be provided. Software description must include a detailed, technical description including the impact of any software and hardware on the device's functions, the associated capabilities and limitations of each part, the associated inputs and outputs, mapping of the software architecture, and a description of the video signal pipeline.
+
+---
+
+[5] activation=33.787304
+§ 20-872 Penalties. a. Any person that violates any provision of this subchapter or any rule promulgated pursuant to this subchapter is liable for a civil penalty of not more than $500 for a first violation and each additional violation occurring on the same day as the first violation, and not less than $500 nor more than $1,500 for each subsequent violation.
+
+b. Each day on which an automated employment decision tool is used in violation of this section shall give rise to a separate violation of subdivision a of section 20-871.
+
+c. Failure to provide any notice to a candidate or an employee in violation of paragraphs 1, 2 or 3 of subdivision b of section 20-871 shall constitute a separate violation.
+
+d. A proceeding to recover any civil penalty authorized by this subchapter is returnable to any tribunal established within the office of administrative trials and hearings or within any agency of the city designated to conduct such proceedings.
+
+---
+

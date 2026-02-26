@@ -1,0 +1,115 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T17:17:18.278235Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "sshleifer/tiny-gpt2",
+        "device": "cpu",
+        "dtype": "float32",
+        "batch_size": 4,
+        "max_length": 256,
+        "seed": 0,
+        "layers": [
+          1
+        ],
+        "sae_release": "unused",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 16,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 200,
+        "perm_N": 1000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run_tiny.yaml",
+        "layer": 1,
+        "safe_jsonl": "data/processed/dsafe_test.jsonl",
+        "topk_safe_json": "results/polarization/layer1_train_topk_safe.json",
+        "k": 16,
+        "max_samples": 20,
+        "sae_npz": "artifacts/sae_tiny_layer1.npz",
+        "bootstrap_B": 50,
+        "perm_N": 200,
+        "seed": null,
+        "summary_out": "results/pilot_ablation/effect_summary_layer1_k16_test.json",
+        "sample_out": "results/pilot_ablation/effects_layer1_k16_test.csv"
+      }
+    }
+  },
+  "effect_summary": {
+    "layer": 1,
+    "n_samples": 20,
+    "k_features": 16,
+    "seed": 0,
+    "target_token": "RESTRICTION",
+    "target_token_ids": [
+      19535,
+      5446,
+      18379,
+      2849
+    ],
+    "mean_effect": -0.002243804931640625,
+    "bootstrap_95_ci": [
+      -0.004867548942565918,
+      -4.3897628784180285e-05
+    ],
+    "random_control_mean_effect": -0.0019023895263671875,
+    "random_control_bootstrap_95_ci": [
+      -0.00473766803741455,
+      0.0012707853317260739
+    ],
+    "paired_delta_mean": -0.0003414154052734375,
+    "paired_delta_bootstrap_95_ci": [
+      -0.0006051349639892578,
+      -2.778530120849613e-05
+    ],
+    "paired_delta_permutation_p": 0.05970149253731343,
+    "perm_N": 200,
+    "safe_feature_ids": [
+      15,
+      27,
+      10,
+      54,
+      40,
+      8,
+      12,
+      25,
+      52,
+      14,
+      58,
+      30,
+      22,
+      31,
+      3,
+      4
+    ],
+    "random_feature_ids": [
+      18,
+      33,
+      26,
+      1,
+      48,
+      61,
+      47,
+      55,
+      41,
+      2,
+      62,
+      16,
+      34,
+      0,
+      11,
+      39
+    ],
+    "sample_csv": "results\\pilot_ablation\\effects_layer1_k16_test.csv"
+  }
+}

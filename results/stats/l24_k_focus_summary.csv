@@ -1,0 +1,6 @@
+layer,k,n_samples,delta_safe_minus_random,ci_low,ci_high,perm_p,sig,summary_json
+24,4,84,0.47265625,0.38670944940476193,0.560458519345238,9.999000099990002e-05,***,results\pilot_ablation\effect_summary_layer24_k4_test.json
+24,8,84,0.42726934523809523,0.3318452380952381,0.5247488839285714,9.999000099990002e-05,***,results\pilot_ablation\effect_summary_layer24_k8_test.json
+24,16,84,6.297247023809524,5.638383556547619,6.887681361607142,9.999000099990002e-05,***,results\pilot_ablation\effect_summary_layer24_k16_test.json
+24,32,84,7.692522321428571,7.156426711309524,8.20618954613095,9.999000099990002e-05,***,results\pilot_ablation\effect_summary_layer24_k32_test.json
+24,64,84,8.73046875,8.178929501488096,9.257291666666665,9.999000099990002e-05,***,results\pilot_ablation\effect_summary_layer24_k64_test.json

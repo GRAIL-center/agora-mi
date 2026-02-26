@@ -1,0 +1,73 @@
+Feature 245 top examples
+
+[1] activation=123.019348
+Data Protection Laws Provide Additional Broad Protections for Californians
+Data is the bedrock underlying the massive growth in AI, and Californians’ broad privacy and data rights directly
+impact AI systems, whether through the data used to build and train AI, or through the information that may be
+exposed by AI outputs.
+Californians possess a constitutional right to privacy that applies to both government and private entities. (Hill
+v. National Collegiate Athletic Assn. (1994) 7 Cal.4th 1, 20.) Informational privacy, i.e., the “interest in precluding
+the dissemination or misuse of sensitive and confidential information” is a core privacy interest protected by the
+California Constitution. (Id. at 35.) Developers and entities that use AI must carefully monitor AI systems’ training
+data, inputs, and outputs to ensure that Californians’ constitutional right to privacy is respected.
+The California Consumer Privacy Act (CCPA) broadly regulates the collection, use, sale, and sharing of consumers’
+personal information, including heightened protections for sensitive personal information. Personal information
+may also include inferences about consumers made by AI systems. (See Civ. Code, § 1798.140(v).) CCPA grants
+consumers important rights:
+• The right to know about the personal information a business collects about them, and how it is used and
+shared;
+• The right to correct inaccurate personal information that a business has about them;
+• The right to delete personal information collected about them (with some exceptions);
+• The right to opt out of the sale or sharing of their personal information; and
+• The right to limit the use and disclosure of their sensitive personal information. (Id. § 1798.100 et seq.)
+
+---
+
+[2] activation=115.131187
+5. Long Beach will practice ethical data stewardship throughout the data lifecycle to
+minimize misuse of personal data.
+a. Long Beach will anonymize, deidentify, and/or aggregate personal information for
+any City purposes when access to individual records is not expressly needed.
+b. Long Beach will work to ensure residents can access and correct their personal
+data and provide individuals with the ability to opt out of data collection (without
+jeopardizing City service quality) when it is not required for a City service.
+c. Long Beach will securely retain and store data only as long as it is needed and in a
+manner that is consistent with both applicable laws and the context in which it was
+collected.
+
+---
+
+[3] activation=107.340652
+2.   Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be subject to administrative fines of up to EUR 1 500 000.
+
+3.   The non-compliance of the AI system with any requirements or obligations under this Regulation, other than those laid down in Article 5, shall be subject to administrative fines of up to EUR 750 000.
+
+4.   Before taking decisions pursuant to this Article, the European Data Protection Supervisor shall give the Union institution, body, office or agency which is the subject of the proceedings conducted by the European Data Protection Supervisor the opportunity of being heard on the matter regarding the possible infringement. The European Data Protection Supervisor shall base his or her decisions only on elements and circumstances on which the parties concerned have been able to comment. Complainants, if any, shall be associated closely with the proceedings.
+
+5.   The rights of defence of the parties concerned shall be fully respected in the proceedings. They shall be entitled to have access to the European Data Protection Supervisor’s file, subject to the legitimate interest of individuals or undertakings in the protection of their personal data or business secrets.
+
+6.   Funds collected by imposition of fines in this Article shall contribute to the general budget of the Union. The fines shall not affect the effective operation of the Union institution, body, office or agency fined.
+
+7.   The European Data Protection Supervisor shall, on an annual basis, notify the Commission of the administrative fines it has imposed pursuant to this Article and of any litigation or judicial proceedings it has initiated.
+
+---
+
+[4] activation=96.887878
+4.	A statement that the AI system is in conformity with this Regulation and, if applicable, with any other relevant Union law that provides for the issuing of the EU declaration of conformity referred to in Article 47;
+
+5.	Where an AI system involves the processing of personal data, a statement that that AI system complies with Regulations (EU) 2016/679 and (EU) 2018/1725 and Directive (EU) 2016/680;
+
+6.	References to any relevant harmonised standards used or any other common specification in relation to which conformity is declared;
+
+7.	Where applicable, the name and identification number of the notified body, a description of the conformity assessment procedure performed, and identification of the certificate issued;
+
+8.	The place and date of issue of the declaration, the name and function of the person who signed it, as well as an indication for, or on behalf of whom, that person signed, a signature.
+
+---
+
+[5] activation=83.132202
+DATA  PRIVACY
+You should be protected from abusive data practices via built-in protections and you should have agency over how data about you is used. You should be protected from violations of privacy through design choices that ensure such protections are included by default, including ensuring that data collection conforms to reasonable expectations and that only data strictly necessary for the specific context is collected.  Designers, developers, and deployers of automated systems should seek your permission and respect your decisions regarding collection, use, access, transfer, and deletion of your data in appropriate ways and to the greatest extent possible; where not possible, alternative privacy by design safeguards should be used. Systems should not employ user experience and design decisions that obfuscate user choice or burden users with defaults that are privacy invasive. Consent should only be used to justify collection of data in cases where it can be appropriately and meaningfully given. Any consent requests should be brief, be understandable in plain language, and give you agency over data collection and the specific context of use; current hard-to-understand notice-and-choice practices for broad uses of data should be changed. Enhanced protections and restrictions for data and inferences related to sensitive domains, including health, work, education, criminal justice, and finance, and for data pertaining to youth should put you first. In sensitive domains, your data and related inferences should only be used for necessary functions, and you should be protected by ethical review and use prohibitions. You and your communities should be free from unchecked surveillance; surveillance technologies should be subject to heightened oversight that includes at least pre-deployment assessment of their potential harms and scope limits to protect privacy and civil liberties. Continuous surveillance and monitoring should not be used in education, work, housing, or in other contexts where the use of such surveillance technologies is likely to limit rights, opportunities, or access. Whenever possible, you should have access to reporting that confirms your data decisions have been respected and provides an assessment of the potential impact of surveillance technologies on your rights, opportunities, or access.
+
+---
+

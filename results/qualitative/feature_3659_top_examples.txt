@@ -1,0 +1,63 @@
+Feature 3659 top examples
+
+[1] activation=17.781509
+“(a) Offense.—Except as provided in subsection (b), whoever knowingly or recklessly produces or distributes, or causes to be produced or distributed, in or affecting interstate or foreign commerce or using any means, channel, facility, or instrumentality of interstate or foreign commerce, a digital forgery of an identifiable individual, without the consent of the identifiable individual shall be fined under this title, imprisoned not more than 5 years, or both.
+
+---
+
+[2] activation=15.326944
+CHAPTER II: PROHIBITED AI PRACTICES
+
+Article 5: Prohibited AI practices
+
+1.   The following AI practices shall be prohibited:
+
+(a)	the placing on the market, the putting into service or the use of an AI system that deploys subliminal techniques beyond a person’s consciousness or purposefully manipulative or deceptive techniques, with the objective, or the effect of materially distorting the behaviour of a person or a group of persons by appreciably impairing their ability to make an informed decision, thereby causing them to take a decision that they would not have otherwise taken in a manner that causes or is reasonably likely to cause that person, another person or group of persons significant harm;
+
+(b)	the placing on the market, the putting into service or the use of an AI system that exploits any of the vulnerabilities of a natural person or a specific group of persons due to their age, disability or a specific social or economic situation, with the objective, or the effect, of materially distorting the behaviour of that person or a person belonging to that group in a manner that causes or is reasonably likely to cause that person or another person significant harm;
+
+(c)	the placing on the market, the putting into service or the use of AI systems for the evaluation or classification of natural persons or groups of persons over a certain period of time based on their social behaviour or known, inferred or predicted personal or personality characteristics, with the social score leading to either or both of the following:
+
+(i)	detrimental or unfavourable treatment of certain natural persons or groups of persons in social contexts that are unrelated to the contexts in which the data was originally generated or collected;
+
+(ii)	detrimental or unfavourable treatment of certain natural persons or groups of persons that is unjustified or disproportionate to their social behaviour or its gravity;
+
+---
+
+[3] activation=14.891582
+Article 35	Right to Explanation and Refusal of AI-Based Decisions
+
+AI providers shall assure the right of users to withdraw from or refuse the use of AI, except where it is part of the basic functions of products and services.
+
+Individuals and organizations whose legitimate rights and interests may be significantly affected by AI products and services shall have the right to request the AI provider give explanations, the right to reject decisions made solely through AI products and services, and the right to request the AI provider redo the decisions with the participation of human beings.
+
+---
+
+---
+
+[4] activation=13.283399
+(g)  Definitions.--As used in this section, the following words and phrases shall have the meanings given to them in this subsection:
+"Artificial intelligence."  As defined in section 3131.1 (relating to unlawful dissemination of artificially generated depiction).
+"Artificially generated depiction."  A book, magazine, pamphlet, slide, photograph, videotape, film or computer depiction:
+(1)  that appears to authentically depict a child under 18 years of age engaging in a prohibited sexual act or in the simulation of such act that did not occur in reality; and
+(2)  the production of which was substantially dependent upon technical means, including artificial intelligence and photoshop software, rather than the ability of another person to physically impersonate the child.
+"Intentionally views."  The deliberate, purposeful, voluntary viewing of material containing an artificially generated depiction or depicting a child under 18 years of age engaging in a prohibited sexual act or in the simulation of such act. The term shall not include the accidental or inadvertent viewing of such material.
+"Photoshop."  As defined in section 3131.1.
+-
+
+---
+
+[5] activation=12.571951
+SEC. 2. FINDINGS.
+Congress makes the following findings:
+(1) The People’s Republic of China, the Russian Federation, and other adversarial countries have taken actions to undermine global stability as well as the United States national security and foreign policy objectives.
+(2) China has used commercially available civilian technology to modernize its military forces in a policy known as military-civil fusion.
+(3) As part of its policy of military-civil fusion, China is working to modernize its nuclear, chemical, missile, and biological weapons capacity.
+(4) The United States and its allies have long regulated items and activities that support the development, production, or use of otherwise commercial items if those items are aid in the development, production, or use of nuclear, chemical, missile, or biological weapons.
+(5) Artificial intelligence tools could be used to support the development, production, or use of nuclear, chemical, missile, or biological weapons or enhance the destructive capabilities of those weapons.
+(6) Advanced semiconductors and supercomputer components such as graphics processing units can be used to develop or train artificial intelligence tools and models.
+(7) In October 2022, the Department of Commerce promulgated export control rules to prevent the export of advanced semiconductors and supercomputer components to China or Macau.
+(8) Notwithstanding these controls, recent reporting indicates that though entities located in China and Macau can no longer purchase and import advanced semiconductors and supercomputer components because of the October 2022 export controls, Chinese entities are still developing artificial intelligence tools and models by purchasing remote and cloud access to these same advanced components to train artificial intelligence models and tools.
+
+---
+

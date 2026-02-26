@@ -1,0 +1,44 @@
+{
+  "layer": 24,
+  "safe": {
+    "n_nodes": 180,
+    "n_edges": 6307,
+    "depth": 18,
+    "branching_factor": 35.03888888888889,
+    "density": 0.195747982619491
+  },
+  "innov": {
+    "n_nodes": 184,
+    "n_edges": 7099,
+    "depth": 12,
+    "branching_factor": 38.58152173913044,
+    "density": 0.2108279876455215
+  },
+  "comparison": {
+    "n_nodes": {
+      "safe": 180,
+      "innov": 184,
+      "delta": -4
+    },
+    "n_edges": {
+      "safe": 6307,
+      "innov": 7099,
+      "delta": -792
+    },
+    "depth": {
+      "safe": 18,
+      "innov": 12,
+      "delta": 6
+    },
+    "branching_factor": {
+      "safe": 35.03888888888889,
+      "innov": 38.58152173913044,
+      "delta": -3.542632850241546
+    },
+    "density": {
+      "safe": 0.195747982619491,
+      "innov": 0.2108279876455215,
+      "delta": -0.01508000502603049
+    }
+  }
+}

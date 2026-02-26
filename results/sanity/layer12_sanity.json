@@ -1,0 +1,140 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T17:28:24.792655Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "google/gemma-2-2b",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "batch_size": 4,
+        "max_length": 1024,
+        "seed": 0,
+        "layers": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sae_release": "gemma-scope-2b-pt-res-canonical",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 64,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 2000,
+        "perm_N": 10000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "logs\\run_sweeps_temp_config.yaml",
+        "layer": 12,
+        "safe_jsonl": "data/processed/dsafe_train.jsonl",
+        "innov_jsonl": "data/processed/dinnov_train.jsonl",
+        "features_npz": "results\\polarization\\layer12_train_features.npz",
+        "topk_safe_json": "results\\polarization\\layer12_train_topk_safe.json",
+        "topk_innov_json": "results\\polarization\\layer12_train_topk_innov.json"
+      }
+    }
+  },
+  "sanity": {
+    "layer": 12,
+    "length_confound": {
+      "mean_a": 315.95957820738136,
+      "var_a": 26447.299419540086,
+      "mean_b": 312.7232142857143,
+      "var_b": 23728.59838836022,
+      "mean_diff": 3.2363639216670776
+    },
+    "top_feature_length_correlations": [
+      {
+        "feature_id": 13295,
+        "pearson_corr_with_length": 0.05579212692159887
+      },
+      {
+        "feature_id": 7541,
+        "pearson_corr_with_length": -0.1979745522396357
+      },
+      {
+        "feature_id": 10047,
+        "pearson_corr_with_length": -0.03737914251589967
+      },
+      {
+        "feature_id": 3659,
+        "pearson_corr_with_length": -0.3811329704771574
+      },
+      {
+        "feature_id": 2564,
+        "pearson_corr_with_length": 0.005808264221665156
+      },
+      {
+        "feature_id": 9954,
+        "pearson_corr_with_length": -0.003888911914676882
+      },
+      {
+        "feature_id": 16180,
+        "pearson_corr_with_length": 0.020686909284471734
+      },
+      {
+        "feature_id": 1809,
+        "pearson_corr_with_length": -0.007593534869027328
+      },
+      {
+        "feature_id": 1220,
+        "pearson_corr_with_length": -0.0017013962264517295
+      },
+      {
+        "feature_id": 11320,
+        "pearson_corr_with_length": -0.009661025562692405
+      },
+      {
+        "feature_id": 1041,
+        "pearson_corr_with_length": -0.020460418157735076
+      },
+      {
+        "feature_id": 11087,
+        "pearson_corr_with_length": -0.03990020831562178
+      },
+      {
+        "feature_id": 6491,
+        "pearson_corr_with_length": 0.00737092809682784
+      },
+      {
+        "feature_id": 9238,
+        "pearson_corr_with_length": -0.010163261146226307
+      },
+      {
+        "feature_id": 4667,
+        "pearson_corr_with_length": -0.03398459267068377
+      },
+      {
+        "feature_id": 11767,
+        "pearson_corr_with_length": -0.03461066149114846
+      },
+      {
+        "feature_id": 3220,
+        "pearson_corr_with_length": -0.23132671094883814
+      },
+      {
+        "feature_id": 10543,
+        "pearson_corr_with_length": -0.020599715715463384
+      },
+      {
+        "feature_id": 6889,
+        "pearson_corr_with_length": -0.03476017751043918
+      },
+      {
+        "feature_id": 1005,
+        "pearson_corr_with_length": -0.46085428980995113
+      }
+    ],
+    "quick_auc": 0.6178353171433136,
+    "recommendation": null
+  }
+}

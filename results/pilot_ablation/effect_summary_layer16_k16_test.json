@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T17:35:34.694615Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "google/gemma-2-2b",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "batch_size": 4,
+        "max_length": 1024,
+        "seed": 0,
+        "layers": [
+          12,
+          16,
+          20,
+          24
+        ],
+        "sae_release": "gemma-scope-2b-pt-res-canonical",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 64,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 2000,
+        "perm_N": 10000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "logs\\run_sweeps_temp_config.yaml",
+        "layer": 16,
+        "safe_jsonl": "data/processed/dsafe_test.jsonl",
+        "topk_safe_json": "results\\polarization\\layer16_train_topk_safe.json",
+        "k": 16,
+        "max_samples": 200,
+        "sae_npz": null,
+        "bootstrap_B": null,
+        "perm_N": null,
+        "seed": null,
+        "summary_out": "results\\pilot_ablation\\effect_summary_layer16_k16_test.json",
+        "sample_out": "results\\pilot_ablation\\effects_layer16_k16_test.csv"
+      }
+    }
+  },
+  "effect_summary": {
+    "layer": 16,
+    "n_samples": 84,
+    "k_features": 16,
+    "seed": 0,
+    "target_token": "RESTRICTION",
+    "target_token_ids": [
+      41531,
+      22772,
+      12718
+    ],
+    "mean_effect": -0.6968005952380952,
+    "bootstrap_95_ci": [
+      -1.0406488327752976,
+      -0.32560453869047684
+    ],
+    "random_control_mean_effect": -0.9220842633928571,
+    "random_control_bootstrap_95_ci": [
+      -1.293244861421131,
+      -0.579238746279762
+    ],
+    "paired_delta_mean": 0.22528366815476192,
+    "paired_delta_bootstrap_95_ci": [
+      0.12853131975446427,
+      0.3400303431919643
+    ],
+    "paired_delta_permutation_p": 9.999000099990002e-05,
+    "perm_N": 10000,
+    "safe_feature_ids": [
+      7008,
+      9450,
+      2560,
+      5768,
+      2889,
+      8962,
+      6475,
+      14077,
+      8885,
+      4415,
+      13052,
+      4218,
+      13529,
+      7443,
+      10026,
+      6267
+    ],
+    "random_feature_ids": [
+      5039,
+      10429,
+      8368,
+      670,
+      11953,
+      9940,
+      13320,
+      14952,
+      13925,
+      1230,
+      15904,
+      4416,
+      8250,
+      270,
+      2868,
+      10639
+    ],
+    "sample_csv": "results\\pilot_ablation\\effects_layer16_k16_test.csv"
+  }
+}

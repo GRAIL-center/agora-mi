@@ -1,0 +1,79 @@
+Feature 9622 top examples
+
+[1] activation=68.452835
+Principle 9: Conduct appropriate testing and evaluation  
+Primarily applies to: Developers and System Operators 
+
+
+[OWASP 2024, WEF 2024, Nvidia 2023, NCSC 2023, ENISA 2023, Google 2023, G7 2023]  
+
+
+9.1 Developers shall ensure that all models, applications and systems that are released to System Operators and/or End-users have been tested as part of a security assessment process.   
+
+
+9.2 System Operators shall conduct testing prior to the system being deployed with support from Developers.   
+
+
+9.2.1 For security testing, System Operators and Developers should use independent security testers with technical skills relevant to their AI systems. 
+
+
+9.3 Developers should ensure that the findings from the testing and evaluation are shared with System Operators, to inform their own testing and evaluation.   
+
+
+9.4 Developers should evaluate model outputs to ensure they do not allow System Operators or End-users to reverse engineer non-public aspects of the model or the training data.  
+
+
+9.4.1 Additionally, Developers should evaluate model outputs to ensure they do not provide System Operators or End-users with unintended influence over the system.
+
+---
+
+[2] activation=51.229305
+Data Input Controls and Audit
+OpenAI’s large language models, including the models that power ChatGPT, are developed using three primary sources of information: (1) information that is publicly available on the internet, (2) information that we license from third parties, and (3) information that our users or our human trainers provide.  
+The vast majority of our training data comes from publicly available information that is freely and openly available on the Internet – for example, we do not seek information behind paywalls or from the “deep web.” We apply filters and remove certain data that we do not want our models to learn from or output, such as hate speech, adult content, sites that primarily aggregate personal information, and spam. 
+We also have implemented measures to enable creators, rightsholders, and website operators to express their preferences regarding AI training with respect to the content that they own or control. For example, OpenAI has implemented an easy means for website operators to exclude their content from being accessed by OpenAI’s “GPTBot” web crawler, relying on the robots.txt web standard. Similarly, OpenAI has documented the user-agent-string (“ChatGPT-user”) used by ChatGPT and ChatGPT plugins to access websites, so that site operators can block access for those purposes, as well. We provide instructions online for how to disallow either bot from accessing  sites. We also provide a self-service form
+(opens in a new window)
+for image creators to opt their content out from training of our future DALL-E image generation models.
+
+---
+
+[3] activation=49.319214
+§ 86. UNLAWFUL DISCRIMINATORY PRACTICES.   IT  SHALL  BE  AN  UNLAWFUL
+ DISCRIMINATORY PRACTICE:
+   1.  FOR  A DEVELOPER OR DEPLOYER TO USE, SELL, OR SHARE A HIGH-RISK AI
+ SYSTEM OR A PRODUCT FEATURING A HIGH-RISK AI SYSTEM THAT PRODUCES  ALGO-
+ RITHMIC DISCRIMINATION; OR
+   2.  FOR  A DEVELOPER TO USE, SELL, OR SHARE A HIGH-RISK AI SYSTEM OR A
+ PRODUCT FEATURING A HIGH-RISK AI SYSTEM THAT HAS NOT PASSED AN INDEPEND-
+ ENT AUDIT, IN ACCORDANCE WITH SECTION EIGHTY-SEVEN OF THIS ARTICLE, THAT
+ HAS FOUND THAT THE PRODUCT DOES NOT IN FACT PRODUCE ALGORITHMIC DISCRIM-
+ INATION.
+
+---
+
+[4] activation=47.898861
+c)	Annotated content accuracy:
+
+1）	For functional annotation, each batch of annotated training data shall be manually sampled, and if it is found that the content is inaccurate, it shall be re-annotated; if it is found that the content contains illegal and unhealthy information, that batch of training data shall be invalidated;
+
+2）	For safety annotation, each piece of annotated data shall be reviewed and approved by at least one auditor.
+
+d)	Segregated storage of safety-related annotation data should be carried out.
+
+---
+
+[5] activation=45.182598
+(b) Transformational Models.--The Secretary of Energy shall--
+            (1) mobilize National Laboratories to partner with industry 
+        sectors within the United States to curate the scientific data 
+        of the Department of Energy across the National Laboratory 
+        complex so that the data is structured, cleaned, and 
+        preprocessed in a way that makes it suitable for use in 
+        artificial intelligence and machine learning models; and
+
+            (2) initiate seed efforts for self-improving artificial 
+        intelligence models for science and engineering powered by the 
+        data described in paragraph (1).
+
+---
+

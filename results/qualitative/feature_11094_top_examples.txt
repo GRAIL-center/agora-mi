@@ -1,0 +1,57 @@
+Feature 11094 top examples
+
+[1] activation=67.369881
+5.   The providers of the general-purpose AI model concerned or its representative shall supply the information requested. In the case of legal persons, companies or firms, or where the provider has no legal personality, the persons authorised to represent them by law or by their statutes, shall provide the access requested on behalf of the provider of the general-purpose AI model concerned.
+
+6.   The Commission shall adopt implementing acts setting out the detailed arrangements and the conditions for the evaluations, including the detailed arrangements for involving independent experts, and the procedure for the selection thereof. Those implementing acts shall be adopted in accordance with the examination procedure referred to in Article 98(2).
+
+7.   Prior to requesting access to the general-purpose AI model concerned, the AI Office may initiate a structured dialogue with the provider of the general-purpose AI model to gather more information on the internal testing of the model, internal safeguards for preventing systemic risks, and other internal procedures and measures the provider has taken to mitigate such risks.
+
+---
+
+[2] activation=60.455845
+SEC. 5. ARTIFICIAL INTELLIGENCE ENVIRONMENTAL IMPACTS CONSORTIUM.
+
+(a) In General.—The Director of the National Institute of Standards and Technology shall, in consultation with the Administrator of the Environmental Protection Agency, the Secretary of Energy, and such others as the Director considers appropriate, convene a consortium of stakeholders, including members from academia, civil society, and industry, to identify the future measurements, methodologies, standards, and other appropriate needs, in order to measure and report the full range of environmental impacts of artificial intelligence.
+(b) Location.—The Director may determine the location of the consortium within the National Institute of Standards and Technology.
+(c) Goals.—The goals of the consortium shall include the following:
+(1) Facilitating consistent, comparable reporting on the environmental impacts of the full lifecycle of artificial intelligence models, systems, and hardware.
+(2) According to technical feasibility, the development or cataloging of open source software and hardware tools and other resources designed to facilitate the measurement of environmental impacts of artificial intelligence models, systems, and hardware.
+(3) Providing recommendations on how to mitigate the negative, and promote the positive, environmental impacts of artificial intelligence.
+
+---
+
+[3] activation=60.441738
+(II) An evaluation and identification of combatant command demand and fleet size, including recommendations to support--
+(aa) readiness;
+(bb) training;
+(cc) routine ship maintenance;
+(dd) personnel;
+(ee) forward presence;
+(ff) depot level ship maintenance; and
+(gg) fleet modernization.
+		(III) A detailed review of the cost of the recapitalization of the Nuclear Triad in the Department of Defense and its effect on the Navy's budget.
+		(IV) A review of Navy personnel policies and training to determine changes needed across all personnel activities to improve training effectiveness and force tactical readiness and reduce operational stress.
+
+---
+
+[4] activation=60.231716
+(b) RESEARCH PROJECTS.— 
+(1) FACULTY.—A faculty member who is employed in position made available under subsection (a) shall, in the course of such employment, carry out a research project that— 
+(A) relates to a topic in the field of science, technology, engineering, or mathematics; and 
+(B) contributes to the objectives of the Department of Defense, as determined by the Secretary of Defense. 
+(2) STUDENTS.—A student employed in position made available under subsection (a) shall assist a faculty member with a research project described in paragraph (1).
+
+---
+
+[5] activation=47.964088
+Art. 6 When regulating the artificial intelligence implementation, the State shall observe the following guidelines:
+I	– subsidiary intervention: specific rules shall be implemented for the usage of artificial intelligence systems only when absolutely necessary to guarantee compliance with
+the provisions of current legislation;
+II	– sectoral action: the State shall act through the competent body or entity, considering the specific context and regulatory framework of each sector;
+III	– risk-based management: the development and usage of artificial intelligence systems shall consider the specific risks and definitions of the need to regulate artificial intelligence systems, and the respective degree of intervention shall always be proportional to the specific risks offered by each system and the probability of occurrence of these risks, always evaluated in comparison with:
+a)	the potential social and financial benefits of the artificial intelligence system; and
+b)	the risks presented by similar systems that do not involve artificial intelligence, according to item V of this head provision;
+
+---
+

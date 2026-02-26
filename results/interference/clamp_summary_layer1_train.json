@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-02-19T17:17:38.216713Z",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "git_commit": null,
+    "config": {
+      "run": {
+        "model_id": "sshleifer/tiny-gpt2",
+        "device": "cpu",
+        "dtype": "float32",
+        "batch_size": 4,
+        "max_length": 256,
+        "seed": 0,
+        "layers": [
+          1
+        ],
+        "sae_release": "unused",
+        "sae_id_template": "layer_{L}/width_16k/canonical",
+        "topk": 16,
+        "delta_thresh": null,
+        "edge_tau": 0.1,
+        "bootstrap_B": 200,
+        "perm_N": 1000,
+        "fdr_q": 0.05,
+        "input_dir": "data/raw/agora",
+        "processed_dir": "data/processed",
+        "results_dir": "results",
+        "logs_dir": "logs",
+        "prompt_config": "configs/prompt_templates.yaml"
+      },
+      "args": {
+        "config": "configs/run_tiny.yaml",
+        "layer": 1,
+        "innov_jsonl": "data/processed/dinnov_test.jsonl",
+        "selection_tag": "train",
+        "topk_safe_json": null,
+        "delta_csv": null,
+        "features_npz": null,
+        "k": 16,
+        "alphas": "0.5,1",
+        "max_samples": 12,
+        "sae_npz": "artifacts/sae_tiny_layer1.npz",
+        "bootstrap_B": 50,
+        "perm_N": 200,
+        "seed": null
+      }
+    }
+  },
+  "layer": 1,
+  "selection_tag": "train",
+  "k": 16,
+  "alphas": [
+    0.5,
+    1.0
+  ],
+  "safe_feature_ids": [
+    15,
+    27,
+    10,
+    54,
+    40,
+    8,
+    12,
+    25,
+    52,
+    14,
+    58,
+    30,
+    22,
+    31,
+    3,
+    4
+  ],
+  "random_feature_ids": [
+    18,
+    33,
+    26,
+    1,
+    48,
+    61,
+    47,
+    55,
+    41,
+    2,
+    62,
+    16,
+    34,
+    0,
+    11,
+    39
+  ],
+  "neutral_feature_ids": [
+    28,
+    1,
+    43,
+    53,
+    7,
+    17,
+    57,
+    0,
+    60,
+    21,
+    32,
+    59,
+    50,
+    18,
+    56,
+    61
+  ],
+  "summary_rows": [
+    {
+      "alpha": 0.5,
+      "condition": "neutral",
+      "n": 12,
+      "mean_delta_prob_inc": -7.43789753861653e-08,
+      "ci95_delta_prob_inc": [
+        -2.7110072994736737e-07,
+        1.0339445004059475e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007021586100261,
+      "ci95_delta_logprob_inc": [
+        -0.011701909701029458,
+        -0.0002940257390340175
+      ],
+      "mean_delta_mass": 1.901280484162271e-07,
+      "ci95_delta_mass": [
+        -8.611991688667331e-07,
+        9.580425588258848e-07
+      ]
+    },
+    {
+      "alpha": 0.5,
+      "condition": "random",
+      "n": 12,
+      "mean_delta_prob_inc": -7.440506339754609e-08,
+      "ci95_delta_prob_inc": [
+        -2.7112094815618753e-07,
+        1.0335401362295453e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007657368977864,
+      "ci95_delta_logprob_inc": [
+        -0.01170353094736735,
+        -0.0002946615219116217
+      ],
+      "mean_delta_mass": 1.9004922554207346e-07,
+      "ci95_delta_mass": [
+        -8.612957268875713e-07,
+        9.579026482242622e-07
+      ]
+    },
+    {
+      "alpha": 0.5,
+      "condition": "safe",
+      "n": 12,
+      "mean_delta_prob_inc": -7.440506339754609e-08,
+      "ci95_delta_prob_inc": [
+        -2.7112094815618753e-07,
+        1.0335401362295453e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007657368977864,
+      "ci95_delta_logprob_inc": [
+        -0.01170353094736735,
+        -0.0002946615219116217
+      ],
+      "mean_delta_mass": 1.9004922554207346e-07,
+      "ci95_delta_mass": [
+        -8.612957268875713e-07,
+        9.579026482242622e-07
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "neutral",
+      "n": 12,
+      "mean_delta_prob_inc": -7.440506339754609e-08,
+      "ci95_delta_prob_inc": [
+        -3.1864604460839683e-07,
+        1.360878126512495e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007657368977864,
+      "ci95_delta_logprob_inc": [
+        -0.010659027099609374,
+        0.004361446698506673
+      ],
+      "mean_delta_mass": 1.9004922554207346e-07,
+      "ci95_delta_mass": [
+        -6.541837744104365e-07,
+        1.2606294149009043e-06
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "random",
+      "n": 12,
+      "mean_delta_prob_inc": -7.440506339754609e-08,
+      "ci95_delta_prob_inc": [
+        -3.1864604460839683e-07,
+        1.360878126512495e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007657368977864,
+      "ci95_delta_logprob_inc": [
+        -0.010659027099609374,
+        0.004361446698506673
+      ],
+      "mean_delta_mass": 1.9004922554207346e-07,
+      "ci95_delta_mass": [
+        -6.541837744104365e-07,
+        1.2606294149009043e-06
+      ]
+    },
+    {
+      "alpha": 1.0,
+      "condition": "safe",
+      "n": 12,
+      "mean_delta_prob_inc": -7.440506339754609e-08,
+      "ci95_delta_prob_inc": [
+        -3.1864604460839683e-07,
+        1.360878126512495e-07
+      ],
+      "mean_delta_logprob_inc": -0.004007657368977864,
+      "ci95_delta_logprob_inc": [
+        -0.010659027099609374,
+        0.004361446698506673
+      ],
+      "mean_delta_mass": 1.9004922554207346e-07,
+      "ci95_delta_mass": [
+        -6.541837744104365e-07,
+        1.2606294149009043e-06
+      ]
+    }
+  ],
+  "paired_tests_primary_metric": [
+    {
+      "alpha": 0.5,
+      "compare": "safe_minus_random",
+      "n": 12,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "perm_p": 1.0
+    },
+    {
+      "alpha": 0.5,
+      "compare": "safe_minus_neutral",
+      "n": 12,
+      "mean_delta": -2.608801138078339e-11,
+      "ci95": [
+        -7.826403414235017e-11,
+        0.0
+      ],
+      "perm_p": 1.0
+    },
+    {
+      "alpha": 1.0,
+      "compare": "safe_minus_random",
+      "n": 12,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "perm_p": 1.0
+    },
+    {
+      "alpha": 1.0,
+      "compare": "safe_minus_neutral",
+      "n": 12,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "perm_p": 1.0
+    }
+  ],
+  "sample_csv": "results\\interference\\clamp_samples_layer1_train.csv"
+}

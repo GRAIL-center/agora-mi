@@ -1,0 +1,46 @@
+# Tags are compared after normalization:
+# lower-case, non-alnum -> underscore, repeated underscores collapsed.
+
+dsafe_tags:
+  - prohibition
+  - mandate
+  - audit
+  - penalty
+  - enforcement
+  - liability
+  # AGORA-native fallbacks
+  - strategies_evaluation_external_auditing
+  - incentives_fines
+  - incentives_civil_liability
+  - incentives_criminal_liability
+  - strategies_licensing_registration_and_certification
+  - strategies_input_controls
+  - strategies_performance_requirements
+
+dinnov_tags:
+  - funding_support
+  - tax_incentives
+  - education_support
+  - standards_support
+  - r_and_d_support
+  - deregulation
+  # AGORA-native fallbacks
+  - strategies_government_support
+  - strategies_government_support_for_r_d
+  - incentives_subsidies
+  - strategies_pilots_and_testbeds
+
+min_text_chars: 200
+max_text_chars: 4000
+dedupe: true
+
+# overlap policy: drop | keep_both
+overlap_policy: "drop"
+
+# split ratios
+train_ratio: 0.7
+dev_ratio: 0.15
+test_ratio: 0.15
+
+# optional cap per class per split (null = unlimited)
+max_per_class: null

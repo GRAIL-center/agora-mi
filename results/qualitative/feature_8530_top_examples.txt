@@ -1,0 +1,62 @@
+Feature 8530 top examples
+
+[1] activation=85.776718
+(f) Enforcement.—
+
+
+(1) IN GENERAL.—Notwithstanding any other provision of law, a covered entity described in subparagraph (B) or (C) of subsection (a)(2) that violates a prohibition under subsection (b), or violates subsection (e), on or after the date of enactment of this Act shall be precluded from receiving any Federal financial assistance on or after the date of such violation.
+
+
+(2) REGULATIONS.—The Secretary of Defense, in consultation with the Secretary of State, the Director of National Intelligence, the Director of the Federal Bureau of Investigation, the Secretary of Energy, the Secretary of Education, the Secretary of the Treasury, and the Secretary of Commerce, shall—
+
+
+(A) promulgate regulations to enforce the prohibitions under subsection (b), the auditing requirements under subsection (e), and the requirement under paragraph (1); and
+
+
+(B) coordinate with the heads of other Federal agencies to ensure the enforcement of such prohibitions and requirements.
+
+---
+
+[2] activation=85.148376
+b)	Matching of training data from different sources:
+
+1）	The diversity of training data sources shall be increased, and there shall be multiple sources of training data for each language, such as Chinese, English, etc., as well as for each type of training data, such as text, images, audio, and video;
+
+2）	If it is necessary to use training data from foreign sources, it shall be reasonably matched with training data from domestic sources.
+
+---
+
+[3] activation=85.015671
+Article 49: Registration
+
+1.   Before placing on the market or putting into service a high-risk AI system listed in Annex III, with the exception of high-risk AI systems referred to in point 2 of Annex III, the provider or, where applicable, the authorised representative shall register themselves and their system in the EU database referred to in Article 71.
+
+2.   Before placing on the market or putting into service an AI system for which the provider has concluded that it is not high-risk according to Article 6(3), that provider or, where applicable, the authorised representative shall register themselves and that system in the EU database referred to in Article 71.
+
+3.   Before putting into service or using a high-risk AI system listed in Annex III, with the exception of high-risk AI systems listed in point 2 of Annex III, deployers that are public authorities, Union institutions, bodies, offices or agencies or persons acting on their behalf shall register themselves, select the system and register its use in the EU database referred to in Article 71.
+
+---
+
+[4] activation=84.839211
+Align Protection Measures Globally
+
+America must impose strong export controls on sensitive technologies. We should encourage partners and allies to follow U.S. controls, and not backfill. If they do, America should use tools such as the Foreign Direct Product Rule and secondary tariffs to achieve greater international alignment.
+
+Recommended Policy Actions
+
+• Led by DOC and DOS and in coordination with NSC, DOE, and NSF, develop, implement, and share information on complementary technology protection measures, including in basic research and higher education, to mitigate risks from strategic adversaries and concerning entities. This work should build on existing efforts underway at DOS and DOC, or, where necessary, involve new diplomatic campaigns.
+• Develop a technology diplomacy strategic plan for an AI global alliance to align incentives and policy levers across government to induce key allies to adopt complementary AI protection systems and export controls across the supply chain, led by DOS in coordination with DOC, DOD, and DOE. This plan should aim to ensure that American allies do not supply adversaries with technologies on which the U.S. is seeking to impose export controls.
+• Expand new initiatives for promoting plurilateral controls for the AI tech stack, avoiding the sole reliance on multilateral treaty bodies to accomplish this objective, while also encompassing existing U.S. controls and all future controls to level the playing field between U.S. and allied controls.
+• Led by DOC and DOD, coordinate with allies to ensure that they adopt U.S. export controls, work together with the U.S to develop new controls, and prohibit U.S. adversaries from supplying their defense-industrial base or acquiring controlling stakes in defense suppliers.
+
+---
+
+[5] activation=84.486168
+(b) Report.--
+	(1) Submission.--Not later than January 1, 2024, the Director of National Intelligence, in coordination with heads of human capital from each element of the intelligence community, shall submit to the congressional intelligence committees, the Subcommittee on Defense of the Committee on Appropriations of the Senate, and the Subcommittee on Defense of the Committee on Appropriations of the House of Representatives a single report on the workforce needs of each element of the intelligence community relating to emerging technologies, with a specific focus on artificial intelligence.
+	(2) Elements.--The report under paragraph (1) shall include, with respect to each element of the intelligence community, the following:
+		(A) A description of the number and types of personnel in work roles whose primary official duties include artificial intelligence responsibilities.
+		(B) A detailed description of the plans for each element developed pursuant to subsection (a).
+
+---
+
