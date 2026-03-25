@@ -266,6 +266,7 @@ class PolicyFeatureBenchmarkTests(unittest.TestCase):
             "consistency_summary_path",
             "robustness_summary_path",
             "sae_causality_summary_path",
+            "appendix_task_inventory_path",
             "paper_readout_path",
             "benchmark_report_path",
         ):
@@ -335,6 +336,10 @@ class PolicyFeatureBenchmarkTests(unittest.TestCase):
         self.assertEqual(dense_method["coverage"]["risk_factors_bias"]["selected_layer"], 16)
         self.assertTrue(report["preflight"]["headline_ready"])
         self.assertIn("paper_readout", report)
+        self.assertIn("statistical_testing", report)
+        self.assertIn("primary_comparisons", report)
+        self.assertIn("exploratory_comparisons", report)
+        self.assertTrue((self.output_root / "summary" / "appendix_task_inventory.csv").exists())
 
 
 if __name__ == "__main__":

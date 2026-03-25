@@ -2,11 +2,11 @@
 
 This repository studies how language models internally represent and process policy text.
 
-The current research direction is a proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
+The current project direction is a proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
 
 ## Research Focus
 
-The main paper asks four questions:
+The current project asks four questions:
 
 1. How do language models internally represent policy text and policy relevant features
 2. Which policy features produce distinct and robust internal representations
@@ -29,12 +29,10 @@ These pairs are evaluated through a compact audit suite, but the benchmark is a 
 
 ```text
 configs/      Experiment and benchmark configuration
-docs/         Research notes and persistent paper assets
-scripts/      Data preparation, discovery, transfer, benchmark, and paper utilities
+docs/         Tutorials, figures, and lightweight project notes
+scripts/      Data preparation, discovery, transfer, and benchmark utilities
 src/          Reusable library code for data, models, SAE handling, analysis, and benchmarking
 tests/        Unit and smoke tests for the current pipeline
-main.tex      Current ACL-style paper draft
-custom.bib    Paper bibliography
 ```
 
 ## Tutorial Notebook
@@ -47,7 +45,7 @@ The notebook is written for readers who are new to mechanistic interpretability 
 
 ## Main Pipeline
 
-The current paper-facing pipeline is:
+The current main pipeline is:
 
 1. Filter AGORA to AI related, operative, annotated segments
 2. Build proxy specific manifests from existing AGORA tag annotations
@@ -112,23 +110,9 @@ Aggregate benchmark outputs:
 python scripts/aggregate_policy_feature_benchmark.py
 ```
 
-Compile the paper:
+## Figures and Tutorials
 
-```bash
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
-
-## Paper Files
-
-The current paper draft is:
-
-1. `main.tex`
-2. `main.pdf`
-
-Persistent paper figures that should remain versioned live under `docs/figures/`.
+Versioned figures and tutorial assets live under `docs/figures/` and `docs/tutorials/`.
 
 ## Notes on Local Dependencies
 

@@ -64,3 +64,8 @@ submit_gautschi.sh
 tmp_main_preview-*.png
 inspect_sae.py
 zip_project.py
+main.tex
+main.pdf
+custom.bib
+scripts/generate_paper_figures.py
+docs/figures/fig_methodology_policy_pipeline.png

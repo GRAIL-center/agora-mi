@@ -49,6 +49,17 @@ scoring:
     min: 0.0
     max: 1.0
 
+statistical_testing:
+  paired_bootstrap_confidence: 0.95
+  paired_bootstrap_iterations: 2000
+  paired_bootstrap_seed: 0
+  coverage_test_family: "paired_bootstrap_auc"
+  robustness_test_family: "paired_bootstrap_auc"
+  discovery_test_family: "document_cluster_permutation"
+  discovery_multiple_comparison: "benjamini_hochberg_fdr"
+  transfer_test_family: "paired_bootstrap_auc"
+  causality_test_family: "matched_random_control_margin_drop"
+
 preflight:
   reference_split_counts:
     train: 1965
@@ -74,6 +85,13 @@ paper:
   baseline_method: "lexical_tfidf_logreg"
   appendix_on_preflight_failure: true
   pair_gap_aggregation: "mean"
+  primary_comparisons:
+    - "within_pair_transfer"
+    - "masking_delta"
+    - "intervention_selectivity"
+  exploratory_comparisons:
+    - "layerwise_profiles"
+    - "family_overlap_visualizations"
   success_criteria:
     require_headline_top_core: true
     min_axes_beating_baseline: 2

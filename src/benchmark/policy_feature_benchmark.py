@@ -637,6 +637,50 @@ def _write_causality_summary(summary_dir: Path, method_results: list[dict[str, A
     return out_path
 
 
+def _write_appendix_task_inventory(
+    summary_dir: Path,
+    method_results: list[dict[str, Any]],
+    task_registry: dict[str, Any],
+) -> Path:
+    out_path = summary_dir / "appendix_task_inventory.csv"
+    task_map = task_registry["coverage_task_map"]
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "method_name",
+                "task_id",
+                "family",
+                "pair_id",
+                "test_size",
+                "test_positive_count",
+                "validated_test_positive_count",
+                "selected_layer",
+                "feature_count",
+                "selection_source",
+            ],
+        )
+        writer.writeheader()
+        for method_result in method_results:
+            for task_id, payload in method_result.get("coverage", {}).items():
+                task = task_map[task_id]
+                writer.writerow(
+                    {
+                        "method_name": method_result["method_name"],
+                        "task_id": task_id,
+                        "family": task["family"],
+                        "pair_id": task["pair_id"],
+                        "test_size": int(payload.get("n_positive_test", 0) or 0) + int(payload.get("n_negative_test", 0) or 0),
+                        "test_positive_count": payload.get("n_positive_test"),
+                        "validated_test_positive_count": payload.get("n_positive_validated_test"),
+                        "selected_layer": payload.get("selected_layer"),
+                        "feature_count": payload.get("feature_count"),
+                        "selection_source": payload.get("selection_source"),
+                    }
+                )
+    return out_path
+
+
 def _pair_mean(values: list[float]) -> float:
     return _nanmean(values)
 
@@ -790,6 +834,8 @@ def _build_report(
     preflight_report: dict[str, Any],
     paper_readout: dict[str, Any],
 ) -> dict[str, Any]:
+    statistical_testing = dict(config.get("statistical_testing", {}))
+    paper_cfg = dict(config.get("paper", {}))
     task_report = {}
     for task in task_registry["coverage_tasks"]:
         task_report[task["task_id"]] = {
@@ -807,6 +853,9 @@ def _build_report(
         "output_root": config["output_root"],
         "n_coverage_tasks": len(task_registry["coverage_tasks"]),
         "n_consistency_tasks": len(task_registry["consistency_tasks"]),
+        "statistical_testing": statistical_testing,
+        "primary_comparisons": list(paper_cfg.get("primary_comparisons", [])),
+        "exploratory_comparisons": list(paper_cfg.get("exploratory_comparisons", [])),
         "coverage_tasks": task_report,
         "preflight": preflight_report,
         "paper_readout": paper_readout,
@@ -882,6 +931,7 @@ def aggregate_existing_results(
     consistency_summary_path = _write_consistency_summary(summary_dir, method_results, task_registry)
     robustness_summary_path = _write_robustness_summary(summary_dir, method_results, task_registry)
     causality_summary_path = _write_causality_summary(summary_dir, method_results)
+    appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
     save_json(summary_dir / "paper_readout.json", paper_readout)
     report = _build_report(config, task_registry, method_results, summaries, preflight_report, paper_readout)
@@ -896,6 +946,7 @@ def aggregate_existing_results(
         "consistency_summary_path": str(consistency_summary_path),
         "robustness_summary_path": str(robustness_summary_path),
         "sae_causality_summary_path": str(causality_summary_path),
+        "appendix_task_inventory_path": str(appendix_inventory_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),
         "benchmark_report_path": str(summary_dir / "benchmark_report.json"),
     }
@@ -942,6 +993,7 @@ def run_benchmark(
     consistency_summary_path = _write_consistency_summary(summary_dir, method_results, task_registry)
     robustness_summary_path = _write_robustness_summary(summary_dir, method_results, task_registry)
     causality_summary_path = _write_causality_summary(summary_dir, method_results)
+    appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
     save_json(summary_dir / "paper_readout.json", paper_readout)
     report = _build_report(config, task_registry, method_results, summaries, preflight_report, paper_readout)
@@ -956,6 +1008,7 @@ def run_benchmark(
         "consistency_summary_path": str(consistency_summary_path),
         "robustness_summary_path": str(robustness_summary_path),
         "sae_causality_summary_path": str(causality_summary_path),
+        "appendix_task_inventory_path": str(appendix_inventory_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),
         "benchmark_report_path": str(summary_dir / "benchmark_report.json"),
     }
