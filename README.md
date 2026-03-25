@@ -1,29 +1,29 @@
-# AI Forge
+# How Do Language Models Represent Policy Text?
 
-This repository studies how language models internally represent and process policy text.
+This repository accompanies a research paper project on the internal representation of policy text in language models.
 
-The current project direction is a proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
+The project studies proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
 
-## Research Focus
+## Paper Focus
 
-The current project asks four questions:
+The central research questions are:
 
 1. How do language models internally represent policy text and policy relevant features
 2. Which policy features produce distinct and robust internal representations
 3. Do related policy features share internal structure that generalizes across proxies
 4. Are these discovered policy features causally involved in held out policy judgments
 
-Public values are treated as a downstream interpretive lens rather than a primary empirical target.
+Public values are treated as a secondary interpretive lens rather than as the primary empirical target.
 
-## Current Core Policy Features
+## Core Empirical Scope
 
-The v1 empirical core uses three concept pairs:
+The current v1 empirical core focuses on three related concept pairs:
 
 1. Bias and Discrimination
 2. Privacy and Rights violation
 3. Transparency and Interpretability
 
-These pairs are evaluated through a compact audit suite, but the benchmark is a supporting evaluation protocol rather than the main identity of the project.
+These pairs support a compact evaluation protocol for policy feature discovery, transfer, robustness, and causal qualification.
 
 ## Repository Layout
 
@@ -37,15 +37,15 @@ tests/        Unit and smoke tests for the current pipeline
 
 ## Tutorial Notebook
 
-If you want a guided walkthrough from data processing to mechanistic interpretability, start with:
+For a guided walkthrough from data processing to mechanistic interpretability, start with:
 
 `docs/tutorials/policy_representation_tutorial.ipynb`
 
 The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step.
 
-## Main Pipeline
+## Method Overview
 
-The current main pipeline is:
+The current workflow is:
 
 1. Filter AGORA to AI related, operative, annotated segments
 2. Build proxy specific manifests from existing AGORA tag annotations
@@ -57,7 +57,7 @@ The current main pipeline is:
 8. Consolidate repeated sparse features into family core banks
 9. Run intervention based causal evaluation on held out policy judgments
 
-## Benchmark Scope
+## Evaluation Protocol
 
 The `Policy Feature Governance Audit Benchmark` is the standardized evaluation wrapper around the methodology above.
 
