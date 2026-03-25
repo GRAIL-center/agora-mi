@@ -37,6 +37,14 @@ main.tex      Current ACL-style paper draft
 custom.bib    Paper bibliography
 ```
 
+## Tutorial Notebook
+
+If you want a guided walkthrough from data processing to mechanistic interpretability, start with:
+
+`docs/tutorials/policy_representation_tutorial.ipynb`
+
+The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step.
+
 ## Main Pipeline
 
 The current paper-facing pipeline is:
