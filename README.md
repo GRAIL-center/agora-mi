@@ -43,6 +43,8 @@ For a guided walkthrough from data processing to mechanistic interpretability, s
 
 The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step.
 
+For staged Lambda commands for the expensive runs, see `docs/lambda_runbook.md`.
+
 ## Method Overview
 
 The current workflow is:
