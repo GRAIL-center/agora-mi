@@ -1,0 +1,32 @@
+model_id: "google/gemma-2-2b-it"
+device: "cuda"
+dtype: "bfloat16"
+batch_size: 16  # Scaled for A100 80GB
+max_length: 1024
+seed: 0
+layers: [12, 16, 20, 24]
+use_chat_template: true
+
+# SAE (sae-lens)
+# Note: GemmaScope was trained on Base, but transfers moderately well to IT.
+sae_release: "gemma-scope-2b-pt-res-canonical"
+sae_id_template: "layer_{L}/width_16k/canonical"
+
+# Top features / thresholds
+topk: 64
+delta_thresh: null
+edge_tau: 0.1
+
+# Statistics
+bootstrap_B: 2000
+perm_N: 10000
+fdr_q: 0.05
+
+# Data paths
+input_dir: "data/raw/agora"
+processed_dir: "data/processed"
+results_dir: "results/gemma-2-2b-it"
+logs_dir: "logs/gemma-2-2b-it"
+
+# Prompt template path
+prompt_config: "configs/prompt_templates.yaml"

@@ -1,0 +1,23 @@
+template_v1: |
+  You are a policy analyst.
+  Classify the excerpt as either RESTRICTION or INCENTIVE.
+  Reply with only one token: RESTRICTION or INCENTIVE.
+
+  Excerpt:
+  {TEXT}
+
+  Answer:
+
+target_tokens:
+  RESTRICTION: "RESTRICTION"
+  INCENTIVE: "INCENTIVE"
+
+innovation_vocab:
+  - innovation
+  - research
+  - development
+  - subsidy
+  - grant
+  - incentive
+  - pilot
+  - support

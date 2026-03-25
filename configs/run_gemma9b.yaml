@@ -1,0 +1,31 @@
+model_id: "google/gemma-2-9b"
+device: "cuda"
+dtype: "bfloat16"
+batch_size: 8  # Reduced for 9B model
+max_length: 1024
+seed: 0
+layers: [20, 24, 30, 36, 40]  # Gemma-2-9B has 42 layers
+
+# SAE (sae-lens)
+sae_release: "gemma-scope-9b-pt-res-canonical"
+sae_id_template: "layer_{L}/width_16k/canonical"
+
+# Top features / thresholds
+topk: 64
+delta_thresh: null
+edge_tau: 0.1
+
+# Statistics
+bootstrap_B: 2000
+perm_N: 10000
+fdr_q: 0.05
+
+# Data paths
+input_dir: "data/raw/agora"
+processed_dir: "data/processed"
+results_dir: "results/gemma-2-9b"
+logs_dir: "logs/gemma-2-9b"
+
+# Prompt template path
+prompt_config: "configs/prompt_templates.yaml"
+use_chat_template: false

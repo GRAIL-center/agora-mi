@@ -1,0 +1,25 @@
+template_v1: |
+  You are reading an AI policy passage.
+
+  Passage:
+  {TEXT}
+
+family_forced_choice_template: |
+  You are reading an AI policy passage.
+  Which policy concept is most strongly implicated by this passage?
+  Reply with only one label from:
+  SUSTAINABILITY
+  RIGHTS
+  TRANSPARENCY
+  EQUALITY
+
+  Passage:
+  {TEXT}
+
+  Answer:
+
+family_target_tokens:
+  sustainability: "SUSTAINABILITY"
+  individual_rights: "RIGHTS"
+  transparency_accountability: "TRANSPARENCY"
+  equality_neutrality: "EQUALITY"

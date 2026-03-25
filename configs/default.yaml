@@ -1,0 +1,43 @@
+seed: 42
+
+data:
+  input_jsonl: data/raw/agora.jsonl
+  output_dir: data/processed
+  id_field: document_id
+  text_field: text
+  tag_field: tags
+  safe_tags:
+    - prohibition
+    - mandate
+    - audit
+    - penalty
+  innov_tags:
+    - funding_support
+    - tax_incentive
+    - education_support
+    - standards_support
+  train_ratio: 0.7
+  dev_ratio: 0.15
+  test_ratio: 0.15
+  max_per_class: 200
+
+model:
+  model_name: google/gemma-2-2b
+  layer: 16
+  batch_size: 8
+  max_length: 512
+  device: auto
+
+sae:
+  mode: npz
+  npz_path: artifacts/sae/gemma_scope_layer16.npz
+  release: ""
+  sae_id: ""
+
+polarization:
+  top_k: 64
+
+ablation:
+  target_token: " safe"
+  k_safety_features: 64
+  max_samples: 200
