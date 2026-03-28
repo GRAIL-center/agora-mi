@@ -1,0 +1,60 @@
+{
+  "manifest_version": 1,
+  "family_name": "transparency_accountability",
+  "family_label": "Transparency and accountability",
+  "family_status": "main",
+  "family_description": "Value family centered on intelligibility, openness, and accountable visibility into AI systems.",
+  "pool_counts": {
+    "main": {
+      "train": 343,
+      "dev": 97,
+      "test": 47
+    },
+    "all": {
+      "train": 365,
+      "dev": 100,
+      "test": 48
+    }
+  },
+  "proxy_counts": {
+    "Risk factors: Transparency": 487,
+    "Risk factors: Interpretability and explainability": 141
+  },
+  "strategy_counts": {
+    "regulation_and_enforcement": 439,
+    "direct_services_and_public_projects": 147,
+    "information_and_capacity_building": 240
+  },
+  "proxies": {
+    "risk_factors_transparency": {
+      "proxy_name": "Risk factors: Transparency",
+      "proxy_slug": "risk_factors_transparency",
+      "proxy_tier": "main",
+      "counts": {
+        "train": 343,
+        "dev": 97,
+        "test": 47
+      },
+      "validated_counts": {
+        "train": 66,
+        "dev": 28,
+        "test": 14
+      }
+    },
+    "risk_factors_interpretability_and_explainability": {
+      "proxy_name": "Risk factors: Interpretability and explainability",
+      "proxy_slug": "risk_factors_interpretability_and_explainability",
+      "proxy_tier": "secondary",
+      "counts": {
+        "train": 112,
+        "dev": 23,
+        "test": 6
+      },
+      "validated_counts": {
+        "train": 21,
+        "dev": 6,
+        "test": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "manifest_version": 1,
+  "source_family": "equality_neutrality",
+  "source_proxy": "Risk factors: Bias",
+  "source_proxy_slug": "risk_factors_bias",
+  "target_family": "sustainability",
+  "target_proxy": "Risk factors: Safety",
+  "target_proxy_slug": "risk_factors_safety",
+  "family_relation": "cross_family",
+  "evaluation_split": "test",
+  "feature_bank_path": null,
+  "expected_feature_bank_glob": "results/policy_discovery/equality_neutrality/risk_factors_bias/**/feature_bank.json"
+}

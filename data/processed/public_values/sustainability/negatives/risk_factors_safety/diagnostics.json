@@ -1,0 +1,47 @@
+{
+  "train": {
+    "n_positives": 401,
+    "n_candidates": 1564,
+    "n_matched": 401,
+    "candidate_reuse_events": 0,
+    "mean_matching_score": 0.5898333283739529,
+    "mean_text_similarity": 0.35445317146257604,
+    "authority_match_rate": 0.972568578553616,
+    "jurisdiction_match_rate": 0.9800498753117207,
+    "document_form_match_rate": 0.9800498753117207,
+    "domain_overlap_mean": 0.10649269682935518,
+    "year_score_mean": 0.9173138582116138,
+    "length_score_mean": 0.805476057045717,
+    "encoding_method_used": "tfidf"
+  },
+  "dev": {
+    "n_positives": 74,
+    "n_candidates": 371,
+    "n_matched": 74,
+    "candidate_reuse_events": 0,
+    "mean_matching_score": 0.5897777461519201,
+    "mean_text_similarity": 0.29654834178453465,
+    "authority_match_rate": 0.9864864864864865,
+    "jurisdiction_match_rate": 1.0,
+    "document_form_match_rate": 1.0,
+    "domain_overlap_mean": 0.27702702702702703,
+    "year_score_mean": 0.9425675675675675,
+    "length_score_mean": 0.8285126261914987,
+    "encoding_method_used": "tfidf"
+  },
+  "test": {
+    "n_positives": 38,
+    "n_candidates": 271,
+    "n_matched": 38,
+    "candidate_reuse_events": 0,
+    "mean_matching_score": 0.579315405402237,
+    "mean_text_similarity": 0.2959951946314395,
+    "authority_match_rate": 1.0,
+    "jurisdiction_match_rate": 1.0,
+    "document_form_match_rate": 1.0,
+    "domain_overlap_mean": 0.18421052631578946,
+    "year_score_mean": 0.9868421052631579,
+    "length_score_mean": 0.783544099233523,
+    "encoding_method_used": "tfidf"
+  }
+}

@@ -90,20 +90,28 @@ Only the first three axes define the main method comparison table. Causality is 
 pip install -r requirements.txt
 ```
 
-The main code expects local access to AGORA files and model artifacts. These large local resources are intentionally not tracked in the repository.
+The repository now includes the processed `data/processed/public_values` manifests needed for the benchmark and assistant experiments. For the current experimental path, Lambda runs can start from these tracked processed files without rebuilding manifests from raw AGORA inputs.
+
+Raw AGORA files are still needed only if you want to regenerate the processed manifests locally.
 
 ## Useful Commands
 
-Build proxy manifests:
+Build proxy manifests from raw AGORA data:
 
 ```bash
 python scripts/build_public_value_corpus.py
 ```
 
-Build matched negatives:
+Build matched negatives from raw AGORA data:
 
 ```bash
 python scripts/build_matched_negatives.py
+```
+
+Run the benchmark directly from the tracked processed manifests:
+
+```bash
+python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark.yaml
 ```
 
 Run the benchmark preflight:

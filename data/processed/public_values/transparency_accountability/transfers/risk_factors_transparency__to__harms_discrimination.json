@@ -1,0 +1,13 @@
+{
+  "manifest_version": 1,
+  "source_family": "transparency_accountability",
+  "source_proxy": "Risk factors: Transparency",
+  "source_proxy_slug": "risk_factors_transparency",
+  "target_family": "equality_neutrality",
+  "target_proxy": "Harms: Discrimination",
+  "target_proxy_slug": "harms_discrimination",
+  "family_relation": "cross_family",
+  "evaluation_split": "test",
+  "feature_bank_path": null,
+  "expected_feature_bank_glob": "results/policy_discovery/transparency_accountability/risk_factors_transparency/**/feature_bank.json"
+}

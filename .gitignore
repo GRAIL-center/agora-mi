@@ -25,6 +25,9 @@ tmp/
 tmp_smoke/
 data/raw/
 data/processed/
+!data/processed/
+!data/processed/public_values/
+!data/processed/public_values/**
 
 agora/
 agora.zip

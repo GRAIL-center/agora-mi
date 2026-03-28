@@ -1,0 +1,13 @@
+{
+  "manifest_version": 1,
+  "source_family": "sustainability",
+  "source_proxy": "Harms: Ecological harm",
+  "source_proxy_slug": "harms_ecological_harm",
+  "target_family": "transparency_accountability",
+  "target_proxy": "Risk factors: Transparency",
+  "target_proxy_slug": "risk_factors_transparency",
+  "family_relation": "cross_family",
+  "evaluation_split": "test",
+  "feature_bank_path": null,
+  "expected_feature_bank_glob": "results/policy_discovery/sustainability/harms_ecological_harm/**/feature_bank.json"
+}

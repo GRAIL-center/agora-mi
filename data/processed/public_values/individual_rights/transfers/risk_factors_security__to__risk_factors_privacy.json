@@ -1,0 +1,13 @@
+{
+  "manifest_version": 1,
+  "source_family": "individual_rights",
+  "source_proxy": "Risk factors: Security",
+  "source_proxy_slug": "risk_factors_security",
+  "target_family": "individual_rights",
+  "target_proxy": "Risk factors: Privacy",
+  "target_proxy_slug": "risk_factors_privacy",
+  "family_relation": "within_family",
+  "evaluation_split": "test",
+  "feature_bank_path": null,
+  "expected_feature_bank_glob": "results/policy_discovery/individual_rights/risk_factors_security/**/feature_bank.json"
+}

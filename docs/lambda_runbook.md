@@ -5,7 +5,7 @@ This document provides copy and paste one line commands for running the full pol
 ## Assumptions
 
 1. The repository has already been cloned on the Lambda machine.
-2. AGORA raw files are available locally under `agora/agora/` or `data/raw/agora/`.
+2. The tracked processed manifests under `data/processed/public_values` are present after cloning the repository.
 3. You have accepted the Hugging Face access terms for `google/gemma-2-2b` and can authenticate with a token.
 4. Commands are run from the repository root.
 
@@ -27,67 +27,61 @@ python3 -m venv .venv && source .venv/bin/activate && python -m pip install --up
 export HF_TOKEN="YOUR_HF_TOKEN" && python -c "from huggingface_hub import login; import os; login(token=os.environ['HF_TOKEN'])"
 ```
 
-## Step 4. Build proxy manifests
+## Step 4. Verify processed manifests
 
 ```bash
-python scripts/build_public_value_corpus.py
+python -c "from pathlib import Path; p=Path('data/processed/public_values'); print('exists', p.exists()); print('summary', (p/'summary.json').exists())"
 ```
 
-## Step 5. Build matched negatives
-
-```bash
-python scripts/build_matched_negatives.py
-```
-
-## Step 6. Run benchmark preflight
+## Step 5. Run benchmark preflight
 
 ```bash
 python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark.yaml --output_root results/policy_feature_benchmark_lambda
 ```
 
-## Step 7. Run benchmark cheap baselines
+## Step 6. Run benchmark cheap baselines
 
 ```bash
 python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_cheap.yaml --output_root results/policy_feature_benchmark_lambda
 ```
 
-## Step 8. Run the benchmark dense residual stage
+## Step 7. Run the benchmark dense residual stage
 
 ```bash
 python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_dense.yaml --output_root results/policy_feature_benchmark_lambda
 ```
 
-## Step 9. Run the benchmark sparse SAE stage and causal qualification
+## Step 8. Run the benchmark sparse SAE stage and causal qualification
 
 ```bash
 python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_sae.yaml --output_root results/policy_feature_benchmark_lambda
 ```
 
-## Step 10. Aggregate benchmark outputs
+## Step 9. Aggregate benchmark outputs
 
 ```bash
 python scripts/aggregate_policy_feature_benchmark.py --config configs/policy_feature_benchmark.yaml --output_root results/policy_feature_benchmark_lambda
 ```
 
-## Step 11. Run the assistant cheap stage
+## Step 10. Run the assistant cheap stage
 
 ```bash
 python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_cheap.yaml --output_root results/policy_analysis_assistant_lambda
 ```
 
-## Step 12. Run the assistant dense stage
+## Step 11. Run the assistant dense stage
 
 ```bash
 python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_dense.yaml --output_root results/policy_analysis_assistant_lambda
 ```
 
-## Step 13. Run the assistant sparse stage
+## Step 12. Run the assistant sparse stage
 
 ```bash
 python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_sae.yaml --output_root results/policy_analysis_assistant_lambda
 ```
 
-## Step 14. Optional single document analysis
+## Step 13. Optional single document analysis
 
 ```bash
 python scripts/run_policy_document_analysis.py --input_path path/to/document.txt --config configs/policy_analysis_assistant_sae.yaml --output_path results/policy_document_analysis_lambda.json --document_id lambda_doc_1 --title "Lambda Document" --source_type lambda_text
@@ -114,10 +108,10 @@ python scripts/run_policy_document_analysis.py --input_path path/to/document.txt
 
 ## Optional sanity checks
 
-Check AGORA detection:
+Check processed manifests:
 
 ```bash
-python -c "from pathlib import Path; paths = [Path('agora/agora'), Path('data/raw/agora')]; print({str(p): p.exists() for p in paths})"
+python -c "from pathlib import Path; p = Path('data/processed/public_values'); print('exists', p.exists()); print('summary', (p/'summary.json').exists())"
 ```
 
 Check GPU visibility:
