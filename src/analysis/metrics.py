@@ -61,3 +61,82 @@ def distinct_n(texts: list[str], n: int) -> float:
     if total == 0:
         return 0.0
     return float(len(grams) / total)
+
+
+def average_precision(y_true: np.ndarray, scores: np.ndarray) -> float:
+    y = np.asarray(y_true).astype(int)
+    s = np.asarray(scores, dtype=np.float64)
+    n_pos = int((y == 1).sum())
+    if y.size == 0 or s.size == 0 or y.shape[0] != s.shape[0] or n_pos == 0:
+        return float("nan")
+    order = np.argsort(s)[::-1]
+    ranked = y[order]
+    precision = np.cumsum(ranked) / np.arange(1, ranked.size + 1)
+    return float((precision * ranked).sum() / n_pos)
+
+
+def precision_at_k_binary(labels: np.ndarray, scores: np.ndarray, k: int) -> float:
+    y = np.asarray(labels).astype(int)
+    s = np.asarray(scores, dtype=np.float64)
+    if y.size == 0 or s.size == 0 or y.shape[0] != s.shape[0] or k <= 0:
+        return float("nan")
+    topk = min(int(k), y.size)
+    order = np.argsort(s)[::-1][:topk]
+    return float(y[order].sum() / topk)
+
+
+def recall_at_k_binary(labels: np.ndarray, scores: np.ndarray, k: int) -> float:
+    y = np.asarray(labels).astype(int)
+    s = np.asarray(scores, dtype=np.float64)
+    n_pos = int((y == 1).sum())
+    if y.size == 0 or s.size == 0 or y.shape[0] != s.shape[0] or k <= 0 or n_pos == 0:
+        return float("nan")
+    topk = min(int(k), y.size)
+    order = np.argsort(s)[::-1][:topk]
+    return float(y[order].sum() / n_pos)
+
+
+def first_relevant_rank_binary(labels: np.ndarray, scores: np.ndarray) -> float:
+    y = np.asarray(labels).astype(int)
+    s = np.asarray(scores, dtype=np.float64)
+    if y.size == 0 or s.size == 0 or y.shape[0] != s.shape[0]:
+        return float("nan")
+    order = np.argsort(s)[::-1]
+    ranked = y[order]
+    hits = np.flatnonzero(ranked == 1)
+    if hits.size == 0:
+        return float("nan")
+    return float(hits[0] + 1)
+
+
+def ndcg_at_k_binary(labels: np.ndarray, scores: np.ndarray, k: int) -> float:
+    y = np.asarray(labels).astype(int)
+    s = np.asarray(scores, dtype=np.float64)
+    if y.size == 0 or s.size == 0 or y.shape[0] != s.shape[0] or k <= 0:
+        return float("nan")
+    topk = min(int(k), y.size)
+    order = np.argsort(s)[::-1][:topk]
+    ranked = y[order].astype(np.float64)
+    discounts = 1.0 / np.log2(np.arange(2, topk + 2))
+    dcg = float(((2.0**ranked - 1.0) * discounts).sum())
+    ideal = np.sort(y.astype(np.float64))[::-1][:topk]
+    idcg = float(((2.0**ideal - 1.0) * discounts).sum())
+    if idcg == 0.0:
+        return float("nan")
+    return float(dcg / idcg)
+
+
+def reciprocal_rank_from_order(relevant_mask: np.ndarray) -> float:
+    hits = np.flatnonzero(np.asarray(relevant_mask).astype(bool))
+    if hits.size == 0:
+        return 0.0
+    return float(1.0 / float(hits[0] + 1))
+
+
+def cosine_similarity(x: np.ndarray, y: np.ndarray) -> float:
+    a = np.asarray(x, dtype=np.float64)
+    b = np.asarray(y, dtype=np.float64)
+    denom = np.linalg.norm(a) * np.linalg.norm(b)
+    if denom == 0.0:
+        return 0.0
+    return float(np.dot(a, b) / denom)

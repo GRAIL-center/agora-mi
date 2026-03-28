@@ -4,6 +4,8 @@ This repository accompanies a research paper project on the internal representat
 
 The project studies proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
 
+The same mechanistic pipeline also supports an applied policy analysis assistant layer for segment highlighting, cross document retrieval, and review triage. In this repository, that assistant layer is treated as a downstream use of the mechanistic evidence rather than as a replacement for it.
+
 ## Paper Focus
 
 The central research questions are:
@@ -25,6 +27,16 @@ The current v1 empirical core focuses on three related concept pairs:
 
 These pairs support a compact evaluation protocol for policy feature discovery, transfer, robustness, and causal qualification.
 
+## Policy Analysis Assistant Extension
+
+The assistant layer is built on top of the mechanistic core workflow.
+
+1. Highlight policy relevant segments using proxy and family aligned internal signals
+2. Retrieve segments from the corpus that share similar policy logic
+3. Triage which document segments deserve closer human review first
+
+The assistant does not replace the scientific core. Discovery, transfer, masking, and intervention remain the main evidence chain. Assistant facing scores and grounded natural language notes are presentation layers over that evidence.
+
 ## Repository Layout
 
 ```text
@@ -41,9 +53,9 @@ For a guided walkthrough from data processing to mechanistic interpretability, s
 
 `docs/tutorials/policy_representation_tutorial.ipynb`
 
-The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step.
+The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step. It now ends with a transition from mechanistic evidence to policy analysis support objects such as `segment_card`, `document_brief`, retrieval examples, and grounded natural language notes.
 
-For staged Lambda commands for the expensive runs, see `docs/lambda_runbook.md`.
+For the full Lambda run sequence for benchmark and assistant experiments, see `docs/lambda_runbook.md`.
 
 ## Method Overview
 
@@ -111,6 +123,25 @@ Aggregate benchmark outputs:
 ```bash
 python scripts/aggregate_policy_feature_benchmark.py
 ```
+
+Run the policy analysis assistant experiment suite:
+
+```bash
+python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant.yaml
+```
+
+Analyze a single document with the sparse assistant:
+
+```bash
+python scripts/run_policy_document_analysis.py --input_path path/to/document.txt --output_path results/policy_document_analysis.json
+```
+
+Main assistant outputs:
+
+1. `results/policy_analysis_assistant/summary/assistant_leaderboard.json`
+2. `results/policy_analysis_assistant/summary/assistant_report.json`
+3. `results/policy_analysis_assistant/summary/trust_bundle.json`
+4. `results/policy_document_analysis.json`
 
 ## Figures and Tutorials
 

@@ -131,7 +131,7 @@ class SentenceEmbeddingEncoder:
                 hidden = model_out.last_hidden_state
                 mask = enc["attention_mask"].unsqueeze(-1)
                 pooled = (hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1)
-            outputs.append(pooled.detach().cpu().numpy().astype(np.float32))
+            outputs.append(pooled.detach().to(torch.float32).cpu().numpy().astype(np.float32))
         matrix = np.concatenate(outputs, axis=0)
         norms = np.linalg.norm(matrix, axis=1, keepdims=True)
         norms = np.where(norms == 0.0, 1.0, norms)
@@ -198,7 +198,7 @@ class InternalFeatureExtractor:
                 pooled = pool_sequence_activations(seq, attention_mask=enc["attention_mask"], pooling=pooling)
                 if sae is not None:
                     pooled = encode_features(sae, pooled.to(torch.float32))
-            outputs.append(pooled.detach().cpu().numpy().astype(np.float32))
+            outputs.append(pooled.detach().to(torch.float32).cpu().numpy().astype(np.float32))
         matrix = np.concatenate(outputs, axis=0) if outputs else np.zeros((0, 1), dtype=np.float32)
         self._feature_cache[cache_key] = matrix
         return matrix

@@ -1,0 +1,18 @@
+benchmark_config: configs/policy_feature_benchmark_dense.yaml
+benchmark_output_root: results/policy_feature_benchmark
+output_root: results/policy_analysis_assistant_dense
+splits:
+  evaluation: test
+scoring:
+  weights:
+    concern: 0.60
+    related_support: 0.25
+    reliability: 0.15
+analysis:
+  document_top_k_segments: 3
+  surfaced_segments_per_family: 5
+retrieval:
+  top_k: 5
+segmentation:
+  chunk_chars: 1200
+  overlap_chars: 200

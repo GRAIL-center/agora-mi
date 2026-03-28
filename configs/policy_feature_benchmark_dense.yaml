@@ -3,7 +3,7 @@ benchmark_id: policy_feature_benchmark
 output_root: results/policy_feature_benchmark
 manifest_root: data/processed/public_values
 policy_config: configs/policy_mech_interp.yaml
-manifest_summary_path: logs/build_public_value_corpus_summary.json
+manifest_summary_path: data/processed/public_values/summary.json
 splits:
   train: train
   dev: dev
