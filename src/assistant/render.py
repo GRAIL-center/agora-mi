@@ -20,6 +20,9 @@ def build_segment_note(segment_card: dict[str, Any]) -> str:
     reliability_score = _fmt(segment_card.get("reliability_score"))
     priority_score = _fmt(segment_card.get("priority_score"))
     supporting_feature_count = segment_card.get("supporting_feature_count")
+    top_feature_ids = segment_card.get("top_feature_ids") or []
+    mean_feature_stability = _fmt(segment_card.get("mean_feature_stability"))
+    causal_badge = str(segment_card.get("causal_badge") or "not_tested")
 
     rank_text = f"ranked {rank} of {total_segments} in this document" if rank and total_segments else "surfaced in this document"
     feature_text = (
@@ -27,6 +30,11 @@ def build_segment_note(segment_card: dict[str, Any]) -> str:
         if supporting_feature_count is not None
         else "It is supported by the fitted internal scoring model."
     )
+    if top_feature_ids:
+        feature_text += (
+            f" Top sparse features: {', '.join(str(int(feature_id)) for feature_id in top_feature_ids[:3])} "
+            f"(mean stability {mean_feature_stability}; causal status {causal_badge})."
+        )
     return (
         f"This segment is surfaced for {family.lower()} with {proxy_anchor.lower()} as the strongest anchor "
         f"(priority {priority_score}; {rank_text}). "

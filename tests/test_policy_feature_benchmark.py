@@ -106,6 +106,8 @@ def _make_stub_runner(method_name: str, *, selected_layer: int | None, causality
     def _runner(config: dict, task_registry: dict, output_root: Path) -> dict:
         task_ids = [task["task_id"] for task in task_registry["coverage_tasks"]]
         family_by_task = {task["task_id"]: task["family"] for task in task_registry["coverage_tasks"]}
+        feature_bank_root = output_root / "_stub_feature_banks"
+        feature_bank_root.mkdir(parents=True, exist_ok=True)
         result = {
             "benchmark_name": config["benchmark_name"],
             "benchmark_id": config["benchmark_id"],
@@ -117,6 +119,21 @@ def _make_stub_runner(method_name: str, *, selected_layer: int | None, causality
         }
         for index, task in enumerate(task_registry["coverage_tasks"]):
             coverage_auc = 0.70 + (index * 0.01)
+            feature_bank_path = None
+            if selected_layer is not None:
+                feature_bank_path = feature_bank_root / f"{task['task_id']}.json"
+                feature_bank_payload = {
+                    "feature_ids": [101, 102, 103],
+                    "feature_weights": [0.90, 0.60, 0.35],
+                    "bootstrap_stability": {"101": 0.80, "102": 0.72, "103": 0.66},
+                    "feature_priority": {"101": 1.0, "102": 0.8, "103": 0.6},
+                    "top_activating_segment_ids": {
+                        "101": [f"{task['task_id']}_eval_0"],
+                        "102": [f"{task['task_id']}_eval_1"],
+                        "103": [f"{task['task_id']}_eval_0"],
+                    },
+                }
+                feature_bank_path.write_text(json.dumps(feature_bank_payload, ensure_ascii=False, indent=2), encoding="utf-8")
             result["coverage"][task["task_id"]] = {
                 "task_id": task["task_id"],
                 "family": task["family"],
@@ -138,6 +155,10 @@ def _make_stub_runner(method_name: str, *, selected_layer: int | None, causality
                 "selection_source": "inner_train_valid" if selected_layer is not None else "none",
                 "mask_keywords": task["mask_keywords"],
                 "feature_count": 32 if selected_layer is not None else None,
+                "stable_feature_count": 3 if selected_layer is not None else 0,
+                "high_confidence_feature_count": 3 if selected_layer is not None else 0,
+                "high_confidence_feature_ids": [101, 102, 103] if selected_layer is not None else [],
+                "feature_bank_path": None if feature_bank_path is None else str(feature_bank_path),
                 "evaluation_segment_ids": [f"{task['task_id']}_eval_0", f"{task['task_id']}_eval_1"],
                 "masked_evaluation_segment_ids": [f"{task['task_id']}_eval_0", f"{task['task_id']}_eval_1"],
             }
@@ -161,23 +182,32 @@ def _make_stub_runner(method_name: str, *, selected_layer: int | None, causality
                 "target_aucs": {target_task_id: 0.55 for target_task_id in cross_targets},
                 "mean_cross_family_auc": 0.55,
             }
-        for family_name in config["causality"]["families"]:
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
             if causality_enabled:
-                result["causality"][family_name] = {
+                result["causality"][task_id] = {
                     "status": "ok",
-                    "layer": selected_layer,
+                    "selected_layer": selected_layer,
                     "site": "resid_post",
-                    "n_core_features": 3,
-                    "causality_score": 0.2,
-                    "details_path": f"{family_name}.json",
+                    "n_high_confidence_features": 3,
+                    "best_k": 3,
+                    "causal_selectivity": 0.2,
+                    "ci_low": 0.05,
+                    "ci_high": 0.30,
+                    "passes_positive_causality": True,
+                    "details_path": f"{task_id}.json",
                 }
             else:
-                result["causality"][family_name] = {
-                    "status": "na",
-                    "layer": None,
+                result["causality"][task_id] = {
+                    "status": "not_tested",
+                    "selected_layer": None,
                     "site": None,
-                    "n_core_features": None,
-                    "causality_score": None,
+                    "n_high_confidence_features": 0,
+                    "best_k": None,
+                    "causal_selectivity": None,
+                    "ci_low": None,
+                    "ci_high": None,
+                    "passes_positive_causality": False,
                     "details_path": None,
                 }
         return result
@@ -261,6 +291,7 @@ class PolicyFeatureBenchmarkTests(unittest.TestCase):
             "preflight_report_path",
             "core_leaderboard_path",
             "main_table_path",
+            "table_main_benchmark_results_path",
             "mechanistic_qualification_path",
             "coverage_task_summary_path",
             "consistency_summary_path",
@@ -269,6 +300,12 @@ class PolicyFeatureBenchmarkTests(unittest.TestCase):
             "appendix_task_inventory_path",
             "paper_readout_path",
             "benchmark_report_path",
+            "feature_dossiers_path",
+            "proxy_feature_summary_path",
+            "proxy_causal_summary_path",
+            "pair_mechanistic_summary_path",
+            "table_proxy_mechanistic_evidence_path",
+            "table_pair_transfer_and_causality_path",
         ):
             self.assertTrue(Path(outputs[path_key]).exists())
         for method_name in runner_factories:
@@ -294,6 +331,8 @@ class PolicyFeatureBenchmarkTests(unittest.TestCase):
         self.assertEqual(sae_row["status"], "ok")
         self.assertTrue((self.output_root / "summary" / "main_table.csv").exists())
         self.assertTrue((self.output_root / "summary" / "paper_readout.json").exists())
+        self.assertTrue((self.output_root / "summary" / "proxy_causal_summary.csv").exists())
+        self.assertTrue((self.output_root / "summary" / "table_pair_transfer_and_causality.csv").exists())
 
     def test_cross_family_averaging_is_deterministic(self):
         runner_factories = {

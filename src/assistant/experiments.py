@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import math
 from pathlib import Path
@@ -87,6 +88,66 @@ def _load_assistant_config(path: str | Path) -> dict[str, Any]:
     cfg["benchmark_output_root"] = str(_resolve_path(cfg["benchmark_output_root"]))
     cfg["__benchmark"] = load_benchmark_config(cfg["benchmark_config"])
     return cfg
+
+
+def _read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def _parse_boolish(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    return text in {"1", "true", "yes", "y"}
+
+
+def _causal_badge_from_row(row: dict[str, Any] | None) -> str:
+    if not row:
+        return "not_tested"
+    if _parse_boolish(row.get("passes_positive_causality", False)):
+        return "passed"
+    status = str(row.get("status", "")).strip().lower()
+    if status in {"ok", "tested", "completed"}:
+        return "tested_not_passed"
+    return "not_tested"
+
+
+def _load_sparse_proxy_evidence(assistant_cfg: dict[str, Any]) -> dict[str, Any]:
+    benchmark_output_root = Path(assistant_cfg["benchmark_output_root"])
+    summary_root = benchmark_output_root / "summary"
+    proxy_causal_rows = _read_csv_rows(summary_root / "proxy_causal_summary.csv")
+    proxy_feature_rows = _read_csv_rows(summary_root / "proxy_feature_summary.csv")
+    pair_rows = _read_csv_rows(summary_root / "pair_mechanistic_summary.csv")
+    if not proxy_causal_rows and not pair_rows:
+        return {
+            "status": "missing_benchmark_results",
+            "benchmark_output_root": str(benchmark_output_root),
+            "summary_root": str(summary_root),
+            "proxy_causal_rows": [],
+            "proxy_feature_rows": [],
+            "pair_rows": [],
+            "proxy_causal_map": {},
+            "proxy_feature_map": {},
+            "proxy_causal_badges": {},
+        }
+    proxy_causal_map = {str(row.get("proxy_slug", "")): row for row in proxy_causal_rows if row.get("proxy_slug")}
+    proxy_feature_map = {str(row.get("proxy_slug", "")): row for row in proxy_feature_rows if row.get("proxy_slug")}
+    return {
+        "status": "ok",
+        "benchmark_output_root": str(benchmark_output_root),
+        "summary_root": str(summary_root),
+        "proxy_causal_rows": proxy_causal_rows,
+        "proxy_feature_rows": proxy_feature_rows,
+        "pair_rows": pair_rows,
+        "proxy_causal_map": proxy_causal_map,
+        "proxy_feature_map": proxy_feature_map,
+        "proxy_causal_badges": {
+            proxy_slug: _causal_badge_from_row(row) for proxy_slug, row in proxy_causal_map.items()
+        },
+    }
 
 
 def _eligible_rows(manifest_root: Path, split: str) -> list[dict[str, Any]]:
@@ -397,6 +458,8 @@ def _fit_sparse_artifact(
     task_feature_weights: dict[str, list[float]] = {}
     task_bootstrap_means: dict[str, float] = {}
     task_dense_sparse_agreement: dict[str, float] = {}
+    task_feature_stability: dict[str, dict[int, float]] = {}
+    task_selected_feature_activations: dict[str, np.ndarray] = {}
     task_banks: dict[str, dict[str, Any]] = {}
 
     for index, task in enumerate(task_registry["coverage_tasks"]):
@@ -515,6 +578,13 @@ def _fit_sparse_artifact(
         task_feature_ids[task_id] = [int(fid) for fid in bank["feature_ids"].tolist()]
         task_feature_weights[task_id] = [float(value) for value in bank["feature_weights"].tolist()]
         task_bootstrap_means[task_id] = _nanmean(list(bank["bootstrap_stability"].values()))
+        task_feature_stability[task_id] = {
+            int(feature_id): float(value) for feature_id, value in bank["bootstrap_stability"].items()
+        }
+        if bank["feature_ids"].size > 0:
+            task_selected_feature_activations[task_id] = eligible_features[:, bank["feature_ids"]].astype(np.float32)
+        else:
+            task_selected_feature_activations[task_id] = np.zeros((len(eligible_rows), 0), dtype=np.float32)
         dense_norm = None if dense_reference_norm is None else dense_reference_norm.get(task_id)
         task_dense_sparse_agreement[task_id] = _corr01(task_scores_norm[task_id], dense_norm) if dense_norm is not None else float("nan")
         task_banks[task_id] = bank
@@ -581,6 +651,8 @@ def _fit_sparse_artifact(
         "task_feature_weights": task_feature_weights,
         "task_bootstrap_means": task_bootstrap_means,
         "task_dense_sparse_agreement": task_dense_sparse_agreement,
+        "task_feature_stability": task_feature_stability,
+        "task_selected_feature_activations": task_selected_feature_activations,
         "task_banks": task_banks,
         "family_sparse_vectors": family_sparse_vectors,
         "family_dense_vectors": family_dense_vectors,
@@ -592,11 +664,46 @@ def _fit_sparse_artifact(
     }
 
 
+def _top_sparse_feature_fields(
+    artifact: dict[str, Any],
+    task_id: str,
+    row_index: int,
+    *,
+    top_n: int = 3,
+) -> tuple[list[int], list[float], float]:
+    feature_ids = [int(value) for value in artifact.get("task_feature_ids", {}).get(task_id, [])]
+    feature_weights = [float(value) for value in artifact.get("task_feature_weights", {}).get(task_id, [])]
+    stability_map = {
+        int(feature_id): float(value)
+        for feature_id, value in artifact.get("task_feature_stability", {}).get(task_id, {}).items()
+    }
+    if not feature_ids or not feature_weights:
+        return [], [], float("nan")
+
+    activation_matrix = artifact.get("task_selected_feature_activations", {}).get(task_id)
+    if activation_matrix is not None and row_index < int(activation_matrix.shape[0]):
+        activations = np.asarray(activation_matrix[row_index], dtype=np.float64)
+        contributions = activations * np.asarray(feature_weights, dtype=np.float64)
+        positive_order = [int(i) for i in np.argsort(-contributions) if contributions[int(i)] > 0]
+        if positive_order:
+            ranked = positive_order[:top_n]
+        else:
+            ranked = [int(i) for i in np.argsort(-np.abs(contributions))[:top_n]]
+    else:
+        ranked = [int(i) for i in np.argsort(-np.abs(np.asarray(feature_weights, dtype=np.float64)))[:top_n]]
+
+    top_feature_ids = [int(feature_ids[i]) for i in ranked]
+    top_feature_weights = [float(feature_weights[i]) for i in ranked]
+    mean_stability = _nanmean([stability_map.get(int(feature_id), float("nan")) for feature_id in top_feature_ids])
+    return top_feature_ids, top_feature_weights, mean_stability
+
+
 def _build_family_cards(
     rows: list[dict[str, Any]],
     family_def: dict[str, Any],
     artifact: dict[str, Any],
     scoring_cfg: dict[str, Any],
+    proxy_evidence: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     left_task_id = family_def["left_task_id"]
     right_task_id = family_def["right_task_id"]
@@ -608,6 +715,7 @@ def _build_family_cards(
     concern_weight = float(scoring_cfg["weights"]["concern"])
     related_weight = float(scoring_cfg["weights"]["related_support"])
     reliability_weight = float(scoring_cfg["weights"]["reliability"])
+    proxy_causal_badges = {} if proxy_evidence is None else dict(proxy_evidence.get("proxy_causal_badges", {}))
 
     cards: list[dict[str, Any]] = []
     for index, row in enumerate(rows):
@@ -639,8 +747,19 @@ def _build_family_cards(
         )
 
         supporting_feature_count = None
+        top_feature_ids: list[int] = []
+        top_feature_weights: list[float] = []
+        mean_feature_stability = float("nan")
+        causal_badge = "not_tested"
         if sparse_vectors is not None:
             supporting_feature_count = int(np.sum(sparse_vectors[index] > 0))
+        if artifact["method_name"] == "sparse_sae_feature_bank":
+            top_feature_ids, top_feature_weights, mean_feature_stability = _top_sparse_feature_fields(
+                artifact,
+                anchor_task_id,
+                index,
+            )
+            causal_badge = str(proxy_causal_badges.get(anchor_task_id, "not_tested"))
         elif artifact["method_name"] == "dense_residual_logreg":
             supporting_feature_count = int(artifact.get("feature_dims", {}).get(anchor_task_id, 0))
 
@@ -662,6 +781,11 @@ def _build_family_cards(
             "document_rank": None,
             "document_segment_count": None,
             "supporting_feature_count": supporting_feature_count,
+            "selected_layer": artifact.get("task_layers", {}).get(anchor_task_id),
+            "top_feature_ids": top_feature_ids,
+            "top_feature_weights": top_feature_weights,
+            "mean_feature_stability": float(mean_feature_stability) if not math.isnan(mean_feature_stability) else float("nan"),
+            "causal_badge": causal_badge,
             "retrieved_examples": [],
             "natural_language_note": "",
         }
@@ -896,6 +1020,7 @@ def _build_method_summary(
     benchmark_cfg: dict[str, Any],
     rows: list[dict[str, Any]],
     artifact: dict[str, Any],
+    proxy_evidence: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     top_k_segments = int(assistant_cfg["analysis"].get("document_top_k_segments", 3))
     surfaced_top_k = int(assistant_cfg["analysis"].get("surfaced_segments_per_family", 5))
@@ -918,7 +1043,7 @@ def _build_method_summary(
     }
 
     for family_def in _family_defs(benchmark_cfg):
-        cards = _build_family_cards(rows, family_def, artifact, assistant_cfg["scoring"])
+        cards = _build_family_cards(rows, family_def, artifact, assistant_cfg["scoring"], proxy_evidence)
         highlighting = _evaluate_highlighting(rows, family_def, cards)
         retrieval, examples = _evaluate_retrieval(
             rows,
@@ -963,6 +1088,17 @@ def _build_method_summary(
         "retrieval": retrieval_metrics,
         "triage": triage_metrics,
     }
+
+
+def _assistant_feature_card_rows(method_summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for summary in method_summaries:
+        method_name = str(summary["method_name"])
+        for card in summary["segment_cards"]:
+            row = dict(card)
+            row["method_name"] = method_name
+            rows.append(row)
+    return rows
 
 
 def _summary_table_rows(method_summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1029,66 +1165,15 @@ def _summary_table_rows(method_summaries: list[dict[str, Any]]) -> list[dict[str
 
 
 def _load_trust_bundle(assistant_cfg: dict[str, Any], benchmark_cfg: dict[str, Any]) -> dict[str, Any]:
-    benchmark_output_root = Path(assistant_cfg["benchmark_output_root"])
-    sparse_path = benchmark_output_root / "method_results" / "sparse_sae_feature_bank.json"
-    if not sparse_path.exists():
-        return {
-            "status": "missing_benchmark_results",
-            "benchmark_output_root": str(benchmark_output_root),
-            "pairs": [],
-        }
-    sparse_obj = json.loads(sparse_path.read_text(encoding="utf-8"))
-    pairs: list[dict[str, Any]] = []
-    for family_def in _family_defs(benchmark_cfg):
-        left_task_id = family_def["left_task_id"]
-        right_task_id = family_def["right_task_id"]
-        forward_key = f"{left_task_id}__to__{right_task_id}"
-        reverse_key = f"{right_task_id}__to__{left_task_id}"
-        left_cov = sparse_obj.get("coverage", {}).get(left_task_id, {})
-        right_cov = sparse_obj.get("coverage", {}).get(right_task_id, {})
-        forward_consistency = sparse_obj.get("consistency", {}).get(forward_key, {})
-        reverse_consistency = sparse_obj.get("consistency", {}).get(reverse_key, {})
-        left_cross = sparse_obj.get("cross_family_controls", {}).get(left_task_id, {})
-        right_cross = sparse_obj.get("cross_family_controls", {}).get(right_task_id, {})
-        family_causality = sparse_obj.get("causality", {}).get(family_def["family"], {})
-        left_layer = left_cov.get("selected_layer")
-        right_layer = right_cov.get("selected_layer")
-        if left_layer is None or right_layer is None:
-            layer_consistency = "missing"
-        elif int(left_layer) == int(right_layer):
-            layer_consistency = "aligned_selected_layers"
-        else:
-            layer_consistency = "mixed_selected_layers"
-        pairs.append(
-            {
-                "family": family_def["family"],
-                "family_display_name": family_def["family_display_name"],
-                "left_task_id": left_task_id,
-                "right_task_id": right_task_id,
-                "left_coverage_auc": left_cov.get("coverage_auc"),
-                "right_coverage_auc": right_cov.get("coverage_auc"),
-                "forward_within_pair_transfer": forward_consistency.get("transfer_auc"),
-                "reverse_within_pair_transfer": reverse_consistency.get("transfer_auc"),
-                "forward_cross_pair_transfer": left_cross.get("mean_cross_family_auc"),
-                "reverse_cross_pair_transfer": right_cross.get("mean_cross_family_auc"),
-                "left_masking_retention": (
-                    None
-                    if left_cov.get("coverage_auc") in {None, 0}
-                    else _clip01(_safe_float(left_cov.get("masked_coverage_auc")) / _safe_float(left_cov.get("coverage_auc")))
-                ),
-                "right_masking_retention": (
-                    None
-                    if right_cov.get("coverage_auc") in {None, 0}
-                    else _clip01(_safe_float(right_cov.get("masked_coverage_auc")) / _safe_float(right_cov.get("coverage_auc")))
-                ),
-                "causal_selectivity": family_causality.get("causality_score"),
-                "layer_consistency_status": layer_consistency,
-            }
-        )
+    del benchmark_cfg
+    proxy_evidence = _load_sparse_proxy_evidence(assistant_cfg)
     return {
-        "status": "ok",
-        "benchmark_output_root": str(benchmark_output_root),
-        "pairs": pairs,
+        "status": proxy_evidence["status"],
+        "benchmark_output_root": proxy_evidence["benchmark_output_root"],
+        "summary_root": proxy_evidence["summary_root"],
+        "proxy_feature_evidence": proxy_evidence["proxy_feature_rows"],
+        "proxy_causal_evidence": proxy_evidence["proxy_causal_rows"],
+        "pair_mechanistic_evidence": proxy_evidence["pair_rows"],
     }
 
 
@@ -1121,6 +1206,7 @@ def run_policy_analysis_experiments(
     manifest_root = Path(benchmark_cfg["manifest_root"])
     evaluation_split = str(assistant_cfg.get("splits", {}).get("evaluation", "test"))
     eligible_rows = _eligible_rows(manifest_root, evaluation_split)
+    proxy_evidence = _load_sparse_proxy_evidence(assistant_cfg)
     enabled_methods = [
         method_name
         for method_name, method_cfg in benchmark_cfg["methods"].items()
@@ -1152,7 +1238,7 @@ def run_policy_analysis_experiments(
     method_output_paths: dict[str, str] = {}
     for artifact in artifacts:
         artifact["benchmark_config_path"] = benchmark_cfg["__config_path"]
-        summary = _build_method_summary(assistant_cfg, benchmark_cfg, eligible_rows, artifact)
+        summary = _build_method_summary(assistant_cfg, benchmark_cfg, eligible_rows, artifact, proxy_evidence)
         method_summaries.append(summary)
         output_path = method_results_root / f"{artifact['method_name']}.json"
         save_json(output_path, _json_ready_method_summary(summary))
@@ -1163,8 +1249,9 @@ def run_policy_analysis_experiments(
     retrieval_summary = {summary["method_name"]: summary["retrieval"] for summary in method_summaries}
     triage_summary = {summary["method_name"]: summary["triage"] for summary in method_summaries}
     trust_bundle = _load_trust_bundle(assistant_cfg, benchmark_cfg)
+    assistant_feature_cards = _assistant_feature_card_rows(method_summaries)
     assistant_report = {
-        "assistant_name": "Policy Analysis Assistant Experiment Plan v1",
+        "assistant_name": "Policy Feature Mechanistic Rerun v2 Assistant Layer",
         "config_path": assistant_cfg["__config_path"],
         "benchmark_config_path": benchmark_cfg["__config_path"],
         "benchmark_output_root": assistant_cfg["benchmark_output_root"],
@@ -1174,6 +1261,7 @@ def run_policy_analysis_experiments(
         "leaderboard": leaderboard,
         "trust_bundle_status": trust_bundle["status"],
         "method_output_paths": method_output_paths,
+        "assistant_feature_cards_path": str(summary_root / "assistant_feature_cards.jsonl"),
     }
 
     save_json(summary_root / "assistant_leaderboard.json", leaderboard)
@@ -1182,11 +1270,13 @@ def run_policy_analysis_experiments(
     save_json(summary_root / "triage_summary.json", triage_summary)
     save_json(summary_root / "trust_bundle.json", trust_bundle)
     save_json(summary_root / "assistant_report.json", assistant_report)
+    _write_jsonl(summary_root / "assistant_feature_cards.jsonl", assistant_feature_cards)
     return {
         "output_root": str(out_root),
         "method_output_paths": method_output_paths,
         "leaderboard_path": str(summary_root / "assistant_leaderboard.json"),
         "report_path": str(summary_root / "assistant_report.json"),
+        "assistant_feature_cards_path": str(summary_root / "assistant_feature_cards.jsonl"),
     }
 
 
@@ -1233,6 +1323,7 @@ def analyze_document_with_sparse_assistant(
 
     corpus_rows = _eligible_rows(Path(benchmark_cfg["manifest_root"]), str(assistant_cfg.get("splits", {}).get("evaluation", "test")))
     combined_rows = corpus_rows + prototype_rows
+    proxy_evidence = _load_sparse_proxy_evidence(assistant_cfg)
     dense_artifact = _fit_dense_artifact(benchmark_cfg, task_registry, combined_rows)
     sparse_artifact = _fit_sparse_artifact(
         benchmark_cfg,
@@ -1240,7 +1331,7 @@ def analyze_document_with_sparse_assistant(
         combined_rows,
         dense_reference_norm=dense_artifact["task_scores_norm"],
     )
-    summary = _build_method_summary(assistant_cfg, benchmark_cfg, combined_rows, sparse_artifact)
+    summary = _build_method_summary(assistant_cfg, benchmark_cfg, combined_rows, sparse_artifact, proxy_evidence)
 
     prototype_cards = [
         card

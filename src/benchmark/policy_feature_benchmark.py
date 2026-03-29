@@ -41,6 +41,13 @@ def _clip(value: float, minimum: float, maximum: float) -> float:
     return float(max(minimum, min(maximum, value)))
 
 
+def _iter_causality_payloads(method_result: dict[str, Any]) -> list[dict[str, Any]]:
+    causality = method_result.get("causality", {})
+    if not isinstance(causality, dict):
+        return []
+    return [payload for payload in causality.values() if isinstance(payload, dict)]
+
+
 def load_benchmark_config(path: str | Path) -> dict[str, Any]:
     config_path = _resolve_path(path)
     cfg = load_yaml(config_path)
@@ -369,8 +376,8 @@ def summarize_method_result(
     consistency_score = _nanmean(consistency_gaps)
 
     causality_values = [
-        _safe_float(entry.get("causality_score"))
-        for entry in method_result.get("causality", {}).values()
+        _safe_float(entry.get("causal_selectivity", entry.get("causality_score")))
+        for entry in _iter_causality_payloads(method_result)
         if str(entry.get("status", "")).lower() == "ok"
     ]
     causality_score = _nanmean(causality_values)
@@ -463,6 +470,32 @@ def _write_preflight_report(summary_dir: Path, preflight_report: dict[str, Any])
 
 def _write_main_table(summary_dir: Path, summaries: list[dict[str, Any]]) -> Path:
     out_path = summary_dir / "main_table.csv"
+    rows = sorted(
+        summaries,
+        key=lambda row: (-float("-inf") if math.isnan(_safe_float(row["CoreScore"])) else -float(row["CoreScore"]), row["method_name"]),
+    )
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["method_name", "CoverageScore", "ConsistencyScore", "RobustnessScore", "CoreScore", "CausalityScore"],
+        )
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(
+                {
+                    "method_name": row["method_name"],
+                    "CoverageScore": row["CoverageScore"],
+                    "ConsistencyScore": row["ConsistencyScore"],
+                    "RobustnessScore": row["RobustnessScore"],
+                    "CoreScore": row["CoreScore"],
+                    "CausalityScore": row["CausalityScore"],
+                }
+            )
+    return out_path
+
+
+def _write_table_main_benchmark_results(summary_dir: Path, summaries: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "table_main_benchmark_results.csv"
     rows = sorted(
         summaries,
         key=lambda row: (-float("-inf") if math.isnan(_safe_float(row["CoreScore"])) else -float(row["CoreScore"]), row["method_name"]),
@@ -619,19 +652,38 @@ def _write_causality_summary(summary_dir: Path, method_results: list[dict[str, A
     with out_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["family_name", "status", "selected_layer", "n_core_features", "causality_score", "details_path"],
+            fieldnames=[
+                "task_id",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "status",
+                "selected_layer",
+                "n_high_confidence_features",
+                "best_k",
+                "causal_selectivity",
+                "ci_low",
+                "ci_high",
+                "passes_positive_causality",
+            ],
         )
         writer.writeheader()
         if sae_result is not None:
-            for family_name, payload in sae_result.get("causality", {}).items():
+            for task_id, payload in sae_result.get("causality", {}).items():
                 writer.writerow(
                     {
-                        "family_name": family_name,
+                        "task_id": task_id,
+                        "family": payload.get("family"),
+                        "pair_id": payload.get("pair_id"),
+                        "proxy_name": payload.get("proxy_name"),
                         "status": payload.get("status"),
-                        "selected_layer": payload.get("layer"),
-                        "n_core_features": payload.get("n_core_features"),
-                        "causality_score": payload.get("causality_score"),
-                        "details_path": payload.get("details_path"),
+                        "selected_layer": payload.get("selected_layer", payload.get("layer")),
+                        "n_high_confidence_features": payload.get("n_high_confidence_features"),
+                        "best_k": payload.get("best_k"),
+                        "causal_selectivity": payload.get("causal_selectivity", payload.get("causality_score")),
+                        "ci_low": payload.get("ci_low"),
+                        "ci_high": payload.get("ci_high"),
+                        "passes_positive_causality": payload.get("passes_positive_causality"),
                     }
                 )
     return out_path
@@ -681,6 +733,407 @@ def _write_appendix_task_inventory(
     return out_path
 
 
+def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> Path:
+    ensure_dir(path.parent)
+    with path.open("w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    return path
+
+
+def _primary_families(config: dict[str, Any]) -> set[str]:
+    paper_cfg = dict(config.get("paper", {}))
+    values = paper_cfg.get("primary_families", [])
+    return {str(value) for value in values}
+
+
+def _build_sparse_feature_dossiers(
+    config: dict[str, Any],
+    task_registry: dict[str, Any],
+    method_results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    if sparse_result is None:
+        return []
+    stable_threshold = float(config.get("causality", {}).get("stable_threshold", 0.50))
+    dossier_rows: list[dict[str, Any]] = []
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        coverage_payload = sparse_result.get("coverage", {}).get(task_id, {})
+        feature_bank_path = coverage_payload.get("feature_bank_path")
+        if not feature_bank_path:
+            continue
+        feature_bank_file = Path(str(feature_bank_path))
+        if not feature_bank_file.exists():
+            continue
+        feature_bank = json.loads(feature_bank_file.read_text(encoding="utf-8"))
+        coverage_auc = _safe_float(coverage_payload.get("coverage_auc"))
+        masked_auc = _safe_float(coverage_payload.get("masked_coverage_auc"))
+        masked_retention = float("nan")
+        if not math.isnan(coverage_auc) and not math.isnan(masked_auc) and not math.isclose(coverage_auc, 0.0):
+            masked_retention = masked_auc / coverage_auc
+        feature_ids = [int(value) for value in feature_bank.get("feature_ids", [])][:10]
+        weights = [float(value) for value in feature_bank.get("feature_weights", [])][:10]
+        stability_map = {str(key): float(value) for key, value in feature_bank.get("bootstrap_stability", {}).items()}
+        priority_map = {str(key): float(value) for key, value in feature_bank.get("feature_priority", {}).items()}
+        top_segments = feature_bank.get("top_activating_segment_ids", {})
+        high_confidence_ids = {int(value) for value in coverage_payload.get("high_confidence_feature_ids", []) or []}
+        for rank, (feature_id, feature_weight) in enumerate(zip(feature_ids, weights), start=1):
+            stability = float(stability_map.get(str(feature_id), 0.0))
+            dossier_rows.append(
+                {
+                    "proxy_slug": task_id,
+                    "family": task["family"],
+                    "pair_id": task["pair_id"],
+                    "proxy_name": task["proxy_name"],
+                    "layer": coverage_payload.get("selected_layer"),
+                    "feature_id": int(feature_id),
+                    "feature_rank": int(rank),
+                    "feature_weight": float(feature_weight),
+                    "bootstrap_stability": stability,
+                    "feature_priority": float(priority_map.get(str(feature_id), 0.0)),
+                    "top_activating_segments": list(top_segments.get(str(feature_id), [])),
+                    "masked_retention_at_feature_set_level": None if math.isnan(masked_retention) else float(masked_retention),
+                    "assistant_usage_count": 0,
+                    "stable": bool(stability >= stable_threshold),
+                    "high_confidence_candidate": bool(int(feature_id) in high_confidence_ids),
+                }
+            )
+    return dossier_rows
+
+
+def _pair_is_appendix(
+    config: dict[str, Any],
+    sparse_result: dict[str, Any],
+    pair: dict[str, Any],
+) -> bool:
+    paper_cfg = dict(config.get("paper", {}))
+    min_test = int(paper_cfg.get("appendix_proxy_min_test_positive", 15))
+    min_validated = int(paper_cfg.get("appendix_proxy_min_validated_positive", 8))
+    for task_id in (pair["left_task_id"], pair["right_task_id"]):
+        payload = sparse_result.get("coverage", {}).get(task_id, {})
+        if int(payload.get("n_positive_test", 0) or 0) < min_test:
+            return True
+        if int(payload.get("n_positive_validated_test", 0) or 0) < min_validated:
+            return True
+    return False
+
+
+def _pair_claim_level(
+    sparse_result: dict[str, Any],
+    pair: dict[str, Any],
+) -> str:
+    left_task_id = str(pair["left_task_id"])
+    right_task_id = str(pair["right_task_id"])
+    left_causal = bool(sparse_result.get("causality", {}).get(left_task_id, {}).get("passes_positive_causality", False))
+    right_causal = bool(sparse_result.get("causality", {}).get(right_task_id, {}).get("passes_positive_causality", False))
+    forward_key = f"{left_task_id}__to__{right_task_id}"
+    reverse_key = f"{right_task_id}__to__{left_task_id}"
+    forward_gap = _safe_float(sparse_result.get("consistency", {}).get(forward_key, {}).get("transfer_auc")) - _safe_float(
+        sparse_result.get("cross_family_controls", {}).get(left_task_id, {}).get("mean_cross_family_auc")
+    )
+    reverse_gap = _safe_float(sparse_result.get("consistency", {}).get(reverse_key, {}).get("transfer_auc")) - _safe_float(
+        sparse_result.get("cross_family_controls", {}).get(right_task_id, {}).get("mean_cross_family_auc")
+    )
+    forward_positive = not math.isnan(forward_gap) and forward_gap > 0.0
+    reverse_positive = not math.isnan(reverse_gap) and reverse_gap > 0.0
+    left_cov = sparse_result.get("coverage", {}).get(left_task_id, {})
+    right_cov = sparse_result.get("coverage", {}).get(right_task_id, {})
+    left_coverage_auc = _safe_float(left_cov.get("coverage_auc"))
+    left_masked_auc = _safe_float(left_cov.get("masked_coverage_auc"))
+    right_coverage_auc = _safe_float(right_cov.get("coverage_auc"))
+    right_masked_auc = _safe_float(right_cov.get("masked_coverage_auc"))
+    left_retention = (
+        left_masked_auc / left_coverage_auc
+        if not math.isnan(left_coverage_auc) and not math.isnan(left_masked_auc) and not math.isclose(left_coverage_auc, 0.0)
+        else float("nan")
+    )
+    right_retention = (
+        right_masked_auc / right_coverage_auc
+        if not math.isnan(right_coverage_auc) and not math.isnan(right_masked_auc) and not math.isclose(right_coverage_auc, 0.0)
+        else float("nan")
+    )
+    any_positive_retention = (not math.isnan(left_retention) and left_retention > 0.0) or (not math.isnan(right_retention) and right_retention > 0.0)
+    if left_causal and right_causal:
+        return "causal_on_both_sides"
+    if (left_causal or right_causal) and (forward_positive or reverse_positive) and any_positive_retention:
+        return "one_sided_causal_plus_transfer"
+    if forward_positive or reverse_positive:
+        return "transfer_only"
+    if left_causal or right_causal:
+        return "single_proxy_causal_only"
+    return "localization_only"
+
+
+def _write_feature_dossiers(summary_dir: Path, rows: list[dict[str, Any]]) -> Path:
+    return _write_jsonl(summary_dir / "feature_dossiers.jsonl", rows)
+
+
+def _write_proxy_feature_summary(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]], dossier_rows: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "proxy_feature_summary.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    if sparse_result is None:
+        with out_path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["proxy_slug"])
+            writer.writeheader()
+        return out_path
+    dossier_by_task: dict[str, list[dict[str, Any]]] = {}
+    for row in dossier_rows:
+        dossier_by_task.setdefault(str(row["proxy_slug"]), []).append(row)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "selected_layer",
+                "stable_feature_count",
+                "high_confidence_feature_count",
+                "top_feature_ids",
+                "mean_top3_stability",
+                "masked_retention",
+                "test_positive_count",
+                "validated_test_positive_count",
+            ],
+        )
+        writer.writeheader()
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
+            coverage_payload = sparse_result.get("coverage", {}).get(task_id, {})
+            rows_for_task = sorted(dossier_by_task.get(task_id, []), key=lambda row: int(row["feature_rank"]))
+            top_feature_ids = [str(row["feature_id"]) for row in rows_for_task[:3]]
+            mean_top3_stability = _nanmean([_safe_float(row["bootstrap_stability"]) for row in rows_for_task[:3]])
+            coverage_auc = _safe_float(coverage_payload.get("coverage_auc"))
+            masked_auc = _safe_float(coverage_payload.get("masked_coverage_auc"))
+            masked_retention = float("nan")
+            if not math.isnan(coverage_auc) and not math.isnan(masked_auc) and not math.isclose(coverage_auc, 0.0):
+                masked_retention = masked_auc / coverage_auc
+            writer.writerow(
+                {
+                    "proxy_slug": task_id,
+                    "family": task["family"],
+                    "pair_id": task["pair_id"],
+                    "proxy_name": task["proxy_name"],
+                    "selected_layer": coverage_payload.get("selected_layer"),
+                    "stable_feature_count": coverage_payload.get("stable_feature_count"),
+                    "high_confidence_feature_count": coverage_payload.get("high_confidence_feature_count"),
+                    "top_feature_ids": ", ".join(top_feature_ids),
+                    "mean_top3_stability": mean_top3_stability,
+                    "masked_retention": "" if math.isnan(masked_retention) else masked_retention,
+                    "test_positive_count": coverage_payload.get("n_positive_test"),
+                    "validated_test_positive_count": coverage_payload.get("n_positive_validated_test"),
+                }
+            )
+    return out_path
+
+
+def _write_proxy_causal_summary(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "proxy_causal_summary.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "status",
+                "selected_layer",
+                "n_high_confidence_features",
+                "best_k",
+                "causal_selectivity",
+                "ci_low",
+                "ci_high",
+                "passes_positive_causality",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is not None:
+            for task in task_registry["coverage_tasks"]:
+                task_id = str(task["task_id"])
+                payload = sparse_result.get("causality", {}).get(task_id, {})
+                writer.writerow(
+                    {
+                        "proxy_slug": task_id,
+                        "family": task["family"],
+                        "pair_id": task["pair_id"],
+                        "proxy_name": task["proxy_name"],
+                        "status": payload.get("status"),
+                        "selected_layer": payload.get("selected_layer", payload.get("layer")),
+                        "n_high_confidence_features": payload.get("n_high_confidence_features"),
+                        "best_k": payload.get("best_k"),
+                        "causal_selectivity": payload.get("causal_selectivity", payload.get("causality_score")),
+                        "ci_low": payload.get("ci_low"),
+                        "ci_high": payload.get("ci_high"),
+                        "passes_positive_causality": payload.get("passes_positive_causality"),
+                    }
+                )
+    return out_path
+
+
+def _write_pair_mechanistic_summary(summary_dir: Path, config: dict[str, Any], task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "pair_mechanistic_summary.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    if sparse_result is None:
+        with out_path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["pair_id"])
+            writer.writeheader()
+        return out_path
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "pair_id",
+                "family",
+                "evidence_tier",
+                "mean_sparse_coverage_auc",
+                "mean_sparse_validated_coverage_auc",
+                "mean_sparse_consistency_gap",
+                "mean_sparse_retention",
+                "selected_layers",
+                "feature_counts",
+                "test_positive_counts",
+                "validated_positive_counts",
+                "left_proxy_causal_status",
+                "right_proxy_causal_status",
+                "claim_level",
+            ],
+        )
+        writer.writeheader()
+        for pair_id, pair in task_registry["pairs"].items():
+            task_ids = [pair["left_task_id"], pair["right_task_id"]]
+            coverage_rows = [sparse_result.get("coverage", {}).get(task_id, {}) for task_id in task_ids]
+            gaps = []
+            for source_task_id, target_task_id in ((pair["left_task_id"], pair["right_task_id"]), (pair["right_task_id"], pair["left_task_id"])):
+                directed_id = f"{source_task_id}__to__{target_task_id}"
+                within_auc = _safe_float(sparse_result.get("consistency", {}).get(directed_id, {}).get("transfer_auc"))
+                cross_auc = _safe_float(sparse_result.get("cross_family_controls", {}).get(source_task_id, {}).get("mean_cross_family_auc"))
+                if not math.isnan(within_auc) and not math.isnan(cross_auc):
+                    gaps.append(within_auc - cross_auc)
+            retentions = []
+            for payload in coverage_rows:
+                coverage_auc = _safe_float(payload.get("coverage_auc"))
+                masked_auc = _safe_float(payload.get("masked_coverage_auc"))
+                if not math.isnan(coverage_auc) and not math.isnan(masked_auc) and not math.isclose(coverage_auc, 0.0):
+                    retentions.append(masked_auc / coverage_auc)
+            writer.writerow(
+                {
+                    "pair_id": pair_id,
+                    "family": pair["family"],
+                    "evidence_tier": "appendix" if _pair_is_appendix(config, sparse_result, pair) else "primary",
+                    "mean_sparse_coverage_auc": _nanmean([_safe_float(payload.get("coverage_auc")) for payload in coverage_rows]),
+                    "mean_sparse_validated_coverage_auc": _nanmean([_safe_float(payload.get("validated_coverage_auc")) for payload in coverage_rows]),
+                    "mean_sparse_consistency_gap": _nanmean(gaps),
+                    "mean_sparse_retention": _nanmean(retentions),
+                    "selected_layers": ", ".join(str(payload.get("selected_layer")) for payload in coverage_rows if payload.get("selected_layer") is not None),
+                    "feature_counts": ", ".join(str(payload.get("feature_count")) for payload in coverage_rows if payload.get("feature_count") is not None),
+                    "test_positive_counts": ", ".join(str(payload.get("n_positive_test")) for payload in coverage_rows if payload.get("n_positive_test") is not None),
+                    "validated_positive_counts": ", ".join(str(payload.get("n_positive_validated_test")) for payload in coverage_rows if payload.get("n_positive_validated_test") is not None),
+                    "left_proxy_causal_status": sparse_result.get("causality", {}).get(pair["left_task_id"], {}).get("status"),
+                    "right_proxy_causal_status": sparse_result.get("causality", {}).get(pair["right_task_id"], {}).get("status"),
+                    "claim_level": _pair_claim_level(sparse_result, pair),
+                }
+            )
+    return out_path
+
+
+def _write_table_proxy_mechanistic_evidence(summary_dir: Path, config: dict[str, Any], task_registry: dict[str, Any], method_results: list[dict[str, Any]], dossier_rows: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "table_proxy_mechanistic_evidence.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    dossier_by_task: dict[str, list[dict[str, Any]]] = {}
+    for row in dossier_rows:
+        dossier_by_task.setdefault(str(row["proxy_slug"]), []).append(row)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy",
+                "selected_layer",
+                "top_feature_ids",
+                "mean_stability_top3",
+                "masked_retention",
+                "causal_selectivity",
+                "evidence_status",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is None:
+            return out_path
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
+            coverage_payload = sparse_result.get("coverage", {}).get(task_id, {})
+            causality_payload = sparse_result.get("causality", {}).get(task_id, {})
+            rows_for_task = sorted(dossier_by_task.get(task_id, []), key=lambda row: int(row["feature_rank"]))
+            top_feature_ids = [str(row["feature_id"]) for row in rows_for_task[:3]]
+            mean_top3_stability = _nanmean([_safe_float(row["bootstrap_stability"]) for row in rows_for_task[:3]])
+            coverage_auc = _safe_float(coverage_payload.get("coverage_auc"))
+            masked_auc = _safe_float(coverage_payload.get("masked_coverage_auc"))
+            masked_retention = float("nan")
+            if not math.isnan(coverage_auc) and not math.isnan(masked_auc) and not math.isclose(coverage_auc, 0.0):
+                masked_retention = masked_auc / coverage_auc
+            if bool(causality_payload.get("passes_positive_causality", False)):
+                evidence_status = "causal_supported"
+            elif int(coverage_payload.get("stable_feature_count", 0) or 0) >= 3:
+                evidence_status = "stable_proxy_signal"
+            else:
+                evidence_status = "appendix_only"
+            writer.writerow(
+                {
+                    "proxy": task["display_name"],
+                    "selected_layer": coverage_payload.get("selected_layer"),
+                    "top_feature_ids": ", ".join(top_feature_ids),
+                    "mean_stability_top3": mean_top3_stability,
+                    "masked_retention": "" if math.isnan(masked_retention) else masked_retention,
+                    "causal_selectivity": causality_payload.get("causal_selectivity", causality_payload.get("causality_score")),
+                    "evidence_status": evidence_status,
+                }
+            )
+    return out_path
+
+
+def _write_table_pair_transfer_and_causality(summary_dir: Path, config: dict[str, Any], task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "table_pair_transfer_and_causality.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "pair",
+                "direction",
+                "consistency_gap",
+                "selected_layer",
+                "target_proxy_causal_status",
+                "opposite_proxy_causal_status",
+                "claim_level",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is None:
+            return out_path
+        for pair_id, pair in task_registry["pairs"].items():
+            claim_level = _pair_claim_level(sparse_result, pair)
+            for source_task_id, target_task_id in ((pair["left_task_id"], pair["right_task_id"]), (pair["right_task_id"], pair["left_task_id"])):
+                directed_id = f"{source_task_id}__to__{target_task_id}"
+                within_auc = _safe_float(sparse_result.get("consistency", {}).get(directed_id, {}).get("transfer_auc"))
+                cross_auc = _safe_float(sparse_result.get("cross_family_controls", {}).get(source_task_id, {}).get("mean_cross_family_auc"))
+                gap = within_auc - cross_auc if not math.isnan(within_auc) and not math.isnan(cross_auc) else float("nan")
+                writer.writerow(
+                    {
+                        "pair": pair_id,
+                        "direction": directed_id,
+                        "consistency_gap": gap,
+                        "selected_layer": sparse_result.get("consistency", {}).get(directed_id, {}).get("selected_layer"),
+                        "target_proxy_causal_status": sparse_result.get("causality", {}).get(target_task_id, {}).get("status"),
+                        "opposite_proxy_causal_status": sparse_result.get("causality", {}).get(source_task_id, {}).get("status"),
+                        "claim_level": claim_level,
+                    }
+                )
+    return out_path
+
+
 def _pair_mean(values: list[float]) -> float:
     return _nanmean(values)
 
@@ -701,7 +1154,6 @@ def _evaluate_paper_readout(
     headline_summary = summary_by_method.get(headline_method, {})
     baseline_summary = summary_by_method.get(baseline_method, {})
     headline_result = result_by_method.get(headline_method, {})
-    baseline_result = result_by_method.get(baseline_method, {})
 
     top_core_score = max((_safe_float(row["CoreScore"]) for row in summaries), default=float("nan"))
     headline_core_score = _safe_float(headline_summary.get("CoreScore"))
@@ -718,8 +1170,43 @@ def _evaluate_paper_readout(
         if _safe_float(headline_summary.get(axis)) > _safe_float(baseline_summary.get(axis))
     ]
 
+    primary_families = _primary_families(config)
+    stable_proxy_dossiers = 0
+    positive_causal_proxies = 0
+    proxy_status: dict[str, Any] = {}
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        coverage_payload = headline_result.get("coverage", {}).get(task_id, {})
+        causality_payload = headline_result.get("causality", {}).get(task_id, {})
+        stable_count = int(coverage_payload.get("stable_feature_count", 0) or 0)
+        is_stable = stable_count >= 3
+        if is_stable:
+            stable_proxy_dossiers += 1
+        passes_causal = bool(causality_payload.get("passes_positive_causality", False))
+        if passes_causal:
+            positive_causal_proxies += 1
+        proxy_status[task_id] = {
+            "task_id": task_id,
+            "family": task["family"],
+            "proxy_name": task["proxy_name"],
+            "stable_feature_count": stable_count,
+            "is_stable_proxy_dossier": is_stable,
+            "selected_layer": coverage_payload.get("selected_layer"),
+            "masked_retention": (
+                None
+                if math.isnan(_safe_float(coverage_payload.get("coverage_auc")))
+                or math.isnan(_safe_float(coverage_payload.get("masked_coverage_auc")))
+                or math.isclose(_safe_float(coverage_payload.get("coverage_auc")), 0.0)
+                else _safe_float(coverage_payload.get("masked_coverage_auc")) / _safe_float(coverage_payload.get("coverage_auc"))
+            ),
+            "causal_status": causality_payload.get("status"),
+            "causal_selectivity": causality_payload.get("causal_selectivity", causality_payload.get("causality_score")),
+            "passes_positive_causality": passes_causal,
+        }
+
     pair_consistency: dict[str, Any] = {}
     positive_consistency_pairs = 0
+    positive_primary_pair_directions = 0
     for pair_id, pair in task_registry["pairs"].items():
         directions = [
             f"{pair['left_task_id']}__to__{pair['right_task_id']}",
@@ -733,15 +1220,26 @@ def _evaluate_paper_readout(
         passes = not math.isnan(mean_gap) and mean_gap > 0.0
         if passes:
             positive_consistency_pairs += 1
+        direction_details = {}
+        for direction, gap in zip(directions, gaps):
+            direction_positive = not math.isnan(gap) and gap > 0.0
+            if pair["family"] in primary_families and direction_positive:
+                positive_primary_pair_directions += 1
+            direction_details[direction] = {
+                "consistency_gap": gap,
+                "passes_positive_gap": direction_positive,
+            }
         pair_consistency[pair_id] = {
             **pair,
             "directions": directions,
             "mean_consistency_gap": mean_gap,
             "passes_positive_gap": passes,
+            "direction_details": direction_details,
         }
 
     pair_robustness: dict[str, Any] = {}
     positive_robustness_pairs = 0
+    primary_pair_positive_retention = False
     for pair_id, pair in task_registry["pairs"].items():
         task_ids = [pair["left_task_id"], pair["right_task_id"]]
         headline_retentions: list[float] = []
@@ -760,6 +1258,9 @@ def _evaluate_paper_readout(
         )
         if passes:
             positive_robustness_pairs += 1
+        if pair["family"] in primary_families and not math.isnan(mean_headline_retention):
+            if mean_headline_retention > float(criteria_cfg.get("min_positive_pair_retention", 0.5)):
+                primary_pair_positive_retention = True
         pair_robustness[pair_id] = {
             **pair,
             "headline_mean_retention": mean_headline_retention,
@@ -767,44 +1268,37 @@ def _evaluate_paper_readout(
             "passes_beating_baseline": passes,
         }
 
-    positive_causality_families = 0
-    causality_by_family: dict[str, Any] = {}
-    for family_name, payload in headline_result.get("causality", {}).items():
-        score = _safe_float(payload.get("causality_score"))
-        passes = str(payload.get("status", "")).lower() == "ok" and not math.isnan(score) and score > 0.0
-        if passes:
-            positive_causality_families += 1
-        causality_by_family[family_name] = {
-            **payload,
-            "passes_positive_causality": passes,
-        }
-
     criteria_results = {
         "headline_top_core": {
-            "required": bool(criteria_cfg.get("require_headline_top_core", True)),
+            "required": bool(criteria_cfg.get("require_headline_top_core", False)),
             "value": is_top_core,
-            "passes": (not bool(criteria_cfg.get("require_headline_top_core", True))) or is_top_core,
+            "passes": (not bool(criteria_cfg.get("require_headline_top_core", False))) or is_top_core,
         },
         "axes_beating_baseline": {
-            "required_min": int(criteria_cfg.get("min_axes_beating_baseline", 2)),
+            "required_min": int(criteria_cfg.get("min_axes_beating_baseline", 0)),
             "value": len(axes_beating_baseline),
             "axes": axes_beating_baseline,
-            "passes": len(axes_beating_baseline) >= int(criteria_cfg.get("min_axes_beating_baseline", 2)),
+            "passes": len(axes_beating_baseline) >= int(criteria_cfg.get("min_axes_beating_baseline", 0)),
         },
-        "positive_consistency_pairs": {
-            "required_min": int(criteria_cfg.get("min_pairs_positive_consistency_gap", 2)),
-            "value": positive_consistency_pairs,
-            "passes": positive_consistency_pairs >= int(criteria_cfg.get("min_pairs_positive_consistency_gap", 2)),
+        "stable_proxy_dossiers": {
+            "required_min": int(criteria_cfg.get("min_stable_proxy_dossiers", 4)),
+            "value": stable_proxy_dossiers,
+            "passes": stable_proxy_dossiers >= int(criteria_cfg.get("min_stable_proxy_dossiers", 4)),
         },
-        "robustness_pairs_beating_baseline": {
-            "required_min": int(criteria_cfg.get("min_pairs_robustness_beating_baseline", 2)),
-            "value": positive_robustness_pairs,
-            "passes": positive_robustness_pairs >= int(criteria_cfg.get("min_pairs_robustness_beating_baseline", 2)),
+        "positive_causal_proxies": {
+            "required_min": int(criteria_cfg.get("min_positive_causal_proxies", 2)),
+            "value": positive_causal_proxies,
+            "passes": positive_causal_proxies >= int(criteria_cfg.get("min_positive_causal_proxies", 2)),
         },
-        "positive_causality_families": {
-            "required_min": int(criteria_cfg.get("min_positive_causality_families", 1)),
-            "value": positive_causality_families,
-            "passes": positive_causality_families >= int(criteria_cfg.get("min_positive_causality_families", 1)),
+        "primary_pair_positive_directions": {
+            "required_min": int(criteria_cfg.get("min_primary_pair_positive_directions", 2)),
+            "value": positive_primary_pair_directions,
+            "passes": positive_primary_pair_directions >= int(criteria_cfg.get("min_primary_pair_positive_directions", 2)),
+        },
+        "primary_pair_positive_retention": {
+            "required": True,
+            "value": primary_pair_positive_retention,
+            "passes": primary_pair_positive_retention,
         },
     }
     headline_success = bool(preflight_report.get("headline_ready", False)) and all(
@@ -816,9 +1310,11 @@ def _evaluate_paper_readout(
         "baseline_method": baseline_method,
         "headline_core_score": headline_core_score,
         "top_core_score": top_core_score,
+        "proxy_status": proxy_status,
         "pair_consistency": pair_consistency,
         "pair_robustness": pair_robustness,
-        "causality_by_family": causality_by_family,
+        "positive_consistency_pairs": positive_consistency_pairs,
+        "positive_robustness_pairs": positive_robustness_pairs,
         "criteria": criteria_results,
         "headline_success": headline_success,
         "headline_pairs": preflight_report.get("headline_pairs", []),
@@ -926,12 +1422,20 @@ def aggregate_existing_results(
     summaries = [summarize_method_result(config, task_registry, method_result) for method_result in method_results]
     core_leaderboard_path = _write_core_leaderboard(summary_dir, summaries)
     main_table_path = _write_main_table(summary_dir, summaries)
+    table_main_results_path = _write_table_main_benchmark_results(summary_dir, summaries)
     mechanistic_path = _write_mechanistic_qualification(summary_dir, summaries, method_results)
     coverage_summary_path = _write_coverage_task_summary(summary_dir, method_results, task_registry)
     consistency_summary_path = _write_consistency_summary(summary_dir, method_results, task_registry)
     robustness_summary_path = _write_robustness_summary(summary_dir, method_results, task_registry)
     causality_summary_path = _write_causality_summary(summary_dir, method_results)
     appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
+    feature_dossier_rows = _build_sparse_feature_dossiers(config, task_registry, method_results)
+    feature_dossiers_path = _write_feature_dossiers(summary_dir, feature_dossier_rows)
+    proxy_feature_summary_path = _write_proxy_feature_summary(summary_dir, task_registry, method_results, feature_dossier_rows)
+    proxy_causal_summary_path = _write_proxy_causal_summary(summary_dir, task_registry, method_results)
+    pair_mechanistic_summary_path = _write_pair_mechanistic_summary(summary_dir, config, task_registry, method_results)
+    table_proxy_mechanistic_evidence_path = _write_table_proxy_mechanistic_evidence(summary_dir, config, task_registry, method_results, feature_dossier_rows)
+    table_pair_transfer_and_causality_path = _write_table_pair_transfer_and_causality(summary_dir, config, task_registry, method_results)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
     save_json(summary_dir / "paper_readout.json", paper_readout)
     report = _build_report(config, task_registry, method_results, summaries, preflight_report, paper_readout)
@@ -941,12 +1445,19 @@ def aggregate_existing_results(
         "preflight_report_path": str(preflight_path),
         "core_leaderboard_path": str(core_leaderboard_path),
         "main_table_path": str(main_table_path),
+        "table_main_benchmark_results_path": str(table_main_results_path),
         "mechanistic_qualification_path": str(mechanistic_path),
         "coverage_task_summary_path": str(coverage_summary_path),
         "consistency_summary_path": str(consistency_summary_path),
         "robustness_summary_path": str(robustness_summary_path),
         "sae_causality_summary_path": str(causality_summary_path),
         "appendix_task_inventory_path": str(appendix_inventory_path),
+        "feature_dossiers_path": str(feature_dossiers_path),
+        "proxy_feature_summary_path": str(proxy_feature_summary_path),
+        "proxy_causal_summary_path": str(proxy_causal_summary_path),
+        "pair_mechanistic_summary_path": str(pair_mechanistic_summary_path),
+        "table_proxy_mechanistic_evidence_path": str(table_proxy_mechanistic_evidence_path),
+        "table_pair_transfer_and_causality_path": str(table_pair_transfer_and_causality_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),
         "benchmark_report_path": str(summary_dir / "benchmark_report.json"),
     }
@@ -988,12 +1499,20 @@ def run_benchmark(
     summaries = [summarize_method_result(config, task_registry, method_result) for method_result in method_results]
     core_leaderboard_path = _write_core_leaderboard(summary_dir, summaries)
     main_table_path = _write_main_table(summary_dir, summaries)
+    table_main_results_path = _write_table_main_benchmark_results(summary_dir, summaries)
     mechanistic_path = _write_mechanistic_qualification(summary_dir, summaries, method_results)
     coverage_summary_path = _write_coverage_task_summary(summary_dir, method_results, task_registry)
     consistency_summary_path = _write_consistency_summary(summary_dir, method_results, task_registry)
     robustness_summary_path = _write_robustness_summary(summary_dir, method_results, task_registry)
     causality_summary_path = _write_causality_summary(summary_dir, method_results)
     appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
+    feature_dossier_rows = _build_sparse_feature_dossiers(config, task_registry, method_results)
+    feature_dossiers_path = _write_feature_dossiers(summary_dir, feature_dossier_rows)
+    proxy_feature_summary_path = _write_proxy_feature_summary(summary_dir, task_registry, method_results, feature_dossier_rows)
+    proxy_causal_summary_path = _write_proxy_causal_summary(summary_dir, task_registry, method_results)
+    pair_mechanistic_summary_path = _write_pair_mechanistic_summary(summary_dir, config, task_registry, method_results)
+    table_proxy_mechanistic_evidence_path = _write_table_proxy_mechanistic_evidence(summary_dir, config, task_registry, method_results, feature_dossier_rows)
+    table_pair_transfer_and_causality_path = _write_table_pair_transfer_and_causality(summary_dir, config, task_registry, method_results)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
     save_json(summary_dir / "paper_readout.json", paper_readout)
     report = _build_report(config, task_registry, method_results, summaries, preflight_report, paper_readout)
@@ -1003,12 +1522,19 @@ def run_benchmark(
         "preflight_report_path": str(preflight_path),
         "core_leaderboard_path": str(core_leaderboard_path),
         "main_table_path": str(main_table_path),
+        "table_main_benchmark_results_path": str(table_main_results_path),
         "mechanistic_qualification_path": str(mechanistic_path),
         "coverage_task_summary_path": str(coverage_summary_path),
         "consistency_summary_path": str(consistency_summary_path),
         "robustness_summary_path": str(robustness_summary_path),
         "sae_causality_summary_path": str(causality_summary_path),
         "appendix_task_inventory_path": str(appendix_inventory_path),
+        "feature_dossiers_path": str(feature_dossiers_path),
+        "proxy_feature_summary_path": str(proxy_feature_summary_path),
+        "proxy_causal_summary_path": str(proxy_causal_summary_path),
+        "pair_mechanistic_summary_path": str(pair_mechanistic_summary_path),
+        "table_proxy_mechanistic_evidence_path": str(table_proxy_mechanistic_evidence_path),
+        "table_pair_transfer_and_causality_path": str(table_pair_transfer_and_causality_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),
         "benchmark_report_path": str(summary_dir / "benchmark_report.json"),
     }

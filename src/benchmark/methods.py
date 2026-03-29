@@ -47,6 +47,12 @@ def _safe_auc(labels: np.ndarray, scores: np.ndarray) -> float:
     return quick_roc_auc(labels, scores)
 
 
+def _clip01(value: float) -> float:
+    if math.isnan(value):
+        return float("nan")
+    return float(min(1.0, max(0.0, value)))
+
+
 def _sigmoid(x: np.ndarray) -> np.ndarray:
     clipped = np.clip(x.astype(np.float64), -40.0, 40.0)
     return 1.0 / (1.0 + np.exp(-clipped))
@@ -727,6 +733,75 @@ def _weighted_score(features: np.ndarray, feature_ids: np.ndarray, weights: np.n
     return features[:, feature_ids] @ weights
 
 
+def _minmax_unit_interval(values: np.ndarray) -> np.ndarray:
+    arr = np.asarray(values, dtype=np.float64)
+    if arr.size == 0:
+        return arr
+    lo = float(arr.min())
+    hi = float(arr.max())
+    if math.isclose(lo, hi):
+        return np.zeros_like(arr, dtype=np.float64)
+    return (arr - lo) / (hi - lo)
+
+
+def _feature_priority_map(
+    feature_ids: np.ndarray,
+    feature_weights: np.ndarray,
+    stability_map: dict[int, float],
+) -> dict[int, float]:
+    if feature_ids.size == 0:
+        return {}
+    normalized_weight = _minmax_unit_interval(np.abs(np.asarray(feature_weights, dtype=np.float64)))
+    priorities: dict[int, float] = {}
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        stability = float(stability_map.get(int(feature_id), 0.0))
+        priorities[int(feature_id)] = float(0.70 * normalized_weight[index] + 0.30 * stability)
+    return priorities
+
+
+def _select_high_confidence_feature_ids(
+    *,
+    feature_ids: np.ndarray,
+    feature_weights: np.ndarray,
+    stability_map: dict[int, float],
+    min_stability: float,
+    min_weight_norm: float,
+) -> list[int]:
+    if feature_ids.size == 0:
+        return []
+    normalized_weight = _minmax_unit_interval(np.abs(np.asarray(feature_weights, dtype=np.float64)))
+    candidates: list[tuple[float, int]] = []
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        stability = float(stability_map.get(int(feature_id), 0.0))
+        weight_norm = float(normalized_weight[index])
+        if stability < float(min_stability):
+            continue
+        if weight_norm < float(min_weight_norm):
+            continue
+        priority = float(0.70 * weight_norm + 0.30 * stability)
+        candidates.append((priority, int(feature_id)))
+    candidates.sort(key=lambda row: (-float(row[0]), int(row[1])))
+    return [feature_id for _, feature_id in candidates]
+
+
+def _top_activating_segment_ids(
+    selected_feature_matrix: np.ndarray,
+    segment_ids: list[str],
+    feature_ids: np.ndarray,
+    *,
+    top_n: int = 5,
+) -> dict[str, list[str]]:
+    if selected_feature_matrix.size == 0 or feature_ids.size == 0:
+        return {}
+    payload: dict[str, list[str]] = {}
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        values = np.asarray(selected_feature_matrix[:, index], dtype=np.float64)
+        order = np.argsort(values)[::-1]
+        top_segment_ids = [str(segment_ids[row_index]) for row_index in order[:top_n]]
+        payload[str(int(feature_id))] = top_segment_ids
+    return payload
+
+
 def _fit_sae_feature_bank(
     *,
     features_pos: np.ndarray,
@@ -796,8 +871,21 @@ def _write_sae_intermediate(
     eval_auc: float,
     train_counts: tuple[int, int],
     eval_counts: tuple[int, int],
+    selected_eval_features: np.ndarray,
+    eval_segment_ids: list[str],
 ) -> Path:
     run_dir = ensure_dir(intermediate_root / "policy_discovery" / family / proxy_slug / f"layer{layer}_{site}")
+    priority_map = _feature_priority_map(
+        feature_bank["feature_ids"],
+        feature_bank["feature_weights"],
+        feature_bank["bootstrap_stability"],
+    )
+    top_activating = _top_activating_segment_ids(
+        selected_eval_features,
+        eval_segment_ids,
+        feature_bank["feature_ids"],
+        top_n=5,
+    )
     bank_payload = {
         "family_name": family,
         "proxy_slug": proxy_slug,
@@ -812,6 +900,8 @@ def _write_sae_intermediate(
         "train_top_deltas": feature_bank["raw_weights"].tolist(),
         "train_q_values": feature_bank["selected_q_values"],
         "bootstrap_stability": {str(key): value for key, value in feature_bank["bootstrap_stability"].items()},
+        "feature_priority": {str(key): value for key, value in priority_map.items()},
+        "top_activating_segment_ids": top_activating,
     }
     (run_dir / "feature_bank.json").write_text(json.dumps(bank_payload, ensure_ascii=False, indent=2), encoding="utf-8")
     (run_dir / "bootstrap_stability.json").write_text(
@@ -983,6 +1073,151 @@ def _run_sae_causality_suite(
     return results
 
 
+def _run_proxy_causality_suite(
+    benchmark_config: dict[str, Any],
+    task_registry: dict[str, Any],
+    intermediate_root: Path,
+    fitted_banks: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    manifest_root = Path(benchmark_config["manifest_root"])
+    runtime_config_path = _prepare_runtime_policy_config(
+        benchmark_config,
+        results_dir=intermediate_root,
+        manifest_root=manifest_root,
+    )
+    causality_cfg = dict(benchmark_config.get("causality", {}))
+    site = str(benchmark_config["methods"]["sparse_sae_feature_bank"]["site"])
+    set_sizes = [int(value) for value in causality_cfg.get("set_sizes", [1, 3, 5])]
+    random_sets = int(causality_cfg.get("random_sets", 100))
+    min_stability = float(causality_cfg.get("high_confidence_min_stability", 0.60))
+    min_weight_norm = float(causality_cfg.get("high_confidence_min_weight", 0.25))
+    results: dict[str, Any] = {}
+
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        fitted = fitted_banks[task_id]
+        feature_ids = np.asarray(fitted.get("feature_ids", []), dtype=np.int64)
+        feature_weights = np.asarray(fitted.get("feature_weights", []), dtype=np.float64)
+        stability_map = {int(key): float(value) for key, value in fitted.get("bootstrap_stability", {}).items()}
+        high_confidence_ids = _select_high_confidence_feature_ids(
+            feature_ids=feature_ids,
+            feature_weights=feature_weights,
+            stability_map=stability_map,
+            min_stability=min_stability,
+            min_weight_norm=min_weight_norm,
+        )
+
+        tested_sets: dict[str, Any] = {}
+        best_payload: dict[str, Any] | None = None
+        for set_size in set_sizes:
+            if len(high_confidence_ids) < int(set_size):
+                continue
+            selected_ids = high_confidence_ids[: int(set_size)]
+            details_path = (
+                intermediate_root
+                / "proxy_causal"
+                / task["family"]
+                / task_id
+                / f"layer{int(fitted['selected_layer'])}_{site}"
+                / f"top{int(set_size)}_{str(causality_cfg.get('split', 'test'))}.json"
+            )
+            _run_subprocess(
+                [
+                    sys.executable,
+                    str(SCRIPTS_DIR / "run_proxy_causal_eval.py"),
+                    "--config",
+                    str(runtime_config_path),
+                    "--manifest_root",
+                    str(manifest_root),
+                    "--family",
+                    str(task["family"]),
+                    "--proxy_slug",
+                    task_id,
+                    "--paired_proxy_slug",
+                    str(task["paired_target_task_id"]),
+                    "--layer",
+                    str(int(fitted["selected_layer"])),
+                    "--site",
+                    site,
+                    "--split",
+                    str(causality_cfg.get("split", "test")),
+                    "--max_samples",
+                    str(int(causality_cfg.get("max_samples", 100))),
+                    "--random_sets",
+                    str(random_sets),
+                    "--feature_ids",
+                    ",".join(str(int(feature_id)) for feature_id in selected_ids),
+                ]
+            )
+            if not details_path.exists():
+                continue
+            details = json.loads(details_path.read_text(encoding="utf-8"))
+            payload = {
+                "set_size": int(set_size),
+                "effective_k": int(details.get("effective_k", set_size)),
+                "feature_ids": [int(value) for value in details.get("feature_ids", [])],
+                "causal_selectivity": details.get("causal_selectivity"),
+                "ci_low": details.get("causal_selectivity_ci_low"),
+                "ci_high": details.get("causal_selectivity_ci_high"),
+                "passes_positive_causality": bool(details.get("passes_positive_causality", False)),
+                "details_path": str(details_path),
+            }
+            tested_sets[f"top{int(set_size)}"] = payload
+            score = float(payload["causal_selectivity"]) if payload["causal_selectivity"] is not None else float("-inf")
+            best_score = float(best_payload["causal_selectivity"]) if best_payload and best_payload["causal_selectivity"] is not None else float("-inf")
+            if best_payload is None or score > best_score:
+                best_payload = payload
+
+        if best_payload is None:
+            results[task_id] = {
+                "task_id": task_id,
+                "family": task["family"],
+                "pair_id": task["pair_id"],
+                "proxy_name": task["proxy_name"],
+                "status": "not_tested",
+                "selected_layer": int(fitted["selected_layer"]),
+                "site": site,
+                "n_high_confidence_features": len(high_confidence_ids),
+                "high_confidence_feature_ids": high_confidence_ids,
+                "tested_sets": tested_sets,
+                "best_k": None,
+                "causal_selectivity": None,
+                "ci_low": None,
+                "ci_high": None,
+                "passes_positive_causality": False,
+            }
+            continue
+
+        best_low = float(best_payload["ci_low"]) if best_payload["ci_low"] is not None else float("nan")
+        best_high = float(best_payload["ci_high"]) if best_payload["ci_high"] is not None else float("nan")
+        best_score = float(best_payload["causal_selectivity"]) if best_payload["causal_selectivity"] is not None else float("nan")
+        passes = (
+            not math.isnan(best_score)
+            and best_score > 0.0
+            and not math.isnan(best_low)
+            and not math.isnan(best_high)
+            and best_low > 0.0
+        )
+        results[task_id] = {
+            "task_id": task_id,
+            "family": task["family"],
+            "pair_id": task["pair_id"],
+            "proxy_name": task["proxy_name"],
+            "status": "ok" if passes else "tested_not_passed",
+            "selected_layer": int(fitted["selected_layer"]),
+            "site": site,
+            "n_high_confidence_features": len(high_confidence_ids),
+            "high_confidence_feature_ids": high_confidence_ids,
+            "tested_sets": tested_sets,
+            "best_k": int(best_payload["set_size"]),
+            "causal_selectivity": None if math.isnan(best_score) else float(best_score),
+            "ci_low": None if math.isnan(best_low) else float(best_low),
+            "ci_high": None if math.isnan(best_high) else float(best_high),
+            "passes_positive_causality": passes,
+        }
+    return results
+
+
 def run_sparse_sae_feature_bank(
     benchmark_config: dict[str, Any],
     task_registry: dict[str, Any],
@@ -1000,6 +1235,10 @@ def run_sparse_sae_feature_bank(
     bootstrap_b = int(policy_cfg.get("bootstrap_B", 500))
     fdr_q = float(policy_cfg.get("fdr_q", 0.05))
     topk = int(method_cfg.get("topk", policy_cfg.get("topk", 64)))
+    causality_cfg = dict(benchmark_config.get("causality", {}))
+    stable_threshold = float(causality_cfg.get("stable_threshold", 0.50))
+    high_confidence_min_stability = float(causality_cfg.get("high_confidence_min_stability", 0.60))
+    high_confidence_min_weight = float(causality_cfg.get("high_confidence_min_weight", 0.25))
     task_ids = [task["task_id"] for task in task_registry["coverage_tasks"]]
     family_by_task = {task["task_id"]: task["family"] for task in task_registry["coverage_tasks"]}
     paired_targets = {task["task_id"]: task["paired_target_task_id"] for task in task_registry["coverage_tasks"]}
@@ -1084,6 +1323,7 @@ def run_sparse_sae_feature_bank(
             ],
             axis=0,
         )
+        selected_eval_features = eval_features[:, bank["feature_ids"]].astype(np.float32) if bank["feature_ids"].size else np.zeros((len(test_pos) + len(test_neg), 0), dtype=np.float32)
         y_test = np.concatenate([np.ones(len(test_pos), dtype=np.int64), np.zeros(len(test_neg), dtype=np.int64)])
         coverage_auc = _safe_auc(y_test, _weighted_score(eval_features, bank["feature_ids"], bank["feature_weights"]))
         _write_sae_intermediate(
@@ -1098,6 +1338,8 @@ def run_sparse_sae_feature_bank(
             eval_auc=coverage_auc,
             train_counts=(len(train_pos), len(train_neg)),
             eval_counts=(len(test_pos), len(test_neg)),
+            selected_eval_features=selected_eval_features,
+            eval_segment_ids=_rows_to_segment_ids(test_pos + test_neg),
         )
 
         masked_test_rows = _mask_rows(test_pos + test_neg, list(task.get("mask_keywords", [])))
@@ -1142,6 +1384,26 @@ def run_sparse_sae_feature_bank(
                 _weighted_score(validated_features, bank["feature_ids"], bank["feature_weights"]),
             )
 
+        feature_priority = _feature_priority_map(
+            bank["feature_ids"],
+            bank["feature_weights"],
+            bank["bootstrap_stability"],
+        )
+        high_confidence_feature_ids = _select_high_confidence_feature_ids(
+            feature_ids=bank["feature_ids"],
+            feature_weights=bank["feature_weights"],
+            stability_map=bank["bootstrap_stability"],
+            min_stability=high_confidence_min_stability,
+            min_weight_norm=high_confidence_min_weight,
+        )
+        stable_feature_count = int(
+            sum(
+                1
+                for feature_id in bank["feature_ids"].astype(int).tolist()
+                if float(bank["bootstrap_stability"].get(int(feature_id), 0.0)) >= stable_threshold
+            )
+        )
+
         result["coverage"][task["task_id"]] = {
             "task_id": task["task_id"],
             "family": task["family"],
@@ -1165,11 +1427,20 @@ def run_sparse_sae_feature_bank(
             "feature_count": int(bank["feature_ids"].size),
             "evaluation_segment_ids": _rows_to_segment_ids(test_pos + test_neg),
             "masked_evaluation_segment_ids": _rows_to_segment_ids(test_pos + test_neg),
+            "feature_bank_path": str(
+                intermediate_root / "policy_discovery" / task["family"] / task["proxy_slug"] / f"layer{best_layer}_{site}" / "feature_bank.json"
+            ),
+            "stable_feature_count": stable_feature_count,
+            "high_confidence_feature_count": len(high_confidence_feature_ids),
+            "high_confidence_feature_ids": high_confidence_feature_ids,
         }
         fitted_banks[task["task_id"]] = {
             "selected_layer": int(best_layer),
             "feature_ids": bank["feature_ids"],
             "feature_weights": bank["feature_weights"],
+            "bootstrap_stability": bank["bootstrap_stability"],
+            "feature_priority": feature_priority,
+            "high_confidence_feature_ids": high_confidence_feature_ids,
         }
 
     def _score_target(source_task_id: str, target_task_id: str) -> float:
@@ -1197,7 +1468,7 @@ def run_sparse_sae_feature_bank(
         payload["selected_layer"] = fitted_banks[payload["source_task_id"]]["selected_layer"]
     result["consistency"] = consistency
     result["cross_family_controls"] = cross_controls
-    result["causality"] = _run_sae_causality_suite(benchmark_config, intermediate_root)
+    result["causality"] = _run_proxy_causality_suite(benchmark_config, task_registry, intermediate_root, fitted_banks)
     return result
 
 

@@ -23,3 +23,23 @@ family_target_tokens:
   individual_rights: "RIGHTS"
   transparency_accountability: "TRANSPARENCY"
   equality_neutrality: "EQUALITY"
+
+proxy_forced_choice_template: |
+  You are reading an AI policy passage.
+  Which policy signal is more strongly implicated by this passage?
+  Reply with only one label from:
+  {LEFT_LABEL}
+  {RIGHT_LABEL}
+
+  Passage:
+  {TEXT}
+
+  Answer:
+
+proxy_target_tokens:
+  risk_factors_bias: "BIAS"
+  harms_discrimination: "DISCRIMINATION"
+  risk_factors_privacy: "PRIVACY"
+  harms_violation_of_civil_or_human_rights_including_privacy: "RIGHTS"
+  risk_factors_transparency: "TRANSPARENCY"
+  risk_factors_interpretability_and_explainability: "INTERPRETABILITY"
