@@ -477,7 +477,7 @@ def _write_main_table(summary_dir: Path, summaries: list[dict[str, Any]]) -> Pat
     with out_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["method_name", "CoverageScore", "ConsistencyScore", "RobustnessScore", "CoreScore", "CausalityScore"],
+            fieldnames=["method_name", "CoverageScore", "ConsistencyScore", "RobustnessScore", "CoreScore"],
         )
         writer.writeheader()
         for row in rows:
@@ -488,7 +488,6 @@ def _write_main_table(summary_dir: Path, summaries: list[dict[str, Any]]) -> Pat
                     "ConsistencyScore": row["ConsistencyScore"],
                     "RobustnessScore": row["RobustnessScore"],
                     "CoreScore": row["CoreScore"],
-                    "CausalityScore": row["CausalityScore"],
                 }
             )
     return out_path
@@ -503,7 +502,7 @@ def _write_table_main_benchmark_results(summary_dir: Path, summaries: list[dict[
     with out_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["method_name", "CoverageScore", "ConsistencyScore", "RobustnessScore", "CoreScore", "CausalityScore"],
+            fieldnames=["method_name", "CoverageScore", "ConsistencyScore", "RobustnessScore", "CoreScore"],
         )
         writer.writeheader()
         for row in rows:
@@ -514,7 +513,6 @@ def _write_table_main_benchmark_results(summary_dir: Path, summaries: list[dict[
                     "ConsistencyScore": row["ConsistencyScore"],
                     "RobustnessScore": row["RobustnessScore"],
                     "CoreScore": row["CoreScore"],
-                    "CausalityScore": row["CausalityScore"],
                 }
             )
     return out_path
@@ -665,6 +663,7 @@ def _write_causality_summary(summary_dir: Path, method_results: list[dict[str, A
                 "ci_low",
                 "ci_high",
                 "passes_positive_causality",
+                "off_target_selectivity",
             ],
         )
         writer.writeheader()
@@ -684,6 +683,7 @@ def _write_causality_summary(summary_dir: Path, method_results: list[dict[str, A
                         "ci_low": payload.get("ci_low"),
                         "ci_high": payload.get("ci_high"),
                         "passes_positive_causality": payload.get("passes_positive_causality"),
+                        "off_target_selectivity": payload.get("off_target_selectivity"),
                     }
                 )
     return out_path
@@ -777,9 +777,14 @@ def _build_sparse_feature_dossiers(
         stability_map = {str(key): float(value) for key, value in feature_bank.get("bootstrap_stability", {}).items()}
         priority_map = {str(key): float(value) for key, value in feature_bank.get("feature_priority", {}).items()}
         top_segments = feature_bank.get("top_activating_segment_ids", {})
+        top_segment_payloads = feature_bank.get("top_activating_segments", {})
+        quantile_segments = feature_bank.get("quantile_segment_ids", {})
+        distribution_stats = feature_bank.get("feature_distribution_stats", {})
+        overlap_stats = feature_bank.get("discovery_overlap_stats", {})
         high_confidence_ids = {int(value) for value in coverage_payload.get("high_confidence_feature_ids", []) or []}
         for rank, (feature_id, feature_weight) in enumerate(zip(feature_ids, weights), start=1):
             stability = float(stability_map.get(str(feature_id), 0.0))
+            feature_stats = dict(distribution_stats.get(str(feature_id), {}))
             dossier_rows.append(
                 {
                     "proxy_slug": task_id,
@@ -793,10 +798,27 @@ def _build_sparse_feature_dossiers(
                     "bootstrap_stability": stability,
                     "feature_priority": float(priority_map.get(str(feature_id), 0.0)),
                     "top_activating_segments": list(top_segments.get(str(feature_id), [])),
+                    "top_activating_contexts": list(top_segment_payloads.get(str(feature_id), [])),
+                    "quantile_segment_ids": dict(quantile_segments.get(str(feature_id), {})),
                     "masked_retention_at_feature_set_level": None if math.isnan(masked_retention) else float(masked_retention),
                     "assistant_usage_count": 0,
                     "stable": bool(stability >= stable_threshold),
                     "high_confidence_candidate": bool(int(feature_id) in high_confidence_ids),
+                    "positive_mean_activation": feature_stats.get("positive_mean_activation"),
+                    "negative_mean_activation": feature_stats.get("negative_mean_activation"),
+                    "positive_activation_variance": feature_stats.get("positive_activation_variance"),
+                    "negative_activation_variance": feature_stats.get("negative_activation_variance"),
+                    "activation_gap": feature_stats.get("activation_gap"),
+                    "cohen_d": feature_stats.get("cohen_d"),
+                    "feature_auc": feature_stats.get("feature_auc"),
+                    "positive_mean_contribution": feature_stats.get("positive_mean_contribution"),
+                    "negative_mean_contribution": feature_stats.get("negative_mean_contribution"),
+                    "contribution_gap": feature_stats.get("contribution_gap"),
+                    "reseed_runs": overlap_stats.get("reseed_runs"),
+                    "reseed_mean_jaccard_top10": overlap_stats.get("mean_jaccard_top10"),
+                    "reseed_min_jaccard_top10": overlap_stats.get("min_jaccard_top10"),
+                    "reseed_mean_jaccard_top3": overlap_stats.get("mean_jaccard_top3"),
+                    "reseed_mean_rank_correlation_top10": overlap_stats.get("mean_rank_correlation_top10"),
                 }
             )
     return dossier_rows
@@ -869,6 +891,306 @@ def _write_feature_dossiers(summary_dir: Path, rows: list[dict[str, Any]]) -> Pa
     return _write_jsonl(summary_dir / "feature_dossiers.jsonl", rows)
 
 
+def _segment_row_lookup(task_registry: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    manifest_root = Path(task_registry["manifest_root"])
+    lookup: dict[str, dict[str, Any]] = {}
+    for split in ("train", "dev", "test"):
+        path = manifest_root / "eligible" / f"{split}.jsonl"
+        if not path.exists():
+            continue
+        for row in read_jsonl(path):
+            lookup[str(row["segment_id"])] = row
+    return lookup
+
+
+def _document_title(row: dict[str, Any]) -> str:
+    metadata = dict(row.get("metadata", {}))
+    title = (
+        row.get("document_title")
+        or row.get("title")
+        or metadata.get("title")
+        or metadata.get("document_title")
+        or metadata.get("document_name")
+        or row.get("document_id")
+    )
+    return str(title)
+
+
+def _write_negative_matching_diagnostics(summary_dir: Path, task_registry: dict[str, Any]) -> Path:
+    out_path = summary_dir / "negative_matching_diagnostics.csv"
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "match_set",
+                "split",
+                "mean_matching_score",
+                "mean_text_similarity",
+                "authority_match_rate",
+                "jurisdiction_match_rate",
+                "document_form_match_rate",
+                "domain_overlap_mean",
+                "year_score_mean",
+                "length_score_mean",
+                "candidate_reuse_events",
+            ],
+        )
+        writer.writeheader()
+        for task in task_registry["coverage_tasks"]:
+            for match_set, diagnostics in (
+                ("matched_negative", task.get("matched_negative_diagnostics")),
+                ("validated_negative", task.get("validated_negative_diagnostics")),
+            ):
+                diagnostics = diagnostics or {}
+                split_payloads = diagnostics if any(key in diagnostics for key in ("train", "dev", "test")) else {"aggregate": diagnostics}
+                for split_name, split_payload in split_payloads.items():
+                    writer.writerow(
+                        {
+                            "proxy_slug": task["task_id"],
+                            "family": task["family"],
+                            "pair_id": task["pair_id"],
+                            "proxy_name": task["proxy_name"],
+                            "match_set": match_set,
+                            "split": split_name,
+                            "mean_matching_score": split_payload.get("mean_matching_score"),
+                            "mean_text_similarity": split_payload.get("mean_text_similarity"),
+                            "authority_match_rate": split_payload.get("authority_match_rate"),
+                            "jurisdiction_match_rate": split_payload.get("jurisdiction_match_rate"),
+                            "document_form_match_rate": split_payload.get("document_form_match_rate"),
+                            "domain_overlap_mean": split_payload.get("domain_overlap_mean"),
+                            "year_score_mean": split_payload.get("year_score_mean"),
+                            "length_score_mean": split_payload.get("length_score_mean"),
+                            "candidate_reuse_events": split_payload.get("candidate_reuse_events"),
+                        }
+                    )
+    return out_path
+
+
+def _write_proxy_causal_samples(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "proxy_causal_samples.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "selected_layer",
+                "set_name",
+                "effective_k",
+                "segment_id",
+                "baseline_margin",
+                "ablated_margin",
+                "target_margin_drop",
+                "mean_random_margin_drop",
+                "paired_delta",
+                "details_path",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is None:
+            return out_path
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
+            payload = sparse_result.get("causality", {}).get(task_id, {})
+            for set_name, tested_payload in sorted((payload.get("tested_sets") or {}).items()):
+                details_path = Path(str(tested_payload.get("details_path", "")))
+                if not details_path.exists():
+                    continue
+                details = json.loads(details_path.read_text(encoding="utf-8"))
+                for row in details.get("sample_rows", []):
+                    writer.writerow(
+                        {
+                            "proxy_slug": task_id,
+                            "family": task["family"],
+                            "pair_id": task["pair_id"],
+                            "proxy_name": task["proxy_name"],
+                            "selected_layer": payload.get("selected_layer"),
+                            "set_name": set_name,
+                            "effective_k": details.get("effective_k"),
+                            "segment_id": row.get("segment_id"),
+                            "baseline_margin": row.get("baseline_margin"),
+                            "ablated_margin": row.get("ablated_margin"),
+                            "target_margin_drop": row.get("target_margin_drop"),
+                            "mean_random_margin_drop": row.get("mean_random_margin_drop"),
+                            "paired_delta": row.get("paired_delta"),
+                            "details_path": str(details_path),
+                        }
+                    )
+    return out_path
+
+
+def _write_proxy_causal_random_controls(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "proxy_causal_random_controls.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "selected_layer",
+                "set_name",
+                "draw_index",
+                "feature_ids",
+                "mean_margin_drop",
+                "std_margin_drop",
+                "details_path",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is None:
+            return out_path
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
+            payload = sparse_result.get("causality", {}).get(task_id, {})
+            for set_name, tested_payload in sorted((payload.get("tested_sets") or {}).items()):
+                details_path = Path(str(tested_payload.get("details_path", "")))
+                if not details_path.exists():
+                    continue
+                details = json.loads(details_path.read_text(encoding="utf-8"))
+                for draw in details.get("random_control_draws", []):
+                    writer.writerow(
+                        {
+                            "proxy_slug": task_id,
+                            "family": task["family"],
+                            "pair_id": task["pair_id"],
+                            "proxy_name": task["proxy_name"],
+                            "selected_layer": payload.get("selected_layer"),
+                            "set_name": set_name,
+                            "draw_index": draw.get("draw_index"),
+                            "feature_ids": ", ".join(str(value) for value in draw.get("feature_ids", [])),
+                            "mean_margin_drop": draw.get("mean_margin_drop"),
+                            "std_margin_drop": draw.get("std_margin_drop"),
+                            "details_path": str(details_path),
+                        }
+                    )
+    return out_path
+
+
+def _write_proxy_off_target_effects(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]]) -> Path:
+    out_path = summary_dir / "proxy_off_target_effects.csv"
+    sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
+    with out_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "proxy_slug",
+                "family",
+                "pair_id",
+                "proxy_name",
+                "selected_layer",
+                "set_name",
+                "off_target_family",
+                "off_target_proxy_slug",
+                "contrast_proxy_slug",
+                "n_samples",
+                "mean_target_margin_drop",
+                "mean_random_margin_drop",
+                "off_target_selectivity",
+                "off_target_selectivity_ci_low",
+                "off_target_selectivity_ci_high",
+                "details_path",
+            ],
+        )
+        writer.writeheader()
+        if sparse_result is None:
+            return out_path
+        for task in task_registry["coverage_tasks"]:
+            task_id = str(task["task_id"])
+            payload = sparse_result.get("causality", {}).get(task_id, {})
+            for set_name, tested_payload in sorted((payload.get("tested_sets") or {}).items()):
+                details_path = Path(str(tested_payload.get("details_path", "")))
+                if not details_path.exists():
+                    continue
+                details = json.loads(details_path.read_text(encoding="utf-8"))
+                for effect in details.get("off_target_proxy_effects", []):
+                    writer.writerow(
+                        {
+                            "proxy_slug": task_id,
+                            "family": task["family"],
+                            "pair_id": task["pair_id"],
+                            "proxy_name": task["proxy_name"],
+                            "selected_layer": payload.get("selected_layer"),
+                            "set_name": set_name,
+                            "off_target_family": effect.get("family_name"),
+                            "off_target_proxy_slug": effect.get("proxy_slug"),
+                            "contrast_proxy_slug": effect.get("contrast_proxy_slug"),
+                            "n_samples": effect.get("n_samples"),
+                            "mean_target_margin_drop": effect.get("mean_target_margin_drop"),
+                            "mean_random_margin_drop": effect.get("mean_random_margin_drop"),
+                            "off_target_selectivity": effect.get("off_target_selectivity"),
+                            "off_target_selectivity_ci_low": effect.get("off_target_selectivity_ci_low"),
+                            "off_target_selectivity_ci_high": effect.get("off_target_selectivity_ci_high"),
+                            "details_path": str(details_path),
+                        }
+                    )
+    return out_path
+
+
+def _write_feature_concept_cards(
+    summary_dir: Path,
+    config: dict[str, Any],
+    task_registry: dict[str, Any],
+    dossier_rows: list[dict[str, Any]],
+) -> Path:
+    primary_families = _primary_families(config)
+    segment_lookup = _segment_row_lookup(task_registry)
+    proxy_name_by_slug = {str(task["task_id"]): str(task["proxy_name"]) for task in task_registry["coverage_tasks"]}
+    rows: list[dict[str, Any]] = []
+    for task in task_registry["coverage_tasks"]:
+        if str(task["family"]) not in primary_families:
+            continue
+        task_rows = sorted(
+            [row for row in dossier_rows if str(row["proxy_slug"]) == str(task["task_id"])],
+            key=lambda row: int(row["feature_rank"]),
+        )[:3]
+        for row in task_rows:
+            contexts = []
+            for context in row.get("top_activating_contexts", []):
+                segment_id = str(context.get("segment_id", ""))
+                segment_row = segment_lookup.get(segment_id, {})
+                tags = {str(tag) for tag in segment_row.get("all_tags", [])}
+                matched_proxy_labels = [
+                    proxy_name for proxy_name in proxy_name_by_slug.values() if proxy_name in tags
+                ]
+                contexts.append(
+                    {
+                        "segment_id": segment_id,
+                        "document_id": segment_row.get("document_id"),
+                        "document_title": _document_title(segment_row) if segment_row else "",
+                        "activation": context.get("activation"),
+                        "text_excerpt": str(segment_row.get("text", ""))[:280],
+                        "matched_proxy_labels": matched_proxy_labels,
+                    }
+                )
+            rows.append(
+                {
+                    "proxy_slug": row["proxy_slug"],
+                    "family": row["family"],
+                    "pair_id": row["pair_id"],
+                    "proxy_name": row["proxy_name"],
+                    "selected_layer": row["layer"],
+                    "feature_id": row["feature_id"],
+                    "feature_rank": row["feature_rank"],
+                    "feature_weight": row["feature_weight"],
+                    "bootstrap_stability": row["bootstrap_stability"],
+                    "activation_gap": row.get("activation_gap"),
+                    "contribution_gap": row.get("contribution_gap"),
+                    "top_contexts": contexts,
+                }
+            )
+    return _write_jsonl(summary_dir / "feature_concept_cards.jsonl", rows)
+
+
 def _write_proxy_feature_summary(summary_dir: Path, task_registry: dict[str, Any], method_results: list[dict[str, Any]], dossier_rows: list[dict[str, Any]]) -> Path:
     out_path = summary_dir / "proxy_feature_summary.csv"
     sparse_result = next((result for result in method_results if result["method_name"] == "sparse_sae_feature_bank"), None)
@@ -892,8 +1214,16 @@ def _write_proxy_feature_summary(summary_dir: Path, task_registry: dict[str, Any
                 "stable_feature_count",
                 "high_confidence_feature_count",
                 "top_feature_ids",
+                "top_feature_weights",
                 "mean_top3_stability",
+                "mean_top3_feature_auc",
+                "mean_top3_effect_size",
+                "mean_top3_activation_gap",
+                "mean_top3_contribution_gap",
                 "masked_retention",
+                "feature_reseed_runs",
+                "feature_top10_mean_jaccard",
+                "feature_top10_rank_correlation",
                 "test_positive_count",
                 "validated_test_positive_count",
             ],
@@ -904,7 +1234,12 @@ def _write_proxy_feature_summary(summary_dir: Path, task_registry: dict[str, Any
             coverage_payload = sparse_result.get("coverage", {}).get(task_id, {})
             rows_for_task = sorted(dossier_by_task.get(task_id, []), key=lambda row: int(row["feature_rank"]))
             top_feature_ids = [str(row["feature_id"]) for row in rows_for_task[:3]]
+            top_feature_weights = [str(row["feature_weight"]) for row in rows_for_task[:3]]
             mean_top3_stability = _nanmean([_safe_float(row["bootstrap_stability"]) for row in rows_for_task[:3]])
+            mean_top3_feature_auc = _nanmean([_safe_float(row.get("feature_auc")) for row in rows_for_task[:3]])
+            mean_top3_effect_size = _nanmean([_safe_float(row.get("cohen_d")) for row in rows_for_task[:3]])
+            mean_top3_activation_gap = _nanmean([_safe_float(row.get("activation_gap")) for row in rows_for_task[:3]])
+            mean_top3_contribution_gap = _nanmean([_safe_float(row.get("contribution_gap")) for row in rows_for_task[:3]])
             coverage_auc = _safe_float(coverage_payload.get("coverage_auc"))
             masked_auc = _safe_float(coverage_payload.get("masked_coverage_auc"))
             masked_retention = float("nan")
@@ -920,8 +1255,16 @@ def _write_proxy_feature_summary(summary_dir: Path, task_registry: dict[str, Any
                     "stable_feature_count": coverage_payload.get("stable_feature_count"),
                     "high_confidence_feature_count": coverage_payload.get("high_confidence_feature_count"),
                     "top_feature_ids": ", ".join(top_feature_ids),
+                    "top_feature_weights": ", ".join(top_feature_weights),
                     "mean_top3_stability": mean_top3_stability,
+                    "mean_top3_feature_auc": mean_top3_feature_auc,
+                    "mean_top3_effect_size": mean_top3_effect_size,
+                    "mean_top3_activation_gap": mean_top3_activation_gap,
+                    "mean_top3_contribution_gap": mean_top3_contribution_gap,
                     "masked_retention": "" if math.isnan(masked_retention) else masked_retention,
+                    "feature_reseed_runs": coverage_payload.get("feature_reseed_runs"),
+                    "feature_top10_mean_jaccard": coverage_payload.get("feature_top10_mean_jaccard"),
+                    "feature_top10_rank_correlation": coverage_payload.get("feature_top10_rank_correlation"),
                     "test_positive_count": coverage_payload.get("n_positive_test"),
                     "validated_test_positive_count": coverage_payload.get("n_positive_validated_test"),
                 }
@@ -944,10 +1287,14 @@ def _write_proxy_causal_summary(summary_dir: Path, task_registry: dict[str, Any]
                 "selected_layer",
                 "n_high_confidence_features",
                 "best_k",
+                "mean_target_margin_drop",
+                "mean_random_margin_drop",
                 "causal_selectivity",
                 "ci_low",
                 "ci_high",
                 "passes_positive_causality",
+                "off_target_selectivity",
+                "details_path",
             ],
         )
         writer.writeheader()
@@ -965,10 +1312,14 @@ def _write_proxy_causal_summary(summary_dir: Path, task_registry: dict[str, Any]
                         "selected_layer": payload.get("selected_layer", payload.get("layer")),
                         "n_high_confidence_features": payload.get("n_high_confidence_features"),
                         "best_k": payload.get("best_k"),
+                        "mean_target_margin_drop": payload.get("mean_target_margin_drop"),
+                        "mean_random_margin_drop": payload.get("mean_random_margin_drop"),
                         "causal_selectivity": payload.get("causal_selectivity", payload.get("causality_score")),
                         "ci_low": payload.get("ci_low"),
                         "ci_high": payload.get("ci_high"),
                         "passes_positive_causality": payload.get("passes_positive_causality"),
+                        "off_target_selectivity": payload.get("off_target_selectivity"),
+                        "details_path": payload.get("details_path"),
                     }
                 )
     return out_path
@@ -1431,9 +1782,14 @@ def aggregate_existing_results(
     appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
     feature_dossier_rows = _build_sparse_feature_dossiers(config, task_registry, method_results)
     feature_dossiers_path = _write_feature_dossiers(summary_dir, feature_dossier_rows)
+    negative_matching_diagnostics_path = _write_negative_matching_diagnostics(summary_dir, task_registry)
     proxy_feature_summary_path = _write_proxy_feature_summary(summary_dir, task_registry, method_results, feature_dossier_rows)
     proxy_causal_summary_path = _write_proxy_causal_summary(summary_dir, task_registry, method_results)
+    proxy_causal_samples_path = _write_proxy_causal_samples(summary_dir, task_registry, method_results)
+    proxy_causal_random_controls_path = _write_proxy_causal_random_controls(summary_dir, task_registry, method_results)
+    proxy_off_target_effects_path = _write_proxy_off_target_effects(summary_dir, task_registry, method_results)
     pair_mechanistic_summary_path = _write_pair_mechanistic_summary(summary_dir, config, task_registry, method_results)
+    feature_concept_cards_path = _write_feature_concept_cards(summary_dir, config, task_registry, feature_dossier_rows)
     table_proxy_mechanistic_evidence_path = _write_table_proxy_mechanistic_evidence(summary_dir, config, task_registry, method_results, feature_dossier_rows)
     table_pair_transfer_and_causality_path = _write_table_pair_transfer_and_causality(summary_dir, config, task_registry, method_results)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
@@ -1453,9 +1809,14 @@ def aggregate_existing_results(
         "sae_causality_summary_path": str(causality_summary_path),
         "appendix_task_inventory_path": str(appendix_inventory_path),
         "feature_dossiers_path": str(feature_dossiers_path),
+        "negative_matching_diagnostics_path": str(negative_matching_diagnostics_path),
         "proxy_feature_summary_path": str(proxy_feature_summary_path),
         "proxy_causal_summary_path": str(proxy_causal_summary_path),
+        "proxy_causal_samples_path": str(proxy_causal_samples_path),
+        "proxy_causal_random_controls_path": str(proxy_causal_random_controls_path),
+        "proxy_off_target_effects_path": str(proxy_off_target_effects_path),
         "pair_mechanistic_summary_path": str(pair_mechanistic_summary_path),
+        "feature_concept_cards_path": str(feature_concept_cards_path),
         "table_proxy_mechanistic_evidence_path": str(table_proxy_mechanistic_evidence_path),
         "table_pair_transfer_and_causality_path": str(table_pair_transfer_and_causality_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),
@@ -1508,9 +1869,14 @@ def run_benchmark(
     appendix_inventory_path = _write_appendix_task_inventory(summary_dir, method_results, task_registry)
     feature_dossier_rows = _build_sparse_feature_dossiers(config, task_registry, method_results)
     feature_dossiers_path = _write_feature_dossiers(summary_dir, feature_dossier_rows)
+    negative_matching_diagnostics_path = _write_negative_matching_diagnostics(summary_dir, task_registry)
     proxy_feature_summary_path = _write_proxy_feature_summary(summary_dir, task_registry, method_results, feature_dossier_rows)
     proxy_causal_summary_path = _write_proxy_causal_summary(summary_dir, task_registry, method_results)
+    proxy_causal_samples_path = _write_proxy_causal_samples(summary_dir, task_registry, method_results)
+    proxy_causal_random_controls_path = _write_proxy_causal_random_controls(summary_dir, task_registry, method_results)
+    proxy_off_target_effects_path = _write_proxy_off_target_effects(summary_dir, task_registry, method_results)
     pair_mechanistic_summary_path = _write_pair_mechanistic_summary(summary_dir, config, task_registry, method_results)
+    feature_concept_cards_path = _write_feature_concept_cards(summary_dir, config, task_registry, feature_dossier_rows)
     table_proxy_mechanistic_evidence_path = _write_table_proxy_mechanistic_evidence(summary_dir, config, task_registry, method_results, feature_dossier_rows)
     table_pair_transfer_and_causality_path = _write_table_pair_transfer_and_causality(summary_dir, config, task_registry, method_results)
     paper_readout = _evaluate_paper_readout(config, task_registry, summaries, method_results, preflight_report)
@@ -1530,9 +1896,14 @@ def run_benchmark(
         "sae_causality_summary_path": str(causality_summary_path),
         "appendix_task_inventory_path": str(appendix_inventory_path),
         "feature_dossiers_path": str(feature_dossiers_path),
+        "negative_matching_diagnostics_path": str(negative_matching_diagnostics_path),
         "proxy_feature_summary_path": str(proxy_feature_summary_path),
         "proxy_causal_summary_path": str(proxy_causal_summary_path),
+        "proxy_causal_samples_path": str(proxy_causal_samples_path),
+        "proxy_causal_random_controls_path": str(proxy_causal_random_controls_path),
+        "proxy_off_target_effects_path": str(proxy_off_target_effects_path),
         "pair_mechanistic_summary_path": str(pair_mechanistic_summary_path),
+        "feature_concept_cards_path": str(feature_concept_cards_path),
         "table_proxy_mechanistic_evidence_path": str(table_proxy_mechanistic_evidence_path),
         "table_pair_transfer_and_causality_path": str(table_pair_transfer_and_causality_path),
         "paper_readout_path": str(summary_dir / "paper_readout.json"),

@@ -20,6 +20,7 @@ from analysis.metrics import (
 )
 from assistant.documents import normalize_document_input, segment_document
 from assistant.render import build_document_summary_note, build_segment_note
+from benchmark.finetuned_encoder import fit_finetuned_proxy_encoder, predict_proxy_scores
 from benchmark.policy_feature_benchmark import build_task_registry, load_benchmark_config
 from benchmark.methods import (
     InternalFeatureExtractor,
@@ -97,6 +98,12 @@ def _read_csv_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    with path.open("w", encoding="utf-8", newline="\n") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
 def _parse_boolish(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -121,6 +128,7 @@ def _load_sparse_proxy_evidence(assistant_cfg: dict[str, Any]) -> dict[str, Any]
     proxy_causal_rows = _read_csv_rows(summary_root / "proxy_causal_summary.csv")
     proxy_feature_rows = _read_csv_rows(summary_root / "proxy_feature_summary.csv")
     pair_rows = _read_csv_rows(summary_root / "pair_mechanistic_summary.csv")
+    dossier_rows = read_jsonl(summary_root / "feature_dossiers.jsonl") if (summary_root / "feature_dossiers.jsonl").exists() else []
     if not proxy_causal_rows and not pair_rows:
         return {
             "status": "missing_benchmark_results",
@@ -129,12 +137,19 @@ def _load_sparse_proxy_evidence(assistant_cfg: dict[str, Any]) -> dict[str, Any]
             "proxy_causal_rows": [],
             "proxy_feature_rows": [],
             "pair_rows": [],
+            "feature_dossier_rows": [],
             "proxy_causal_map": {},
             "proxy_feature_map": {},
             "proxy_causal_badges": {},
+            "dossier_by_proxy_feature": {},
         }
     proxy_causal_map = {str(row.get("proxy_slug", "")): row for row in proxy_causal_rows if row.get("proxy_slug")}
     proxy_feature_map = {str(row.get("proxy_slug", "")): row for row in proxy_feature_rows if row.get("proxy_slug")}
+    dossier_by_proxy_feature = {
+        (str(row.get("proxy_slug", "")), int(row.get("feature_id", -1))): row
+        for row in dossier_rows
+        if row.get("proxy_slug") and str(row.get("feature_id", "")).strip()
+    }
     return {
         "status": "ok",
         "benchmark_output_root": str(benchmark_output_root),
@@ -142,11 +157,13 @@ def _load_sparse_proxy_evidence(assistant_cfg: dict[str, Any]) -> dict[str, Any]
         "proxy_causal_rows": proxy_causal_rows,
         "proxy_feature_rows": proxy_feature_rows,
         "pair_rows": pair_rows,
+        "feature_dossier_rows": dossier_rows,
         "proxy_causal_map": proxy_causal_map,
         "proxy_feature_map": proxy_feature_map,
         "proxy_causal_badges": {
             proxy_slug: _causal_badge_from_row(row) for proxy_slug, row in proxy_causal_map.items()
         },
+        "dossier_by_proxy_feature": dossier_by_proxy_feature,
     }
 
 
@@ -298,6 +315,58 @@ def _fit_sentence_artifact(benchmark_cfg: dict[str, Any], task_registry: dict[st
         "task_scores_norm": task_scores_norm,
         "task_reliability": task_reliability,
         "retrieval_matrix": eligible_embeddings.astype(np.float32),
+    }
+
+
+def _fit_finetuned_encoder_artifact(
+    benchmark_cfg: dict[str, Any],
+    task_registry: dict[str, Any],
+    eligible_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    method_cfg = benchmark_cfg["methods"]["finetuned_encoder_multilabel"]
+    policy_cfg = benchmark_cfg["__policy_config"]
+    manifest_root = Path(benchmark_cfg["manifest_root"])
+    train_rows = read_jsonl(manifest_root / "eligible" / f"{benchmark_cfg['splits']['train']}.jsonl")
+    dev_rows = read_jsonl(manifest_root / "eligible" / f"{benchmark_cfg['splits']['dev']}.jsonl")
+    bundle = fit_finetuned_proxy_encoder(
+        task_registry=task_registry,
+        train_rows=train_rows,
+        dev_rows=dev_rows,
+        method_cfg=method_cfg,
+        device_name=str(policy_cfg.get("device", "auto")),
+        seed=int(policy_cfg.get("seed", 0)),
+    )
+    batch_size = int(method_cfg.get("batch_size", 8))
+    eligible_probs, eligible_embeddings = predict_proxy_scores(bundle, eligible_rows, batch_size=batch_size)
+    task_index = {task_id: index for index, task_id in enumerate(bundle.task_ids)}
+
+    task_scores: dict[str, np.ndarray] = {}
+    task_scores_norm: dict[str, np.ndarray] = {}
+    task_reliability: dict[str, float] = {}
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        proxy_index = int(task_index[task_id])
+        task_scores[task_id] = eligible_probs[:, proxy_index].astype(np.float64)
+        task_scores_norm[task_id] = _minmax_normalize(task_scores[task_id])
+
+        test_pos, test_neg = _load_task_split_rows(task, "test", validated=False)
+        test_rows = test_pos + test_neg
+        test_probs, _ = predict_proxy_scores(bundle, test_rows, batch_size=batch_size)
+        labels = np.concatenate([np.ones(len(test_pos), dtype=np.int64), np.zeros(len(test_neg), dtype=np.int64)])
+        original_auc = quick_roc_auc(labels, test_probs[:, proxy_index])
+        masked_rows = _mask_rows(test_rows, list(task.get("mask_keywords", [])))
+        masked_probs, _ = predict_proxy_scores(bundle, masked_rows, batch_size=batch_size)
+        masked_auc = quick_roc_auc(labels, masked_probs[:, proxy_index])
+        task_reliability[task_id] = _clip01(masked_auc / original_auc) if original_auc and not math.isnan(original_auc) else float("nan")
+
+    return {
+        "method_name": "finetuned_encoder_multilabel",
+        "task_scores": task_scores,
+        "task_scores_norm": task_scores_norm,
+        "task_reliability": task_reliability,
+        "retrieval_matrix": eligible_embeddings.astype(np.float32),
+        "encoder_model_id": bundle.model_id,
+        "encoder_train_metrics": bundle.train_metrics,
     }
 
 
@@ -670,7 +739,7 @@ def _top_sparse_feature_fields(
     row_index: int,
     *,
     top_n: int = 3,
-) -> tuple[list[int], list[float], float]:
+) -> tuple[list[int], list[float], list[float], float]:
     feature_ids = [int(value) for value in artifact.get("task_feature_ids", {}).get(task_id, [])]
     feature_weights = [float(value) for value in artifact.get("task_feature_weights", {}).get(task_id, [])]
     stability_map = {
@@ -678,7 +747,7 @@ def _top_sparse_feature_fields(
         for feature_id, value in artifact.get("task_feature_stability", {}).get(task_id, {}).items()
     }
     if not feature_ids or not feature_weights:
-        return [], [], float("nan")
+        return [], [], [], float("nan")
 
     activation_matrix = artifact.get("task_selected_feature_activations", {}).get(task_id)
     if activation_matrix is not None and row_index < int(activation_matrix.shape[0]):
@@ -694,8 +763,14 @@ def _top_sparse_feature_fields(
 
     top_feature_ids = [int(feature_ids[i]) for i in ranked]
     top_feature_weights = [float(feature_weights[i]) for i in ranked]
+    if activation_matrix is not None and row_index < int(activation_matrix.shape[0]):
+        activations = np.asarray(activation_matrix[row_index], dtype=np.float64)
+        contributions = activations * np.asarray(feature_weights, dtype=np.float64)
+        top_feature_contributions = [float(contributions[i]) for i in ranked]
+    else:
+        top_feature_contributions = [float("nan") for _ in ranked]
     mean_stability = _nanmean([stability_map.get(int(feature_id), float("nan")) for feature_id in top_feature_ids])
-    return top_feature_ids, top_feature_weights, mean_stability
+    return top_feature_ids, top_feature_weights, top_feature_contributions, mean_stability
 
 
 def _build_family_cards(
@@ -749,12 +824,13 @@ def _build_family_cards(
         supporting_feature_count = None
         top_feature_ids: list[int] = []
         top_feature_weights: list[float] = []
+        top_feature_contributions: list[float] = []
         mean_feature_stability = float("nan")
         causal_badge = "not_tested"
         if sparse_vectors is not None:
             supporting_feature_count = int(np.sum(sparse_vectors[index] > 0))
         if artifact["method_name"] == "sparse_sae_feature_bank":
-            top_feature_ids, top_feature_weights, mean_feature_stability = _top_sparse_feature_fields(
+            top_feature_ids, top_feature_weights, top_feature_contributions, mean_feature_stability = _top_sparse_feature_fields(
                 artifact,
                 anchor_task_id,
                 index,
@@ -784,6 +860,7 @@ def _build_family_cards(
             "selected_layer": artifact.get("task_layers", {}).get(anchor_task_id),
             "top_feature_ids": top_feature_ids,
             "top_feature_weights": top_feature_weights,
+            "top_feature_contributions": top_feature_contributions,
             "mean_feature_stability": float(mean_feature_stability) if not math.isnan(mean_feature_stability) else float("nan"),
             "causal_badge": causal_badge,
             "retrieved_examples": [],
@@ -878,7 +955,7 @@ def _family_similarity(
 ) -> float:
     family = family_def["family"]
     method_name = artifact["method_name"]
-    if method_name in {"lexical_tfidf_logreg", "semantic_sentence_embed_logreg"}:
+    if method_name in {"lexical_tfidf_logreg", "semantic_sentence_embed_logreg", "finetuned_encoder_multilabel"}:
         matrix = np.asarray(artifact["retrieval_matrix"], dtype=np.float32)
         return cosine_similarity(matrix[query_index], matrix[candidate_index])
     if method_name == "dense_residual_logreg":
@@ -1101,6 +1178,70 @@ def _assistant_feature_card_rows(method_summaries: list[dict[str, Any]]) -> list
     return rows
 
 
+def _assistant_feature_usage_rows(method_summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: dict[tuple[str, str, str, int], int] = {}
+    for summary in method_summaries:
+        method_name = str(summary["method_name"])
+        for card in summary["segment_cards"]:
+            proxy_anchor = str(card.get("proxy_anchor", ""))
+            family = str(card.get("family", ""))
+            for feature_id in card.get("top_feature_ids", []) or []:
+                key = (method_name, family, proxy_anchor, int(feature_id))
+                counts[key] = counts.get(key, 0) + 1
+    rows = [
+        {
+            "method_name": method_name,
+            "family": family,
+            "proxy_anchor": proxy_anchor,
+            "feature_id": feature_id,
+            "assistant_usage_count": usage_count,
+        }
+        for (method_name, family, proxy_anchor, feature_id), usage_count in counts.items()
+    ]
+    rows.sort(key=lambda row: (str(row["method_name"]), str(row["family"]), str(row["proxy_anchor"]), -int(row["assistant_usage_count"]), int(row["feature_id"])))
+    return rows
+
+
+def _assistant_card_dossier_link_rows(
+    method_summaries: list[dict[str, Any]],
+    proxy_evidence: dict[str, Any],
+) -> list[dict[str, Any]]:
+    sparse_dossiers = dict(proxy_evidence.get("dossier_by_proxy_feature", {}))
+    rows: list[dict[str, Any]] = []
+    for summary in method_summaries:
+        if str(summary["method_name"]) != "sparse_sae_feature_bank":
+            continue
+        for card in summary["segment_cards"]:
+            proxy_anchor = str(card.get("proxy_anchor", ""))
+            feature_ids = [int(value) for value in card.get("top_feature_ids", [])]
+            feature_weights = [float(value) for value in card.get("top_feature_weights", [])]
+            feature_contributions = [float(value) for value in card.get("top_feature_contributions", [])]
+            for rank, feature_id in enumerate(feature_ids, start=1):
+                dossier_row = sparse_dossiers.get((proxy_anchor, int(feature_id)), {})
+                rows.append(
+                    {
+                        "method_name": summary["method_name"],
+                        "document_id": card.get("document_id"),
+                        "segment_id": card.get("segment_id"),
+                        "family": card.get("family"),
+                        "proxy_anchor": proxy_anchor,
+                        "selected_layer": card.get("selected_layer"),
+                        "feature_rank": int(rank),
+                        "feature_id": int(feature_id),
+                        "feature_weight": feature_weights[rank - 1] if rank - 1 < len(feature_weights) else float("nan"),
+                        "feature_contribution": feature_contributions[rank - 1] if rank - 1 < len(feature_contributions) else float("nan"),
+                        "mean_feature_stability": card.get("mean_feature_stability"),
+                        "causal_badge": card.get("causal_badge"),
+                        "dossier_layer": dossier_row.get("layer"),
+                        "dossier_feature_priority": dossier_row.get("feature_priority"),
+                        "dossier_bootstrap_stability": dossier_row.get("bootstrap_stability"),
+                        "dossier_activation_gap": dossier_row.get("activation_gap"),
+                        "dossier_contribution_gap": dossier_row.get("contribution_gap"),
+                    }
+                )
+    return rows
+
+
 def _summary_table_rows(method_summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for summary in method_summaries:
@@ -1221,6 +1362,8 @@ def run_policy_analysis_experiments(
         artifacts.append(_fit_lexical_artifact(task_registry, eligible_rows))
     if "semantic_sentence_embed_logreg" in enabled_methods:
         artifacts.append(_fit_sentence_artifact(benchmark_cfg, task_registry, eligible_rows))
+    if "finetuned_encoder_multilabel" in enabled_methods:
+        artifacts.append(_fit_finetuned_encoder_artifact(benchmark_cfg, task_registry, eligible_rows))
     if "dense_residual_logreg" in enabled_methods:
         dense_artifact = _fit_dense_artifact(benchmark_cfg, task_registry, eligible_rows)
         artifacts.append(dense_artifact)
@@ -1250,6 +1393,8 @@ def run_policy_analysis_experiments(
     triage_summary = {summary["method_name"]: summary["triage"] for summary in method_summaries}
     trust_bundle = _load_trust_bundle(assistant_cfg, benchmark_cfg)
     assistant_feature_cards = _assistant_feature_card_rows(method_summaries)
+    assistant_feature_usage = _assistant_feature_usage_rows(method_summaries)
+    assistant_card_dossier_links = _assistant_card_dossier_link_rows(method_summaries, proxy_evidence)
     assistant_report = {
         "assistant_name": "Policy Feature Mechanistic Rerun v2 Assistant Layer",
         "config_path": assistant_cfg["__config_path"],
@@ -1262,6 +1407,8 @@ def run_policy_analysis_experiments(
         "trust_bundle_status": trust_bundle["status"],
         "method_output_paths": method_output_paths,
         "assistant_feature_cards_path": str(summary_root / "assistant_feature_cards.jsonl"),
+        "assistant_feature_usage_path": str(summary_root / "assistant_feature_usage.csv"),
+        "assistant_card_dossier_links_path": str(summary_root / "assistant_card_dossier_links.jsonl"),
     }
 
     save_json(summary_root / "assistant_leaderboard.json", leaderboard)
@@ -1271,12 +1418,20 @@ def run_policy_analysis_experiments(
     save_json(summary_root / "trust_bundle.json", trust_bundle)
     save_json(summary_root / "assistant_report.json", assistant_report)
     _write_jsonl(summary_root / "assistant_feature_cards.jsonl", assistant_feature_cards)
+    _write_jsonl(summary_root / "assistant_card_dossier_links.jsonl", assistant_card_dossier_links)
+    with (summary_root / "assistant_feature_usage.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["method_name", "family", "proxy_anchor", "feature_id", "assistant_usage_count"])
+        writer.writeheader()
+        for row in assistant_feature_usage:
+            writer.writerow(row)
     return {
         "output_root": str(out_root),
         "method_output_paths": method_output_paths,
         "leaderboard_path": str(summary_root / "assistant_leaderboard.json"),
         "report_path": str(summary_root / "assistant_report.json"),
         "assistant_feature_cards_path": str(summary_root / "assistant_feature_cards.jsonl"),
+        "assistant_feature_usage_path": str(summary_root / "assistant_feature_usage.csv"),
+        "assistant_card_dossier_links_path": str(summary_root / "assistant_card_dossier_links.jsonl"),
     }
 
 

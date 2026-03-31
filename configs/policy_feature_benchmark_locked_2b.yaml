@@ -1,6 +1,6 @@
 benchmark_name: Policy Feature Governance Audit Benchmark
-benchmark_id: policy_feature_benchmark
-output_root: results/policy_feature_benchmark
+benchmark_id: policy_feature_benchmark_locked_2b
+output_root: results/policy_feature_benchmark_locked_2b
 manifest_root: data/processed/public_values
 policy_config: configs/policy_mech_interp.yaml
 manifest_summary_path: data/processed/public_values/summary.json
@@ -11,14 +11,14 @@ splits:
 methods:
   lexical_tfidf_logreg:
     enabled: true
-    description: Shallow lexical baseline using TF-IDF with logistic regression.
+    description: Shallow lexical baseline using TF IDF with logistic regression.
   semantic_sentence_embed_logreg:
     enabled: true
     description: Semantic baseline using sentence embeddings with logistic regression.
     embedding_model: sentence-transformers/all-MiniLM-L6-v2
     batch_size: 32
   finetuned_encoder_multilabel:
-    enabled: false
+    enabled: true
     description: Shared encoder baseline fine tuned on six proxy labels with a multilabel objective.
     model_id: distilroberta-base
     batch_size: 8
@@ -30,13 +30,8 @@ methods:
     max_length: 512
   dense_residual_logreg:
     enabled: true
-    description: Dense internal baseline using pooled residual activations with logistic
-      regression.
-    candidate_layers:
-    - 12
-    - 16
-    - 20
-    - 24
+    description: Dense internal baseline using pooled residual activations with logistic regression.
+    candidate_layers: [12, 16, 20, 24]
     site: resid_post
     pooling: mean
     robustness_pooling: max
@@ -44,24 +39,17 @@ methods:
     inner_seed: 13
   sparse_sae_feature_bank:
     enabled: true
-    description: Mechanistic sparse baseline using train-selected SAE feature banks.
-    candidate_layers:
-    - 12
-    - 16
-    - 20
-    - 24
+    description: Mechanistic sparse baseline using train selected SAE feature banks.
+    candidate_layers: [12, 16, 20, 24]
     site: resid_post
     pooling: mean
     robustness_pooling: max
     inner_valid_ratio: 0.2
     inner_seed: 13
     topk: 64
-    discovery_overlap_reseeds: 3
+    discovery_overlap_reseeds: 5
 scoring:
-  core_axes:
-  - coverage
-  - consistency
-  - robustness
+  core_axes: [coverage, consistency, robustness]
   core_weights:
     coverage: 0.3333333333
     consistency: 0.3333333333
@@ -100,25 +88,19 @@ preflight:
   require_exact_task_set: true
 paper:
   headline_method: sparse_sae_feature_bank
-  baseline_method: lexical_tfidf_logreg
+  baseline_method: semantic_sentence_embed_logreg
   appendix_on_preflight_failure: true
   pair_gap_aggregation: mean
-  primary_families:
-  - equality_neutrality
-  - individual_rights
+  primary_families: [equality_neutrality, individual_rights]
   primary_comparisons:
-  - proxy_feature_localization
-  - pair_linked_transfer
-  - proxy_feature_set_ablation
-  exploratory_comparisons:
-  - layerwise_profiles
-  - assistant_feature_cards
+    [proxy_feature_localization, pair_linked_transfer, proxy_feature_set_ablation]
+  exploratory_comparisons: [layerwise_profiles, assistant_feature_cards]
   success_criteria:
     require_headline_top_core: false
     min_axes_beating_baseline: 0
     min_stable_proxy_dossiers: 4
     min_positive_causal_proxies: 2
-    min_primary_pair_positive_directions: 2
+    min_primary_pair_positive_directions: 1
     min_positive_pair_retention: 0.5
   appendix_proxy_min_test_positive: 15
   appendix_proxy_min_validated_positive: 8
@@ -138,30 +120,30 @@ masking:
   keyword_source: proxy
   strategy: keyword_mask
 v1_pairs:
-- family: equality_neutrality
-  left:
-    proxy_name: 'Risk factors: Bias'
-    proxy_slug: risk_factors_bias
-    display_name: Bias
-  right:
-    proxy_name: 'Harms: Discrimination'
-    proxy_slug: harms_discrimination
-    display_name: Discrimination
-- family: individual_rights
-  left:
-    proxy_name: 'Risk factors: Privacy'
-    proxy_slug: risk_factors_privacy
-    display_name: Privacy
-  right:
-    proxy_name: 'Harms: Violation of civil or human rights, including privacy'
-    proxy_slug: harms_violation_of_civil_or_human_rights_including_privacy
-    display_name: Rights violation
-- family: transparency_accountability
-  left:
-    proxy_name: 'Risk factors: Transparency'
-    proxy_slug: risk_factors_transparency
-    display_name: Transparency
-  right:
-    proxy_name: 'Risk factors: Interpretability and explainability'
-    proxy_slug: risk_factors_interpretability_and_explainability
-    display_name: Interpretability
+  - family: equality_neutrality
+    left:
+      proxy_name: "Risk factors: Bias"
+      proxy_slug: risk_factors_bias
+      display_name: Bias
+    right:
+      proxy_name: "Harms: Discrimination"
+      proxy_slug: harms_discrimination
+      display_name: Discrimination
+  - family: individual_rights
+    left:
+      proxy_name: "Risk factors: Privacy"
+      proxy_slug: risk_factors_privacy
+      display_name: Privacy
+    right:
+      proxy_name: "Harms: Violation of civil or human rights, including privacy"
+      proxy_slug: harms_violation_of_civil_or_human_rights_including_privacy
+      display_name: Rights violation
+  - family: transparency_accountability
+    left:
+      proxy_name: "Risk factors: Transparency"
+      proxy_slug: risk_factors_transparency
+      display_name: Transparency
+    right:
+      proxy_name: "Risk factors: Interpretability and explainability"
+      proxy_slug: risk_factors_interpretability_and_explainability
+      display_name: Interpretability

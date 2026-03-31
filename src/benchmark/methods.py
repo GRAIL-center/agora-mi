@@ -17,6 +17,7 @@ from analysis.cluster_stats import cluster_bootstrap_selection_frequency, cluste
 from analysis.fdr import benjamini_hochberg
 from analysis.metrics import quick_roc_auc
 from analysis.polarization import polarization_table
+from benchmark.finetuned_encoder import fit_finetuned_proxy_encoder, predict_proxy_scores
 from data.io import read_jsonl
 from data.matching import (
     fit_tfidf_logistic,
@@ -488,6 +489,115 @@ def run_semantic_sentence_embed_logreg(
     return result
 
 
+def run_finetuned_encoder_multilabel(
+    benchmark_config: dict[str, Any],
+    task_registry: dict[str, Any],
+    output_root: Path,
+) -> dict[str, Any]:
+    del output_root
+    result = _base_result(benchmark_config, "finetuned_encoder_multilabel")
+    method_cfg = benchmark_config["methods"]["finetuned_encoder_multilabel"]
+    policy_cfg = benchmark_config["__policy_config"]
+    manifest_root = Path(benchmark_config["manifest_root"])
+    train_rows = read_jsonl(manifest_root / "eligible" / f"{benchmark_config['splits']['train']}.jsonl")
+    dev_rows = read_jsonl(manifest_root / "eligible" / f"{benchmark_config['splits']['dev']}.jsonl")
+    batch_size = int(method_cfg.get("batch_size", 8))
+
+    bundle = fit_finetuned_proxy_encoder(
+        task_registry=task_registry,
+        train_rows=train_rows,
+        dev_rows=dev_rows,
+        method_cfg=method_cfg,
+        device_name=str(policy_cfg.get("device", "auto")),
+        seed=int(policy_cfg.get("seed", 0)),
+    )
+    task_index = {task_id: index for index, task_id in enumerate(bundle.task_ids)}
+    task_ids = [task["task_id"] for task in task_registry["coverage_tasks"]]
+    family_by_task = {task["task_id"]: task["family"] for task in task_registry["coverage_tasks"]}
+    paired_targets = {task["task_id"]: task["paired_target_task_id"] for task in task_registry["coverage_tasks"]}
+
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        proxy_index = int(task_index[task_id])
+        test_pos, test_neg = _load_task_split_rows(task, "test", validated=False)
+        validated_pos, validated_neg = _load_task_split_rows(task, "test", validated=True)
+        test_rows = test_pos + test_neg
+        test_probs, _ = predict_proxy_scores(bundle, test_rows, batch_size=batch_size)
+        scores = test_probs[:, proxy_index]
+        labels = np.concatenate([np.ones(len(test_pos), dtype=np.int64), np.zeros(len(test_neg), dtype=np.int64)])
+        coverage_auc = _safe_auc(labels, scores)
+
+        masked_rows = _mask_rows(test_rows, list(task.get("mask_keywords", [])))
+        masked_probs, _ = predict_proxy_scores(bundle, masked_rows, batch_size=batch_size)
+        masked_auc = _safe_auc(labels, masked_probs[:, proxy_index])
+
+        validated_auc = float("nan")
+        if validated_pos and validated_neg:
+            validated_rows = validated_pos + validated_neg
+            validated_probs, _ = predict_proxy_scores(bundle, validated_rows, batch_size=batch_size)
+            validated_labels = np.concatenate(
+                [np.ones(len(validated_pos), dtype=np.int64), np.zeros(len(validated_neg), dtype=np.int64)]
+            )
+            validated_auc = _safe_auc(validated_labels, validated_probs[:, proxy_index])
+
+        result["coverage"][task_id] = {
+            "task_id": task_id,
+            "family": task["family"],
+            "proxy_name": task["proxy_name"],
+            "coverage_auc": float(coverage_auc),
+            "masked_coverage_auc": float(masked_auc),
+            "validated_coverage_auc": None if math.isnan(validated_auc) else float(validated_auc),
+            "n_positive_train": None,
+            "n_negative_train": None,
+            "n_positive_test": len(test_pos),
+            "n_negative_test": len(test_neg),
+            "n_positive_validated_test": len(validated_pos),
+            "n_negative_validated_test": len(validated_neg),
+            "selected_layer": None,
+            "site": "encoder_last_hidden",
+            "pooling": "mean",
+            "robustness_pooling": "mean",
+            "selection_metric": bundle.train_metrics.get("dev_loss"),
+            "selection_source": "eligible_train_dev_multilabel",
+            "mask_keywords": list(task.get("mask_keywords", [])),
+            "feature_count": None,
+            "evaluation_segment_ids": _rows_to_segment_ids(test_rows),
+            "masked_evaluation_segment_ids": _rows_to_segment_ids(test_rows),
+            "encoder_model_id": bundle.model_id,
+            "encoder_train_loss": bundle.train_metrics.get("train_loss"),
+            "encoder_dev_loss": bundle.train_metrics.get("dev_loss"),
+        }
+
+    def _score_target(source_task_id: str, target_task_id: str) -> float:
+        proxy_index = int(task_index[source_task_id])
+        target_task = task_registry["coverage_task_map"][target_task_id]
+        pos_rows, neg_rows = _load_task_split_rows(target_task, "test", validated=False)
+        eval_rows = pos_rows + neg_rows
+        probs, _ = predict_proxy_scores(bundle, eval_rows, batch_size=batch_size)
+        labels = np.concatenate([np.ones(len(pos_rows), dtype=np.int64), np.zeros(len(neg_rows), dtype=np.int64)])
+        return _safe_auc(labels, probs[:, proxy_index])
+
+    consistency, cross_controls = _evaluate_transfer_scores(
+        task_ids=task_ids,
+        paired_targets=paired_targets,
+        score_target=_score_target,
+        family_by_task=family_by_task,
+    )
+    result["consistency"] = consistency
+    result["cross_family_controls"] = cross_controls
+    for task in task_registry["coverage_tasks"]:
+        task_id = str(task["task_id"])
+        result["causality"][task_id] = {
+            "task_id": task_id,
+            "status": "not_evaluated_under_intervention_protocol",
+            "selected_layer": None,
+            "site": "encoder_last_hidden",
+            "causal_selectivity": None,
+            "details_path": None,
+        }
+    return result
+
+
 def _dense_task_fit(
     extractor: InternalFeatureExtractor,
     *,
@@ -802,6 +912,172 @@ def _top_activating_segment_ids(
     return payload
 
 
+def _top_activating_segments(
+    selected_feature_matrix: np.ndarray,
+    segment_ids: list[str],
+    feature_ids: np.ndarray,
+    *,
+    top_n: int = 5,
+) -> dict[str, list[dict[str, float | str]]]:
+    if selected_feature_matrix.size == 0 or feature_ids.size == 0:
+        return {}
+    payload: dict[str, list[dict[str, float | str]]] = {}
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        values = np.asarray(selected_feature_matrix[:, index], dtype=np.float64)
+        order = np.argsort(values)[::-1]
+        top_rows: list[dict[str, float | str]] = []
+        for row_index in order[:top_n]:
+            top_rows.append(
+                {
+                    "segment_id": str(segment_ids[int(row_index)]),
+                    "activation": float(values[int(row_index)]),
+                }
+            )
+        payload[str(int(feature_id))] = top_rows
+    return payload
+
+
+def _quantile_segment_ids(
+    selected_feature_matrix: np.ndarray,
+    segment_ids: list[str],
+    feature_ids: np.ndarray,
+    *,
+    quantiles: tuple[float, ...] = (0.50, 0.90, 0.95),
+) -> dict[str, dict[str, str]]:
+    if selected_feature_matrix.size == 0 or feature_ids.size == 0:
+        return {}
+    payload: dict[str, dict[str, str]] = {}
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        values = np.asarray(selected_feature_matrix[:, index], dtype=np.float64)
+        if values.size == 0:
+            continue
+        q_payload: dict[str, str] = {}
+        for quantile in quantiles:
+            target = float(np.quantile(values, quantile))
+            nearest = int(np.argmin(np.abs(values - target)))
+            q_payload[f"q{int(round(quantile * 100.0)):02d}"] = str(segment_ids[nearest])
+        payload[str(int(feature_id))] = q_payload
+    return payload
+
+
+def _feature_distribution_stats(
+    *,
+    features_pos: np.ndarray,
+    features_neg: np.ndarray,
+    feature_ids: np.ndarray,
+    feature_weights: np.ndarray,
+) -> dict[int, dict[str, float]]:
+    if feature_ids.size == 0:
+        return {}
+    pos_selected = features_pos[:, feature_ids]
+    neg_selected = features_neg[:, feature_ids]
+    results: dict[int, dict[str, float]] = {}
+    n_pos = max(1, int(pos_selected.shape[0]))
+    n_neg = max(1, int(neg_selected.shape[0]))
+    for index, feature_id in enumerate(feature_ids.astype(int).tolist()):
+        pos_values = np.asarray(pos_selected[:, index], dtype=np.float64)
+        neg_values = np.asarray(neg_selected[:, index], dtype=np.float64)
+        pos_mean = float(pos_values.mean()) if pos_values.size else float("nan")
+        neg_mean = float(neg_values.mean()) if neg_values.size else float("nan")
+        pos_var = float(pos_values.var(ddof=1)) if pos_values.size > 1 else 0.0
+        neg_var = float(neg_values.var(ddof=1)) if neg_values.size > 1 else 0.0
+        pooled_var_num = max(0.0, ((n_pos - 1) * pos_var) + ((n_neg - 1) * neg_var))
+        pooled_var_den = max(1.0, float(n_pos + n_neg - 2))
+        pooled_std = math.sqrt(pooled_var_num / pooled_var_den) if pooled_var_num > 0.0 else 0.0
+        activation_gap = pos_mean - neg_mean
+        cohen_d = float(activation_gap / pooled_std) if pooled_std > 0.0 else float("nan")
+        labels = np.concatenate([np.ones(n_pos, dtype=np.int64), np.zeros(n_neg, dtype=np.int64)])
+        values = np.concatenate([pos_values, neg_values], axis=0)
+        feature_auc = _safe_auc(labels, values)
+        weight = float(feature_weights[index])
+        pos_contrib = float((pos_values * weight).mean()) if pos_values.size else float("nan")
+        neg_contrib = float((neg_values * weight).mean()) if neg_values.size else float("nan")
+        results[int(feature_id)] = {
+            "positive_mean_activation": pos_mean,
+            "negative_mean_activation": neg_mean,
+            "positive_activation_variance": pos_var,
+            "negative_activation_variance": neg_var,
+            "activation_gap": activation_gap,
+            "cohen_d": cohen_d,
+            "feature_auc": feature_auc,
+            "positive_mean_contribution": pos_contrib,
+            "negative_mean_contribution": neg_contrib,
+            "contribution_gap": pos_contrib - neg_contrib if not math.isnan(pos_contrib) and not math.isnan(neg_contrib) else float("nan"),
+        }
+    return results
+
+
+def _rank_correlation(feature_ids_a: list[int], feature_ids_b: list[int], *, top_k: int) -> float:
+    top_a = [int(value) for value in feature_ids_a[:top_k]]
+    top_b = [int(value) for value in feature_ids_b[:top_k]]
+    universe = sorted(set(top_a) | set(top_b))
+    if len(universe) < 2:
+        return float("nan")
+    default_rank = float(top_k + 1)
+    rank_a = np.asarray([float(top_a.index(feature_id) + 1) if feature_id in top_a else default_rank for feature_id in universe], dtype=np.float64)
+    rank_b = np.asarray([float(top_b.index(feature_id) + 1) if feature_id in top_b else default_rank for feature_id in universe], dtype=np.float64)
+    if math.isclose(float(rank_a.std()), 0.0) or math.isclose(float(rank_b.std()), 0.0):
+        return float("nan")
+    return float(np.corrcoef(rank_a, rank_b)[0, 1])
+
+
+def _feature_reseed_overlap_stats(
+    *,
+    features_pos: np.ndarray,
+    features_neg: np.ndarray,
+    pos_doc_ids: list[str],
+    neg_doc_ids: list[str],
+    feature_ids: np.ndarray,
+    topk: int,
+    perm_n: int,
+    bootstrap_b: int,
+    fdr_q: float,
+    seed: int,
+    n_reseeds: int,
+) -> dict[str, float]:
+    if feature_ids.size == 0 or n_reseeds <= 0:
+        return {
+            "reseed_runs": 0,
+            "mean_jaccard_top10": float("nan"),
+            "min_jaccard_top10": float("nan"),
+            "mean_jaccard_top3": float("nan"),
+            "mean_rank_correlation_top10": float("nan"),
+        }
+    primary = [int(value) for value in feature_ids.astype(int).tolist()]
+    primary_top10 = set(primary[:10])
+    primary_top3 = set(primary[:3])
+    top10_overlaps: list[float] = []
+    top3_overlaps: list[float] = []
+    rank_corrs: list[float] = []
+    for offset in range(1, int(n_reseeds) + 1):
+        reseed_bank = _fit_sae_feature_bank(
+            features_pos=features_pos,
+            features_neg=features_neg,
+            pos_doc_ids=pos_doc_ids,
+            neg_doc_ids=neg_doc_ids,
+            topk=topk,
+            perm_n=perm_n,
+            bootstrap_b=bootstrap_b,
+            fdr_q=fdr_q,
+            seed=seed + (100 * offset),
+        )
+        reseed_ids = [int(value) for value in reseed_bank["feature_ids"].astype(int).tolist()]
+        reseed_top10 = set(reseed_ids[:10])
+        reseed_top3 = set(reseed_ids[:3])
+        top10_union = primary_top10 | reseed_top10
+        top3_union = primary_top3 | reseed_top3
+        top10_overlaps.append(float(len(primary_top10 & reseed_top10)) / float(len(top10_union)) if top10_union else float("nan"))
+        top3_overlaps.append(float(len(primary_top3 & reseed_top3)) / float(len(top3_union)) if top3_union else float("nan"))
+        rank_corrs.append(_rank_correlation(primary, reseed_ids, top_k=10))
+    return {
+        "reseed_runs": int(n_reseeds),
+        "mean_jaccard_top10": _nanmean(top10_overlaps),
+        "min_jaccard_top10": float(min(top10_overlaps)) if top10_overlaps else float("nan"),
+        "mean_jaccard_top3": _nanmean(top3_overlaps),
+        "mean_rank_correlation_top10": _nanmean(rank_corrs),
+    }
+
+
 def _fit_sae_feature_bank(
     *,
     features_pos: np.ndarray,
@@ -873,6 +1149,8 @@ def _write_sae_intermediate(
     eval_counts: tuple[int, int],
     selected_eval_features: np.ndarray,
     eval_segment_ids: list[str],
+    feature_distribution_stats: dict[int, dict[str, float]],
+    discovery_overlap_stats: dict[str, float],
 ) -> Path:
     run_dir = ensure_dir(intermediate_root / "policy_discovery" / family / proxy_slug / f"layer{layer}_{site}")
     priority_map = _feature_priority_map(
@@ -885,6 +1163,17 @@ def _write_sae_intermediate(
         eval_segment_ids,
         feature_bank["feature_ids"],
         top_n=5,
+    )
+    top_activating_segments = _top_activating_segments(
+        selected_eval_features,
+        eval_segment_ids,
+        feature_bank["feature_ids"],
+        top_n=5,
+    )
+    quantile_segments = _quantile_segment_ids(
+        selected_eval_features,
+        eval_segment_ids,
+        feature_bank["feature_ids"],
     )
     bank_payload = {
         "family_name": family,
@@ -902,6 +1191,10 @@ def _write_sae_intermediate(
         "bootstrap_stability": {str(key): value for key, value in feature_bank["bootstrap_stability"].items()},
         "feature_priority": {str(key): value for key, value in priority_map.items()},
         "top_activating_segment_ids": top_activating,
+        "top_activating_segments": top_activating_segments,
+        "quantile_segment_ids": quantile_segments,
+        "feature_distribution_stats": {str(key): value for key, value in feature_distribution_stats.items()},
+        "discovery_overlap_stats": discovery_overlap_stats,
     }
     (run_dir / "feature_bank.json").write_text(json.dumps(bank_payload, ensure_ascii=False, indent=2), encoding="utf-8")
     (run_dir / "bootstrap_stability.json").write_text(
@@ -1096,6 +1389,14 @@ def _run_proxy_causality_suite(
     for task in task_registry["coverage_tasks"]:
         task_id = str(task["task_id"])
         fitted = fitted_banks[task_id]
+        unrelated_specs = []
+        for other_task in task_registry["coverage_tasks"]:
+            other_task_id = str(other_task["task_id"])
+            if other_task_id in {task_id, str(task["paired_target_task_id"])}:
+                continue
+            unrelated_specs.append(
+                f"{str(other_task['family'])}::{other_task_id}::{str(other_task['paired_target_task_id'])}"
+            )
         feature_ids = np.asarray(fitted.get("feature_ids", []), dtype=np.int64)
         feature_weights = np.asarray(fitted.get("feature_weights", []), dtype=np.float64)
         stability_map = {int(key): float(value) for key, value in fitted.get("bootstrap_stability", {}).items()}
@@ -1147,6 +1448,8 @@ def _run_proxy_causality_suite(
                     str(random_sets),
                     "--feature_ids",
                     ",".join(str(int(feature_id)) for feature_id in selected_ids),
+                    "--off_target_proxy_specs",
+                    ",".join(unrelated_specs),
                 ]
             )
             if not details_path.exists():
@@ -1160,6 +1463,20 @@ def _run_proxy_causality_suite(
                 "ci_low": details.get("causal_selectivity_ci_low"),
                 "ci_high": details.get("causal_selectivity_ci_high"),
                 "passes_positive_causality": bool(details.get("passes_positive_causality", False)),
+                "mean_target_margin_drop": details.get("mean_target_margin_drop"),
+                "mean_random_margin_drop": details.get("mean_random_margin_drop"),
+                "std_target_margin_drop": details.get("std_target_margin_drop"),
+                "std_random_margin_drop": details.get("std_random_margin_drop"),
+                "intervention": details.get("intervention", {}),
+                "random_run_mean_margin_drops": details.get("random_run_mean_margin_drops", []),
+                "random_run_mean_margin_drop_quantiles": details.get("random_run_mean_margin_drop_quantiles", {}),
+                "random_control_draws": details.get("random_control_draws", []),
+                "mean_off_target_margin_drop": details.get("mean_off_target_margin_drop"),
+                "mean_off_target_random_margin_drop": details.get("mean_off_target_random_margin_drop"),
+                "off_target_selectivity": details.get("off_target_selectivity"),
+                "off_target_ci_low": details.get("off_target_selectivity_ci_low"),
+                "off_target_ci_high": details.get("off_target_selectivity_ci_high"),
+                "off_target_proxy_effects": details.get("off_target_proxy_effects", []),
                 "details_path": str(details_path),
             }
             tested_sets[f"top{int(set_size)}"] = payload
@@ -1185,6 +1502,11 @@ def _run_proxy_causality_suite(
                 "ci_low": None,
                 "ci_high": None,
                 "passes_positive_causality": False,
+                "off_target_selectivity": None,
+                "mean_target_margin_drop": None,
+                "mean_random_margin_drop": None,
+                "off_target_proxy_effects": [],
+                "details_path": None,
             }
             continue
 
@@ -1214,6 +1536,11 @@ def _run_proxy_causality_suite(
             "ci_low": None if math.isnan(best_low) else float(best_low),
             "ci_high": None if math.isnan(best_high) else float(best_high),
             "passes_positive_causality": passes,
+            "off_target_selectivity": best_payload.get("off_target_selectivity"),
+            "mean_target_margin_drop": best_payload.get("mean_target_margin_drop"),
+            "mean_random_margin_drop": best_payload.get("mean_random_margin_drop"),
+            "off_target_proxy_effects": best_payload.get("off_target_proxy_effects", []),
+            "details_path": best_payload.get("details_path"),
         }
     return results
 
@@ -1239,6 +1566,7 @@ def run_sparse_sae_feature_bank(
     stable_threshold = float(causality_cfg.get("stable_threshold", 0.50))
     high_confidence_min_stability = float(causality_cfg.get("high_confidence_min_stability", 0.60))
     high_confidence_min_weight = float(causality_cfg.get("high_confidence_min_weight", 0.25))
+    discovery_overlap_reseeds = int(method_cfg.get("discovery_overlap_reseeds", 3))
     task_ids = [task["task_id"] for task in task_registry["coverage_tasks"]]
     family_by_task = {task["task_id"]: task["family"] for task in task_registry["coverage_tasks"]}
     paired_targets = {task["task_id"]: task["paired_target_task_id"] for task in task_registry["coverage_tasks"]}
@@ -1324,6 +1652,25 @@ def run_sparse_sae_feature_bank(
             axis=0,
         )
         selected_eval_features = eval_features[:, bank["feature_ids"]].astype(np.float32) if bank["feature_ids"].size else np.zeros((len(test_pos) + len(test_neg), 0), dtype=np.float32)
+        feature_distribution_stats = _feature_distribution_stats(
+            features_pos=train_pos_features,
+            features_neg=train_neg_features,
+            feature_ids=bank["feature_ids"],
+            feature_weights=bank["feature_weights"],
+        )
+        discovery_overlap_stats = _feature_reseed_overlap_stats(
+            features_pos=train_pos_features,
+            features_neg=train_neg_features,
+            pos_doc_ids=_rows_to_doc_ids(train_pos),
+            neg_doc_ids=_rows_to_doc_ids(train_neg),
+            feature_ids=bank["feature_ids"],
+            topk=topk,
+            perm_n=perm_n,
+            bootstrap_b=bootstrap_b,
+            fdr_q=fdr_q,
+            seed=seed + index + best_layer,
+            n_reseeds=discovery_overlap_reseeds,
+        )
         y_test = np.concatenate([np.ones(len(test_pos), dtype=np.int64), np.zeros(len(test_neg), dtype=np.int64)])
         coverage_auc = _safe_auc(y_test, _weighted_score(eval_features, bank["feature_ids"], bank["feature_weights"]))
         _write_sae_intermediate(
@@ -1340,6 +1687,8 @@ def run_sparse_sae_feature_bank(
             eval_counts=(len(test_pos), len(test_neg)),
             selected_eval_features=selected_eval_features,
             eval_segment_ids=_rows_to_segment_ids(test_pos + test_neg),
+            feature_distribution_stats=feature_distribution_stats,
+            discovery_overlap_stats=discovery_overlap_stats,
         )
 
         masked_test_rows = _mask_rows(test_pos + test_neg, list(task.get("mask_keywords", [])))
@@ -1433,6 +1782,11 @@ def run_sparse_sae_feature_bank(
             "stable_feature_count": stable_feature_count,
             "high_confidence_feature_count": len(high_confidence_feature_ids),
             "high_confidence_feature_ids": high_confidence_feature_ids,
+            "feature_reseed_runs": discovery_overlap_stats.get("reseed_runs"),
+            "feature_top10_mean_jaccard": discovery_overlap_stats.get("mean_jaccard_top10"),
+            "feature_top10_min_jaccard": discovery_overlap_stats.get("min_jaccard_top10"),
+            "feature_top3_mean_jaccard": discovery_overlap_stats.get("mean_jaccard_top3"),
+            "feature_top10_rank_correlation": discovery_overlap_stats.get("mean_rank_correlation_top10"),
         }
         fitted_banks[task["task_id"]] = {
             "selected_layer": int(best_layer),
@@ -1441,6 +1795,8 @@ def run_sparse_sae_feature_bank(
             "bootstrap_stability": bank["bootstrap_stability"],
             "feature_priority": feature_priority,
             "high_confidence_feature_ids": high_confidence_feature_ids,
+            "feature_distribution_stats": feature_distribution_stats,
+            "discovery_overlap_stats": discovery_overlap_stats,
         }
 
     def _score_target(source_task_id: str, target_task_id: str) -> float:
@@ -1475,6 +1831,7 @@ def run_sparse_sae_feature_bank(
 RUNNER_FACTORIES = {
     "lexical_tfidf_logreg": run_lexical_tfidf_logreg,
     "semantic_sentence_embed_logreg": run_semantic_sentence_embed_logreg,
+    "finetuned_encoder_multilabel": run_finetuned_encoder_multilabel,
     "dense_residual_logreg": run_dense_residual_logreg,
     "sparse_sae_feature_bank": run_sparse_sae_feature_bank,
 }

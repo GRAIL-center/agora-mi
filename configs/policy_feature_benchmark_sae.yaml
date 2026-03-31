@@ -17,6 +17,17 @@ methods:
     description: Semantic baseline using sentence embeddings with logistic regression.
     embedding_model: sentence-transformers/all-MiniLM-L6-v2
     batch_size: 32
+  finetuned_encoder_multilabel:
+    enabled: false
+    description: Shared encoder baseline fine tuned on six proxy labels with a multilabel objective.
+    model_id: distilroberta-base
+    batch_size: 8
+    epochs: 3
+    learning_rate: 2.0e-5
+    weight_decay: 0.01
+    grad_clip: 1.0
+    early_stopping_patience: 2
+    max_length: 512
   dense_residual_logreg:
     enabled: false
     description: Dense internal baseline using pooled residual activations with logistic
@@ -45,6 +56,7 @@ methods:
     inner_valid_ratio: 0.2
     inner_seed: 13
     topk: 64
+    discovery_overlap_reseeds: 3
 scoring:
   core_axes:
   - coverage

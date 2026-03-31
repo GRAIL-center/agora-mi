@@ -1,88 +1,62 @@
-# How Do Language Models Represent Policy Text?
+# Mechanistic Policy Feature Analysis with Sparse SAE Features
 
-This repository accompanies a research paper project on the internal representation of policy text in language models.
+This repository accompanies a mechanistic NLP project on how language models represent policy relevant text.
 
-The project studies proxy grounded mechanistic analysis of policy features using AGORA policy segments, dense residual representations, sparse SAE features, matched negatives, held out transfer, keyword masking, and causal intervention.
+The current repository direction is feature centered rather than family centered. The empirical core asks which sparse SAE features localize specific policy proxies in held out policy text, how stable those features remain under resampling and keyword masking, whether targeted feature set ablations matter more than matched random controls, and how the resulting evidence can be rendered into analyst facing policy support outputs.
 
-The same mechanistic pipeline also supports an applied policy analysis assistant layer for segment highlighting, cross document retrieval, and review triage. In this repository, that assistant layer is treated as a downstream use of the mechanistic evidence rather than as a replacement for it.
+## Current Research Questions
 
-## Paper Focus
+1. Which sparse SAE features reliably localize each policy proxy in held out policy text
+2. Are those proxy specific features stable across bootstrap resampling and robust under keyword masking rather than only reflecting shallow lexical cues
+3. Do selected proxy specific feature sets causally support proxy scoring more than matched random feature sets at the same layer and cardinality
+4. Can those localized and stress tested features improve analyst facing support tasks such as highlighting, retrieval, and triage
 
-The central research questions are:
+## Empirical Scope
 
-1. How do language models internally represent policy text and policy relevant features
-2. Which policy features produce distinct and robust internal representations
-3. Do related policy features share internal structure that generalizes across proxies
-4. Are these discovered policy features causally involved in held out policy judgments
-
-Public values are treated as a secondary interpretive lens rather than as the primary empirical target.
-
-## Core Empirical Scope
-
-The current v1 empirical core focuses on three related concept pairs:
+The benchmark keeps three proxy pairs.
 
 1. Bias and Discrimination
 2. Privacy and Rights violation
 3. Transparency and Interpretability
 
-These pairs support a compact evaluation protocol for policy feature discovery, transfer, robustness, and causal qualification.
+The first two pairs are the primary headline pairs. Transparency and Interpretability remains a caution pair because the current sample size is too small for equal weight mechanistic claims.
 
-## Policy Analysis Assistant Extension
+## High Level Workflow
 
-The assistant layer is built on top of the mechanistic core workflow.
+The v2 workflow has four stages.
 
-1. Highlight policy relevant segments using proxy and family aligned internal signals
-2. Retrieve segments from the corpus that share similar policy logic
-3. Triage which document segments deserve closer human review first
-
-The assistant does not replace the scientific core. Discovery, transfer, masking, and intervention remain the main evidence chain. Assistant facing scores and grounded natural language notes are presentation layers over that evidence.
+1. Proxy feature discovery
+   Select a held out layer, build sparse feature banks, and rank proxy aligned feature ids.
+2. Stability and robustness
+   Record bootstrap stability, activation distributions, keyword masking retention, and reseeded feature overlap.
+3. Targeted causal intervention
+   Ablate top proxy feature sets and compare their score drop against matched random feature sets from the same layer and cardinality.
+4. Assistant rendering
+   Expose feature backed evidence in segment highlighting, retrieval, and triage outputs.
 
 ## Repository Layout
 
 ```text
 configs/      Experiment and benchmark configuration
-docs/         Tutorials, figures, and lightweight project notes
-scripts/      Data preparation, discovery, transfer, and benchmark utilities
+docs/         Tutorials and runbooks
+scripts/      Data preparation and experiment entry points
 src/          Reusable library code for data, models, SAE handling, analysis, and benchmarking
-tests/        Unit and smoke tests for the current pipeline
+tests/        Unit tests for benchmark and assistant code paths
 ```
 
 ## Tutorial Notebook
 
-For a guided walkthrough from data processing to mechanistic interpretability, start with:
+Start with the tutorial notebook if you want a guided walkthrough.
 
 `docs/tutorials/policy_representation_tutorial.ipynb`
 
-The notebook is written for readers who are new to mechanistic interpretability and explains both the scientific logic and the repository workflow step by step. It now ends with a transition from mechanistic evidence to policy analysis support objects such as `segment_card`, `document_brief`, retrieval examples, and grounded natural language notes.
+The notebook now follows the v2 feature dossier workflow.
 
-For the full Lambda run sequence for benchmark and assistant experiments, see `docs/lambda_runbook.md`.
-
-## Method Overview
-
-The current workflow is:
-
-1. Filter AGORA to AI related, operative, annotated segments
-2. Build proxy specific manifests from existing AGORA tag annotations
-3. Construct metadata matched negatives
-4. Extract dense residual and sparse SAE representations from Gemma 2 2B PT
-5. Perform train only feature discovery
-6. Evaluate held out transfer across related policy features
-7. Stress test with keyword masking
-8. Consolidate repeated sparse features into family core banks
-9. Run intervention based causal evaluation on held out policy judgments
-
-## Evaluation Protocol
-
-The `Policy Feature Governance Audit Benchmark` is the standardized evaluation wrapper around the methodology above.
-
-Its main axes are:
-
-1. Coverage
-2. Consistency
-3. Robustness
-4. Causality
-
-Only the first three axes define the main method comparison table. Causality is reported separately as a mechanistic qualification for intervention capable methods.
+1. policy proxy setup
+2. sparse feature discovery
+3. stability and masking
+4. targeted proxy ablation
+5. assistant feature cards
 
 ## Setup
 
@@ -90,71 +64,82 @@ Only the first three axes define the main method comparison table. Causality is 
 pip install -r requirements.txt
 ```
 
-The repository now includes the processed `data/processed/public_values` manifests needed for the benchmark and assistant experiments. For the current experimental path, Lambda runs can start from these tracked processed files without rebuilding manifests from raw AGORA inputs.
+This repository tracks `data/processed/public_values`, so the standard benchmark and assistant runs can start from processed manifests without rebuilding them from raw AGORA inputs.
 
-Raw AGORA files are still needed only if you want to regenerate the processed manifests locally.
+## Main Commands
 
-## Useful Commands
-
-Build proxy manifests from raw AGORA data:
-
-```bash
-python scripts/build_public_value_corpus.py
-```
-
-Build matched negatives from raw AGORA data:
-
-```bash
-python scripts/build_matched_negatives.py
-```
-
-Run the benchmark directly from the tracked processed manifests:
+Run benchmark preflight.
 
 ```bash
 python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark.yaml
 ```
 
-Run the benchmark preflight:
+Run the benchmark variants.
 
 ```bash
-python scripts/run_policy_feature_benchmark.py --preflight_only
+python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_cheap.yaml
+python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_dense.yaml
+python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_sae.yaml
 ```
 
-Run the full benchmark:
+Aggregate benchmark outputs.
 
 ```bash
-python scripts/run_policy_feature_benchmark.py
+python scripts/aggregate_policy_feature_benchmark.py --config configs/policy_feature_benchmark.yaml
 ```
 
-Aggregate benchmark outputs:
+Run the assistant variants.
 
 ```bash
-python scripts/aggregate_policy_feature_benchmark.py
+python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_cheap.yaml
+python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_dense.yaml
+python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_sae.yaml
 ```
 
-Run the policy analysis assistant experiment suite:
+Analyze one document with the sparse assistant.
 
 ```bash
-python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant.yaml
+python scripts/run_policy_document_analysis.py --input_path path/to/document.txt --config configs/policy_analysis_assistant_sae.yaml --output_path results/policy_document_analysis.json
 ```
 
-Analyze a single document with the sparse assistant:
+## Three Line Lambda Run
+
+If local tests are already complete, the full Lambda rerun can be launched in three shell lines.
 
 ```bash
-python scripts/run_policy_document_analysis.py --input_path path/to/document.txt --output_path results/policy_document_analysis.json
+cd ~/agora-mi && python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark.yaml --output_root results/policy_feature_benchmark_lambda_v2 && for cfg in configs/policy_feature_benchmark_cheap.yaml configs/policy_feature_benchmark_dense.yaml configs/policy_feature_benchmark_sae.yaml; do python scripts/run_policy_feature_benchmark.py --config "$cfg" --output_root results/policy_feature_benchmark_lambda_v2 || exit 1; done && python scripts/aggregate_policy_feature_benchmark.py --config configs/policy_feature_benchmark.yaml --output_root results/policy_feature_benchmark_lambda_v2
+cd ~/agora-mi && for cfg in configs/policy_analysis_assistant_cheap.yaml configs/policy_analysis_assistant_dense.yaml configs/policy_analysis_assistant_sae.yaml; do python scripts/run_policy_analysis_experiments.py --config "$cfg" --output_root results/policy_analysis_assistant_lambda_v2 || exit 1; done
+cd ~/agora-mi && printf '%s\n' 'The agency shall publish an annual transparency report describing system deployment, audit procedures, and material incidents. Any system processing personal data must include retention limits, access controls, and independent review. Operators should assess whether deployment could create discriminatory effects for protected groups and document mitigation steps before rollout.' > sample_policy_doc.txt && python scripts/run_policy_document_analysis.py --input_path sample_policy_doc.txt --config configs/policy_analysis_assistant_sae.yaml --output_path results/policy_document_analysis_lambda_v2.json --document_id lambda_doc_1 --title 'Lambda Document' --source_type lambda_text && tar -czf lambda_results_bundle_v2.tar.gz results/policy_feature_benchmark_lambda_v2 results/policy_analysis_assistant_lambda_v2 results/policy_document_analysis_lambda_v2.json
 ```
 
-Main assistant outputs:
+For a fuller explanation of the run order, see `docs/lambda_runbook.md`.
+
+## Main Outputs
+
+The benchmark summary now emphasizes proxy and pair level mechanistic evidence.
+
+1. `results/policy_feature_benchmark/summary/table_main_benchmark_results.csv`
+2. `results/policy_feature_benchmark/summary/table_proxy_mechanistic_evidence.csv`
+3. `results/policy_feature_benchmark/summary/table_pair_transfer_and_causality.csv`
+4. `results/policy_feature_benchmark/summary/feature_dossiers.jsonl`
+5. `results/policy_feature_benchmark/summary/proxy_feature_summary.csv`
+6. `results/policy_feature_benchmark/summary/proxy_causal_summary.csv`
+
+The assistant summary exposes feature evidence directly.
 
 1. `results/policy_analysis_assistant/summary/assistant_leaderboard.json`
 2. `results/policy_analysis_assistant/summary/assistant_report.json`
-3. `results/policy_analysis_assistant/summary/trust_bundle.json`
-4. `results/policy_document_analysis.json`
+3. `results/policy_analysis_assistant/summary/assistant_feature_usage.csv`
+4. `results/policy_analysis_assistant/summary/assistant_feature_cards.jsonl`
+5. `results/policy_document_analysis.json`
 
-## Figures and Tutorials
+## Interpretation Guidance
 
-Versioned figures and tutorial assets live under `docs/figures/` and `docs/tutorials/`.
+The benchmark is the scientific core.
 
-## Notes on Local Dependencies
+1. Coverage asks whether a method separates proxy positives from matched negatives.
+2. Stability asks whether the selected sparse features survive resampling and lexical masking.
+3. Pair transfer asks whether a proxy aligned feature bank helps on its paired proxy more than on unrelated controls.
+4. Causality asks whether ablating selected proxy feature sets matters more than ablating matched random feature sets.
 
-This repository may coexist locally with external tool clones such as PaperBanana or circuit-tracer. Those external repositories are treated as optional local dependencies and are not part of the main tracked project state here.
+The assistant is the downstream application layer. It uses the benchmark artifacts to surface segments, retrieve related passages, and prioritize review order while exposing feature ids, weights, stability, and causal badges on sparse cards.
