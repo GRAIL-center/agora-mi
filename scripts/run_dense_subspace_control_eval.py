@@ -37,7 +37,13 @@ def _dense_editor_factory(*, dimension_ids: list[int], device) -> callable:
 
     def editor(selected: torch.Tensor, _positions: torch.Tensor) -> torch.Tensor:
         edited = selected.clone()
-        edited[:, :, idx] = 0.0
+        if edited.dim() == 2:
+            edited[:, idx] = 0.0
+            return edited
+        if edited.dim() == 3:
+            edited[:, :, idx] = 0.0
+            return edited
+        raise ValueError(f"Unexpected dense editor input rank: {edited.dim()}")
         return edited
 
     return editor
