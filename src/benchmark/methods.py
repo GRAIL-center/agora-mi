@@ -290,6 +290,21 @@ def _base_result(benchmark_config: dict[str, Any], method_name: str) -> dict[str
     }
 
 
+def _causality_family_names(
+    benchmark_config: dict[str, Any],
+    task_registry: dict[str, Any],
+) -> list[str]:
+    configured = benchmark_config.get("causality", {}).get("families")
+    if configured:
+        return [str(name) for name in configured]
+    families = {
+        str(task["family"])
+        for task in task_registry.get("coverage_tasks", [])
+        if task.get("family") is not None
+    }
+    return sorted(families)
+
+
 def run_lexical_tfidf_logreg(
     benchmark_config: dict[str, Any],
     task_registry: dict[str, Any],
@@ -373,7 +388,7 @@ def run_lexical_tfidf_logreg(
     )
     result["consistency"] = consistency
     result["cross_family_controls"] = cross_controls
-    for family_name in benchmark_config["causality"]["families"]:
+    for family_name in _causality_family_names(benchmark_config, task_registry):
         result["causality"][family_name] = {
             "status": "na",
             "layer": None,
@@ -477,7 +492,7 @@ def run_semantic_sentence_embed_logreg(
     )
     result["consistency"] = consistency
     result["cross_family_controls"] = cross_controls
-    for family_name in benchmark_config["causality"]["families"]:
+    for family_name in _causality_family_names(benchmark_config, task_registry):
         result["causality"][family_name] = {
             "status": "na",
             "layer": None,
@@ -825,7 +840,7 @@ def run_dense_residual_logreg(
         payload["selected_layer"] = models[payload["source_task_id"]]["selected_layer"]
     result["consistency"] = consistency
     result["cross_family_controls"] = cross_controls
-    for family_name in benchmark_config["causality"]["families"]:
+    for family_name in _causality_family_names(benchmark_config, task_registry):
         result["causality"][family_name] = {
             "status": "na",
             "layer": None,
