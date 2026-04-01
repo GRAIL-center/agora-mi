@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from data.io import read_jsonl
-from data.matching import proxy_keywords
+from data.matching import proxy_keywords, proxy_mask_terms
 from runtime import ensure_dir, load_yaml, save_json
 
 
@@ -57,7 +57,16 @@ def load_benchmark_config(path: str | Path) -> dict[str, Any]:
     cfg["policy_config"] = str(_resolve_path(cfg["policy_config"]))
     if cfg.get("manifest_summary_path"):
         cfg["manifest_summary_path"] = str(_resolve_path(cfg["manifest_summary_path"]))
-    cfg.setdefault("masking", {"keyword_source": "proxy"})
+    cfg.setdefault(
+        "masking",
+        {
+            "keyword_source": "proxy",
+            "strategy": "keyword_mask",
+            "replacement": "[MASK]",
+            "extra_terms_by_proxy": {},
+            "additional_strategies": [],
+        },
+    )
     cfg["__policy_config"] = load_yaml(cfg["policy_config"])
     return cfg
 
@@ -96,6 +105,10 @@ def _load_json_if_exists(path: Path) -> dict[str, Any] | None:
 
 def build_task_registry(config: dict[str, Any]) -> dict[str, Any]:
     manifest_root = Path(config["manifest_root"])
+    masking_cfg = dict(config.get("masking", {}))
+    mask_strategy = str(masking_cfg.get("strategy", "keyword_mask"))
+    mask_replacement = str(masking_cfg.get("replacement", "[MASK]"))
+    extra_terms_by_proxy = dict(masking_cfg.get("extra_terms_by_proxy", {}))
     coverage_tasks: list[dict[str, Any]] = []
     coverage_task_map: dict[str, dict[str, Any]] = {}
     consistency_tasks: list[dict[str, Any]] = []
@@ -128,6 +141,15 @@ def build_task_registry(config: dict[str, Any]) -> dict[str, Any]:
                 "pair_id": pair_id,
                 "paths": _task_paths(manifest_root, family, task_id),
                 "mask_keywords": sorted(set(proxy_keywords(str(proxy["proxy_name"])) + proxy_keywords(str(proxy.get("display_name", ""))))),
+                "mask_terms": proxy_mask_terms(
+                    str(proxy["proxy_name"]),
+                    display_name=str(proxy.get("display_name", "")),
+                    strategy=mask_strategy,
+                    extra_terms=[str(value) for value in extra_terms_by_proxy.get(task_id, [])],
+                ),
+                "mask_strategy": mask_strategy,
+                "mask_replacement": mask_replacement,
+                "mask_additional_strategies": [str(value) for value in masking_cfg.get("additional_strategies", [])],
                 "matched_negative_diagnostics": _load_json_if_exists(
                     manifest_root / family / "negatives" / task_id / "diagnostics.json"
                 ),

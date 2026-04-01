@@ -48,7 +48,7 @@ def _get_attr_path(obj, path: tuple[str, ...]):
 
 def get_layer_site_module(model: AutoModelForCausalLM, layer: int, site: str):
     layer_module = get_layer_module(model, layer)
-    if site == "resid_post":
+    if site in {"resid_pre", "resid_post"}:
         return layer_module
     if site == "attn_out":
         candidates = [
@@ -132,6 +132,24 @@ def capture_layer_site_sequence(
             raise ValueError(f"Hidden state index {hs_idx} unavailable for hidden-state len {len(hidden_states)}")
         return hidden_states[hs_idx]
 
+    if site == "resid_pre":
+        captured: dict[str, torch.Tensor] = {}
+        target_module = get_layer_module(model, layer)
+
+        def _pre_hook(_module, args):
+            captured["value"] = args[0]
+
+        handle = target_module.register_forward_pre_hook(_pre_hook)
+        try:
+            with torch.no_grad():
+                model(**inputs, use_cache=False)
+        finally:
+            handle.remove()
+
+        if "value" not in captured:
+            raise RuntimeError(f"Hook did not capture site={site} at layer={layer}")
+        return captured["value"]
+
     captured: dict[str, torch.Tensor] = {}
     target_module = get_layer_site_module(model, layer, site)
 
@@ -183,28 +201,45 @@ def layer_overwrite_hook(
     attention_mask: torch.Tensor,
     token_index: int | str = "last",
 ):
-    layer_module = get_layer_site_module(model, layer, site)
     positions = _resolve_token_positions(attention_mask, token_index)
 
-    def _hook(_module, _inputs, output):
-        if isinstance(output, tuple):
-            hidden = output[0]
-            rest = output[1:]
-        else:
-            hidden = output
-            rest = ()
+    if site == "resid_pre":
+        layer_module = get_layer_module(model, layer)
 
-        edited = hidden.clone()
-        batch_idx = torch.arange(hidden.size(0), device=hidden.device)
-        selected = hidden[batch_idx, positions]
-        edited_selected = editor(selected, positions)
-        edited[batch_idx, positions] = edited_selected
+        def _pre_hook(_module, args):
+            if not args:
+                return args
+            hidden = args[0]
+            edited = hidden.clone()
+            batch_idx = torch.arange(hidden.size(0), device=hidden.device)
+            selected = hidden[batch_idx, positions]
+            edited_selected = editor(selected, positions)
+            edited[batch_idx, positions] = edited_selected
+            return (edited, *args[1:])
 
-        if isinstance(output, tuple):
-            return (edited, *rest)
-        return edited
+        handle = layer_module.register_forward_pre_hook(_pre_hook)
+    else:
+        layer_module = get_layer_site_module(model, layer, site)
 
-    handle = layer_module.register_forward_hook(_hook)
+        def _hook(_module, _inputs, output):
+            if isinstance(output, tuple):
+                hidden = output[0]
+                rest = output[1:]
+            else:
+                hidden = output
+                rest = ()
+
+            edited = hidden.clone()
+            batch_idx = torch.arange(hidden.size(0), device=hidden.device)
+            selected = hidden[batch_idx, positions]
+            edited_selected = editor(selected, positions)
+            edited[batch_idx, positions] = edited_selected
+
+            if isinstance(output, tuple):
+                return (edited, *rest)
+            return edited
+
+        handle = layer_module.register_forward_hook(_hook)
     try:
         yield
     finally:

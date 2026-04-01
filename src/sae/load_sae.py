@@ -33,6 +33,23 @@ class LoadedSAE:
             return f @ self.sae["W_dec"] + self.sae["b_dec"]
         raise RuntimeError(f"Unknown SAE backend: {self.backend}")
 
+    def to_numpy(self) -> dict[str, np.ndarray]:
+        if self.backend == "sae_lens":
+            return {
+                "W_enc": self.sae.W_enc.detach().to(torch.float32).cpu().numpy(),
+                "W_dec": self.sae.W_dec.detach().to(torch.float32).cpu().numpy(),
+                "b_enc": self.sae.b_enc.detach().to(torch.float32).cpu().numpy(),
+                "b_dec": self.sae.b_dec.detach().to(torch.float32).cpu().numpy(),
+            }
+        if self.backend == "npz":
+            return {
+                "W_enc": self.sae["W_enc"].detach().to(torch.float32).cpu().numpy(),
+                "W_dec": self.sae["W_dec"].detach().to(torch.float32).cpu().numpy(),
+                "b_enc": self.sae["b_enc"].detach().to(torch.float32).cpu().numpy(),
+                "b_dec": self.sae["b_dec"].detach().to(torch.float32).cpu().numpy(),
+            }
+        raise RuntimeError(f"Unknown SAE backend: {self.backend}")
+
 
 def _load_npz_sae(npz_path: str | Path, device: torch.device) -> LoadedSAE:
     arr = np.load(npz_path)
@@ -113,9 +130,14 @@ def load_sae_for_layer(
     device: torch.device,
     npz_path: str | None = None,
 ) -> LoadedSAE:
+    npz_template_by_site = run_config.get("sae_npz_template_by_site", {})
+    npz_template = str(npz_template_by_site.get(site, run_config.get("sae_npz_template", ""))).strip()
+    npz_path_resolved = npz_path
+    if npz_path_resolved is None and npz_template:
+        npz_path_resolved = npz_template.replace("{L}", str(layer)).replace("{site}", str(site))
     release_by_site = run_config.get("sae_release_by_site", {})
     template_by_site = run_config.get("sae_id_template_by_site", {})
     release = str(release_by_site.get(site, run_config["sae_release"]))
     template = str(template_by_site.get(site, run_config["sae_id_template"]))
     sae_id = template.replace("{L}", str(layer))
-    return load_sae(release=release, sae_id=sae_id, device=device, npz_path=npz_path)
+    return load_sae(release=release, sae_id=sae_id, device=device, npz_path=npz_path_resolved)

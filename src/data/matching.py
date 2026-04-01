@@ -34,6 +34,67 @@ GENERIC_PROXY_WORDS = {
 }
 
 
+PROXY_SYNONYM_MAP: dict[str, list[str]] = {
+    "bias": [
+        "biased",
+        "unfair",
+        "fairness",
+        "inequity",
+        "inequities",
+        "disparate",
+        "disparity",
+        "disparities",
+    ],
+    "discrimination": [
+        "discriminatory",
+        "protected class",
+        "protected classes",
+        "disparate impact",
+        "equal treatment",
+    ],
+    "privacy": [
+        "private",
+        "personal data",
+        "data privacy",
+        "data protection",
+        "retention",
+        "surveillance",
+        "confidentiality",
+        "consent",
+    ],
+    "rights": [
+        "right",
+        "civil rights",
+        "human rights",
+        "fundamental rights",
+        "civil liberties",
+        "liberties",
+    ],
+    "transparency": [
+        "transparent",
+        "disclosure",
+        "disclosures",
+        "reporting",
+        "audit trail",
+        "openness",
+    ],
+    "interpretability": [
+        "interpretable",
+        "interpretability",
+        "explainability",
+        "explanation",
+        "explanations",
+    ],
+    "explainability": [
+        "interpretable",
+        "interpretability",
+        "explainability",
+        "explanation",
+        "explanations",
+    ],
+}
+
+
 @dataclass(frozen=True)
 class MatchConfig:
     method: str = "sentence"
@@ -55,9 +116,90 @@ def proxy_keywords(proxy_name: str) -> list[str]:
 
 
 def mask_proxy_keywords(text: str, keywords: list[str]) -> str:
+    return apply_mask_strategy(text, keywords, strategy="keyword_mask")
+
+
+def _sort_mask_terms(terms: list[str]) -> list[str]:
+    unique = {term.strip().lower() for term in terms if str(term).strip()}
+    return sorted(unique, key=lambda value: (-len(value), value))
+
+
+def _morphological_expansions(term: str) -> list[str]:
+    cleaned = str(term).strip().lower()
+    if not cleaned:
+        return []
+    expansions = {cleaned}
+    if " " not in cleaned:
+        expansions.add(f"{cleaned}s")
+        expansions.add(f"{cleaned}ed")
+        expansions.add(f"{cleaned}ing")
+        if cleaned.endswith("y") and len(cleaned) > 3:
+            expansions.add(f"{cleaned[:-1]}ies")
+        if cleaned.endswith("e") and len(cleaned) > 3:
+            expansions.add(f"{cleaned[:-1]}ion")
+            expansions.add(f"{cleaned[:-1]}ive")
+    return sorted(expansions)
+
+
+def expanded_proxy_keywords(
+    proxy_name: str,
+    *,
+    display_name: str | None = None,
+    extra_terms: list[str] | None = None,
+) -> list[str]:
+    base_terms = proxy_keywords(proxy_name)
+    if display_name:
+        base_terms.extend(proxy_keywords(display_name))
+    expanded: list[str] = []
+    for term in base_terms:
+        expanded.extend(_morphological_expansions(term))
+        expanded.extend(PROXY_SYNONYM_MAP.get(term, []))
+    if extra_terms:
+        for term in extra_terms:
+            expanded.extend(_morphological_expansions(term))
+    return _sort_mask_terms([*base_terms, *expanded, *(extra_terms or [])])
+
+
+def proxy_mask_terms(
+    proxy_name: str,
+    *,
+    display_name: str | None = None,
+    strategy: str = "keyword_mask",
+    extra_terms: list[str] | None = None,
+) -> list[str]:
+    if strategy in {"expanded_keyword_mask", "expanded_char_mask"}:
+        return expanded_proxy_keywords(proxy_name, display_name=display_name, extra_terms=extra_terms)
+    base_terms = proxy_keywords(proxy_name)
+    if display_name:
+        base_terms.extend(proxy_keywords(display_name))
+    return _sort_mask_terms([*base_terms, *(extra_terms or [])])
+
+
+def _term_pattern(term: str) -> str:
+    pieces = [re.escape(piece) for piece in str(term).split()]
+    return r"\b" + r"\s+".join(pieces) + r"\b"
+
+
+def _char_mask(match: re.Match[str]) -> str:
+    text = match.group(0)
+    return "".join("#" if char.isalnum() else char for char in text)
+
+
+def apply_mask_strategy(
+    text: str,
+    keywords: list[str],
+    *,
+    strategy: str = "keyword_mask",
+    replacement: str = "[MASK]",
+) -> str:
     masked = text
-    for keyword in keywords:
-        masked = re.sub(rf"\b{re.escape(keyword)}\b", "[MASK]", masked, flags=re.IGNORECASE)
+    terms = _sort_mask_terms(keywords)
+    for keyword in terms:
+        pattern = _term_pattern(keyword)
+        if strategy in {"char_mask", "expanded_char_mask"}:
+            masked = re.sub(pattern, _char_mask, masked, flags=re.IGNORECASE)
+        else:
+            masked = re.sub(pattern, replacement, masked, flags=re.IGNORECASE)
     return masked
 
 
@@ -318,8 +460,17 @@ def safe_mean(values: list[float]) -> float:
     return float(np.mean(values)) if values else float("nan")
 
 
-def masked_texts(texts: list[str], keywords: list[str]) -> list[str]:
-    return [mask_proxy_keywords(text, keywords) for text in texts]
+def masked_texts(
+    texts: list[str],
+    keywords: list[str],
+    *,
+    strategy: str = "keyword_mask",
+    replacement: str = "[MASK]",
+) -> list[str]:
+    return [
+        apply_mask_strategy(text, keywords, strategy=strategy, replacement=replacement)
+        for text in texts
+    ]
 
 
 def logit_margin(correct_scores: np.ndarray, distractor_scores: np.ndarray) -> np.ndarray:

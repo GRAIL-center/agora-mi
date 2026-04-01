@@ -82,9 +82,24 @@ def _rows_to_segment_ids(rows: list[dict[str, Any]]) -> list[str]:
     return [str(row["segment_id"]) for row in rows]
 
 
-def _mask_rows(rows: list[dict[str, Any]], keywords: list[str]) -> list[dict[str, Any]]:
-    texts = masked_texts(_rows_to_texts(rows), keywords)
+def _mask_rows(
+    rows: list[dict[str, Any]],
+    keywords: list[str],
+    *,
+    strategy: str = "keyword_mask",
+    replacement: str = "[MASK]",
+) -> list[dict[str, Any]]:
+    texts = masked_texts(_rows_to_texts(rows), keywords, strategy=strategy, replacement=replacement)
     return [{**row, "text": text} for row, text in zip(rows, texts)]
+
+
+def _mask_task_rows(task: dict[str, Any], rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return _mask_rows(
+        rows,
+        list(task.get("mask_terms", task.get("mask_keywords", []))),
+        strategy=str(task.get("mask_strategy", "keyword_mask")),
+        replacement=str(task.get("mask_replacement", "[MASK]")),
+    )
 
 
 def _load_task_split_rows(
@@ -330,7 +345,7 @@ def run_lexical_tfidf_logreg(
         scores = score_tfidf_logistic(vectorizer, model, test_texts)
         coverage_auc = _safe_auc(labels, scores)
 
-        masked_rows = _mask_rows(test_pos + test_neg, keywords)
+        masked_rows = _mask_task_rows(task, test_pos + test_neg)
         masked_scores = score_tfidf_logistic(vectorizer, model, _rows_to_texts(masked_rows))
         masked_auc = _safe_auc(labels, masked_scores)
 
@@ -436,7 +451,7 @@ def run_semantic_sentence_embed_logreg(
         scores = _array_scores(model, x_test)
         coverage_auc = _safe_auc(y_test, scores)
 
-        masked_rows = _mask_rows(test_pos + test_neg, keywords)
+        masked_rows = _mask_task_rows(task, test_pos + test_neg)
         masked_x = encoder.encode(_rows_to_texts(masked_rows))
         masked_scores = _array_scores(model, masked_x)
         masked_auc = _safe_auc(y_test, masked_scores)
@@ -542,7 +557,7 @@ def run_finetuned_encoder_multilabel(
         labels = np.concatenate([np.ones(len(test_pos), dtype=np.int64), np.zeros(len(test_neg), dtype=np.int64)])
         coverage_auc = _safe_auc(labels, scores)
 
-        masked_rows = _mask_rows(test_rows, list(task.get("mask_keywords", [])))
+        masked_rows = _mask_task_rows(task, test_rows)
         masked_probs, _ = predict_proxy_scores(bundle, masked_rows, batch_size=batch_size)
         masked_auc = _safe_auc(labels, masked_probs[:, proxy_index])
 
@@ -772,7 +787,7 @@ def run_dense_residual_logreg(
         )
         selected_layer = int(summary["selected_layer"])
         test_rows = splits["test_pos"] + splits["test_neg"]
-        masked_test_rows = _mask_rows(test_rows, list(task.get("mask_keywords", [])))
+        masked_test_rows = _mask_task_rows(task, test_rows)
         masked_pos = masked_test_rows[: len(splits["test_pos"])]
         masked_neg = masked_test_rows[len(splits["test_pos"]) :]
         x_masked = np.concatenate(
@@ -1706,7 +1721,7 @@ def run_sparse_sae_feature_bank(
             discovery_overlap_stats=discovery_overlap_stats,
         )
 
-        masked_test_rows = _mask_rows(test_pos + test_neg, list(task.get("mask_keywords", [])))
+        masked_test_rows = _mask_task_rows(task, test_pos + test_neg)
         masked_pos = masked_test_rows[: len(test_pos)]
         masked_neg = masked_test_rows[len(test_pos) :]
         train_pos_robust = extractor.extract(train_pos, layer=best_layer, pooling=robustness_pooling)

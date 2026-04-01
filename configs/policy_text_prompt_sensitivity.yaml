@@ -1,0 +1,48 @@
+template_v1: |
+  You are reading an AI policy passage.
+
+  Passage:
+  {TEXT}
+
+proxy_forced_choice_template: |
+  You are reading an AI policy passage.
+  Which policy signal is more strongly implicated by this passage?
+  Reply with only one label from:
+  {LEFT_LABEL}
+  {RIGHT_LABEL}
+
+  Passage:
+  {TEXT}
+
+  Answer:
+
+proxy_forced_choice_template_compact: |
+  Read the policy passage and choose the stronger policy signal.
+  Reply using only one of these labels:
+  {LEFT_LABEL}
+  {RIGHT_LABEL}
+
+  Passage:
+  {TEXT}
+
+  Label:
+
+proxy_forced_choice_template_evidence_first: |
+  Consider the policy passage below.
+  Decide which signal has stronger support in the text.
+  Answer with exactly one label:
+  {LEFT_LABEL}
+  {RIGHT_LABEL}
+
+  Passage:
+  {TEXT}
+
+  Decision:
+
+proxy_target_tokens:
+  risk_factors_bias: "BIAS"
+  harms_discrimination: "DISCRIMINATION"
+  risk_factors_privacy: "PRIVACY"
+  harms_violation_of_civil_or_human_rights_including_privacy: "RIGHTS"
+  risk_factors_transparency: "TRANSPARENCY"
+  risk_factors_interpretability_and_explainability: "INTERPRETABILITY"

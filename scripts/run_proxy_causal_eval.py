@@ -45,6 +45,25 @@ def _parse_off_target_specs(raw_value: str) -> list[tuple[str, str, str]]:
     return specs
 
 
+def _normalize_label_logprob(
+    score: float,
+    *,
+    token_ids: list[int],
+    label_text: str,
+    mode: str,
+) -> float:
+    if mode == "sum":
+        return float(score)
+    if mode == "mean_token":
+        denom = max(len(token_ids), 1)
+        return float(score) / float(denom)
+    if mode == "mean_char":
+        stripped = "".join(char for char in str(label_text) if not char.isspace())
+        denom = max(len(stripped), 1)
+        return float(score) / float(denom)
+    raise ValueError(f"Unsupported label normalization: {mode}")
+
+
 def _editor_factory(*, sae, feature_ids: list[int], layer: int, site: str, device) -> callable:
     idx = torch.tensor(feature_ids, dtype=torch.long, device=device)
 
@@ -63,6 +82,9 @@ def _margin_series(
     prompts: list[str],
     target_token_ids: list[int],
     contrast_token_ids: list[int],
+    target_label: str,
+    contrast_label: str,
+    label_normalization: str,
     model,
     tokenizer,
     editor,
@@ -85,6 +107,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=target_label,
+            label_normalization=label_normalization,
         )
         baseline_contrast = _intervened_label_logprob(
             model=model,
@@ -96,6 +120,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=contrast_label,
+            label_normalization=label_normalization,
         )
         edited_target = _intervened_label_logprob(
             model=model,
@@ -107,6 +133,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=target_label,
+            label_normalization=label_normalization,
         )
         edited_contrast = _intervened_label_logprob(
             model=model,
@@ -118,6 +146,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=contrast_label,
+            label_normalization=label_normalization,
         )
         baseline_margin = float(baseline_target - baseline_contrast)
         edited_margin = float(edited_target - edited_contrast)
@@ -148,6 +178,8 @@ def _intervened_label_logprob(
     site: str,
     device,
     max_length: int,
+    label_text: str,
+    label_normalization: str,
 ) -> float:
     baseline, encoded, prompt_pos = sequence_logprob(
         model=model,
@@ -158,7 +190,12 @@ def _intervened_label_logprob(
         max_length=max_length,
     )
     if editor is None:
-        return baseline
+        return _normalize_label_logprob(
+            baseline,
+            token_ids=target_token_ids,
+            label_text=label_text,
+            mode=label_normalization,
+        )
     with layer_overwrite_hook(
         model,
         layer=layer,
@@ -180,12 +217,18 @@ def _intervened_label_logprob(
             log_probs = torch.log_softmax(step_logits, dim=-1)
             target = torch.tensor(target_token_ids, dtype=torch.long, device=device)
             gathered = log_probs.gather(1, target.unsqueeze(1)).squeeze(1)
-            return float(gathered.sum().item())
+            return _normalize_label_logprob(
+                float(gathered.sum().item()),
+                token_ids=target_token_ids,
+                label_text=label_text,
+                mode=label_normalization,
+            )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/policy_mech_interp.yaml")
+    parser.add_argument("--prompt_config", default=None)
     parser.add_argument("--manifest_root", default="data/processed/public_values")
     parser.add_argument("--family", required=True)
     parser.add_argument("--proxy_slug", required=True)
@@ -198,14 +241,21 @@ def main() -> int:
     parser.add_argument("--feature_ids", required=True)
     parser.add_argument("--sae_npz", default=None)
     parser.add_argument("--off_target_proxy_specs", default="")
+    parser.add_argument("--prompt_template_key", default="proxy_forced_choice_template")
+    parser.add_argument("--prompt_variant_name", default="default")
+    parser.add_argument("--target_label_override", default=None)
+    parser.add_argument("--contrast_label_override", default=None)
+    parser.add_argument("--label_normalization", choices=["sum", "mean_token", "mean_char"], default="sum")
+    parser.add_argument("--output_tag", default="")
     args = parser.parse_args()
 
     setup_logging("run_proxy_causal_eval")
     cfg = read_config(args.config)
-    prompt_cfg = load_prompt_config(cfg.get("prompt_config", "configs/policy_text_prompt.yaml"))
-    template = str(prompt_cfg["proxy_forced_choice_template"])
-    target_label = str(prompt_cfg["proxy_target_tokens"][args.proxy_slug])
-    contrast_label = str(prompt_cfg["proxy_target_tokens"][args.paired_proxy_slug])
+    prompt_config_path = args.prompt_config or cfg.get("prompt_config", "configs/policy_text_prompt.yaml")
+    prompt_cfg = load_prompt_config(prompt_config_path)
+    template = str(prompt_cfg[args.prompt_template_key])
+    target_label = str(args.target_label_override or prompt_cfg["proxy_target_tokens"][args.proxy_slug])
+    contrast_label = str(args.contrast_label_override or prompt_cfg["proxy_target_tokens"][args.paired_proxy_slug])
 
     rows = read_jsonl(Path(args.manifest_root) / args.family / "proxies" / args.proxy_slug / f"{args.split}.jsonl")
     rows = rows[: int(args.max_samples)]
@@ -218,11 +268,12 @@ def main() -> int:
         / args.proxy_slug
         / f"layer{args.layer}_{args.site}"
     )
+    output_suffix = f"_{str(args.output_tag).strip()}" if str(args.output_tag).strip() else ""
 
     feature_ids = [int(value) for value in str(args.feature_ids).split(",") if str(value).strip()]
     if not rows or not feature_ids:
         save_with_metadata(
-            output_path=out_dir / f"top{len(feature_ids)}_{args.split}.json",
+            output_path=out_dir / f"top{len(feature_ids)}_{args.split}{output_suffix}.json",
             payload={
                 "family_name": args.family,
                 "proxy_slug": args.proxy_slug,
@@ -260,6 +311,9 @@ def main() -> int:
         prompts=prompts,
         target_token_ids=target_token_ids,
         contrast_token_ids=contrast_token_ids,
+        target_label=target_label,
+        contrast_label=contrast_label,
+        label_normalization=args.label_normalization,
         model=model,
         tokenizer=tokenizer,
         editor=target_editor,
@@ -359,6 +413,9 @@ def main() -> int:
             prompts=off_prompts,
             target_token_ids=off_target_token_ids,
             contrast_token_ids=off_contrast_token_ids,
+            target_label=off_target_label,
+            contrast_label=off_contrast_label,
+            label_normalization=args.label_normalization,
             model=model,
             tokenizer=tokenizer,
             editor=target_editor,
@@ -376,6 +433,9 @@ def main() -> int:
                 prompts=off_prompts,
                 target_token_ids=off_target_token_ids,
                 contrast_token_ids=off_contrast_token_ids,
+                target_label=off_target_label,
+                contrast_label=off_contrast_label,
+                label_normalization=args.label_normalization,
                 model=model,
                 tokenizer=tokenizer,
                 editor=random_editor,
@@ -440,7 +500,7 @@ def main() -> int:
         row["paired_delta"] = float(paired_delta[index])
 
     save_with_metadata(
-        output_path=out_dir / f"top{len(feature_ids)}_{args.split}.json",
+        output_path=out_dir / f"top{len(feature_ids)}_{args.split}{output_suffix}.json",
         payload={
             "family_name": args.family,
             "proxy_slug": args.proxy_slug,
@@ -457,7 +517,13 @@ def main() -> int:
                 "feature_ids": feature_ids,
                 "target_token_ids": target_token_ids,
                 "contrast_token_ids": contrast_token_ids,
-                "prompt_template_name": "proxy_forced_choice_template",
+                "prompt_template_name": str(args.prompt_template_key),
+                "prompt_variant_name": str(args.prompt_variant_name),
+                "target_label": target_label,
+                "contrast_label": contrast_label,
+                "label_normalization": str(args.label_normalization),
+                "target_label_token_count": len(target_token_ids),
+                "contrast_label_token_count": len(contrast_token_ids),
                 "model_id": str(cfg.get("model_id", "")),
             },
             "mean_target_margin_drop": float(target_margin_drop.mean()) if target_margin_drop.size else float("nan"),

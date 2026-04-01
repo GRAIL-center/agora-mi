@@ -1,0 +1,39 @@
+model_id: "google/gemma-2-2b"
+device: "cuda"
+dtype: "bfloat16"
+batch_size: 4
+max_length: 1024
+seed: 0
+layers: [12, 16, 20, 24]
+sites: ["resid_post", "resid_pre", "mlp_out"]
+pooling: "mean"
+robustness_pooling: "max"
+
+sae_release: "gemma-scope-2b-pt-res-canonical"
+sae_id_template: "layer_{L}/width_16k/canonical"
+sae_npz_template: "results/sae_nulls/gemma2_2b_tied_encoder_null/layer_{L}_{site}.npz"
+
+topk: 64
+delta_thresh: null
+
+bootstrap_B: 500
+perm_N: 2000
+fdr_q: 0.05
+
+processed_dir: "data/processed/public_values"
+results_dir: "results/policy_mech_interp_null_tied_2b"
+logs_dir: "logs"
+
+prompt_config: "configs/policy_text_prompt.yaml"
+use_chat_template: false
+
+matching:
+  method: "sentence"
+  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+  batch_size: 32
+
+discovery:
+  discovery_split: "train"
+  evaluation_split: "test"
+  bootstrap_min_frequency: 0.25
+  use_fdr_survivors_first: true

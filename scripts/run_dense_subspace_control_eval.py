@@ -32,6 +32,23 @@ def _render_proxy_prompt(template: str, text: str, left_label: str, right_label:
     )
 
 
+def _normalize_label_logprob(
+    score: float,
+    *,
+    token_ids: list[int],
+    label_text: str,
+    mode: str,
+) -> float:
+    if mode == "sum":
+        return float(score)
+    if mode == "mean_token":
+        return float(score) / float(max(len(token_ids), 1))
+    if mode == "mean_char":
+        stripped = "".join(char for char in str(label_text) if not char.isspace())
+        return float(score) / float(max(len(stripped), 1))
+    raise ValueError(f"Unsupported label normalization: {mode}")
+
+
 def _dense_editor_factory(*, dimension_ids: list[int], device) -> callable:
     idx = torch.tensor(dimension_ids, dtype=torch.long, device=device)
 
@@ -60,6 +77,8 @@ def _intervened_label_logprob(
     site: str,
     device,
     max_length: int,
+    label_text: str,
+    label_normalization: str,
 ) -> float:
     baseline, encoded, prompt_pos = sequence_logprob(
         model=model,
@@ -70,7 +89,12 @@ def _intervened_label_logprob(
         max_length=max_length,
     )
     if editor is None:
-        return baseline
+        return _normalize_label_logprob(
+            baseline,
+            token_ids=target_token_ids,
+            label_text=label_text,
+            mode=label_normalization,
+        )
     with layer_overwrite_hook(
         model,
         layer=layer,
@@ -92,7 +116,12 @@ def _intervened_label_logprob(
             log_probs = torch.log_softmax(step_logits, dim=-1)
             target = torch.tensor(target_token_ids, dtype=torch.long, device=device)
             gathered = log_probs.gather(1, target.unsqueeze(1)).squeeze(1)
-            return float(gathered.sum().item())
+            return _normalize_label_logprob(
+                float(gathered.sum().item()),
+                token_ids=target_token_ids,
+                label_text=label_text,
+                mode=label_normalization,
+            )
 
 
 def _margin_series(
@@ -101,6 +130,9 @@ def _margin_series(
     prompts: list[str],
     target_token_ids: list[int],
     contrast_token_ids: list[int],
+    target_label: str,
+    contrast_label: str,
+    label_normalization: str,
     model,
     tokenizer,
     editor,
@@ -123,6 +155,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=target_label,
+            label_normalization=label_normalization,
         )
         baseline_contrast = _intervened_label_logprob(
             model=model,
@@ -134,6 +168,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=contrast_label,
+            label_normalization=label_normalization,
         )
         edited_target = _intervened_label_logprob(
             model=model,
@@ -145,6 +181,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=target_label,
+            label_normalization=label_normalization,
         )
         edited_contrast = _intervened_label_logprob(
             model=model,
@@ -156,6 +194,8 @@ def _margin_series(
             site=site,
             device=device,
             max_length=max_length,
+            label_text=contrast_label,
+            label_normalization=label_normalization,
         )
         baseline_margin = float(baseline_target - baseline_contrast)
         edited_margin = float(edited_target - edited_contrast)
@@ -183,9 +223,46 @@ def _random_dimension_ids(hidden_size: int, k: int, *, exclude: list[int], seed:
     return [int(value) for value in rng.choice(np.asarray(candidates, dtype=np.int64), size=k, replace=False).tolist()]
 
 
+def _select_dimension_ids(
+    coef: np.ndarray,
+    *,
+    dimension_energy: np.ndarray,
+    k: int,
+    selection_mode: str,
+    target_ablation_energy: float | None,
+) -> tuple[list[int], float]:
+    ranked_dims = np.argsort(-np.abs(coef))
+    if selection_mode == "topk_abs_coef":
+        dimension_ids = [int(value) for value in ranked_dims[: int(k)].tolist()]
+        selected_energy = float(dimension_energy[dimension_ids].sum()) if dimension_ids else 0.0
+        return dimension_ids, selected_energy
+    if selection_mode == "topk_energy_weighted":
+        weighted = np.abs(coef) * dimension_energy
+        ranked_weighted = np.argsort(-weighted)
+        dimension_ids = [int(value) for value in ranked_weighted[: int(k)].tolist()]
+        selected_energy = float(dimension_energy[dimension_ids].sum()) if dimension_ids else 0.0
+        return dimension_ids, selected_energy
+    if selection_mode == "target_energy":
+        if target_ablation_energy is None or target_ablation_energy <= 0.0:
+            raise ValueError("target_ablation_energy must be positive when selection_mode=target_energy")
+        chosen: list[int] = []
+        cumulative = 0.0
+        for dim in ranked_dims.tolist():
+            chosen.append(int(dim))
+            cumulative += float(dimension_energy[int(dim)])
+            if cumulative >= float(target_ablation_energy):
+                break
+        if not chosen:
+            chosen = [int(value) for value in ranked_dims[: int(k)].tolist()]
+            cumulative = float(dimension_energy[chosen].sum()) if chosen else 0.0
+        return chosen, float(cumulative)
+    raise ValueError(f"Unsupported selection mode: {selection_mode}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/policy_mech_interp.yaml")
+    parser.add_argument("--prompt_config", default=None)
     parser.add_argument("--manifest_root", default="data/processed/public_values")
     parser.add_argument("--family", required=True)
     parser.add_argument("--proxy_slug", required=True)
@@ -196,14 +273,22 @@ def main() -> int:
     parser.add_argument("--max_samples", type=int, default=100)
     parser.add_argument("--random_sets", type=int, default=100)
     parser.add_argument("--k", type=int, required=True)
+    parser.add_argument("--selection_mode", choices=["topk_abs_coef", "topk_energy_weighted", "target_energy"], default="topk_abs_coef")
+    parser.add_argument("--target_ablation_energy", type=float, default=None)
+    parser.add_argument("--prompt_template_key", default="proxy_forced_choice_template")
+    parser.add_argument("--prompt_variant_name", default="default")
+    parser.add_argument("--target_label_override", default=None)
+    parser.add_argument("--contrast_label_override", default=None)
+    parser.add_argument("--label_normalization", choices=["sum", "mean_token", "mean_char"], default="sum")
     args = parser.parse_args()
 
     setup_logging("run_dense_subspace_control_eval")
     cfg = read_config(args.config)
-    prompt_cfg = load_prompt_config(cfg.get("prompt_config", "configs/policy_text_prompt.yaml"))
-    template = str(prompt_cfg["proxy_forced_choice_template"])
-    target_label = str(prompt_cfg["proxy_target_tokens"][args.proxy_slug])
-    contrast_label = str(prompt_cfg["proxy_target_tokens"][args.paired_proxy_slug])
+    prompt_config_path = args.prompt_config or cfg.get("prompt_config", "configs/policy_text_prompt.yaml")
+    prompt_cfg = load_prompt_config(prompt_config_path)
+    template = str(prompt_cfg[str(args.prompt_template_key)])
+    target_label = str(args.target_label_override or prompt_cfg["proxy_target_tokens"][args.proxy_slug])
+    contrast_label = str(args.contrast_label_override or prompt_cfg["proxy_target_tokens"][args.paired_proxy_slug])
 
     train_pos = read_jsonl(Path(args.manifest_root) / args.family / "proxies" / args.proxy_slug / "train.jsonl")
     train_neg = read_jsonl(Path(args.manifest_root) / args.family / "negatives" / args.proxy_slug / "train.jsonl")
@@ -245,8 +330,15 @@ def main() -> int:
     model = _logreg_model()
     model.fit(x_train, y_train)
     coef = np.asarray(model.coef_[0], dtype=np.float64)
-    ranked_dims = np.argsort(-np.abs(coef))
-    dimension_ids = [int(value) for value in ranked_dims[: int(args.k)].tolist()]
+    eval_dense = extractor.extract(rows, layer=int(args.layer), pooling="mean")
+    dimension_energy = np.mean(np.square(eval_dense.astype(np.float64)), axis=0) if eval_dense.size else np.zeros(x_train.shape[1], dtype=np.float64)
+    dimension_ids, selected_ablation_energy = _select_dimension_ids(
+        coef,
+        dimension_energy=dimension_energy,
+        k=int(args.k),
+        selection_mode=str(args.selection_mode),
+        target_ablation_energy=args.target_ablation_energy,
+    )
 
     bundle = load_model_bundle(cfg)
     base_model, tokenizer, device = bundle.model, bundle.tokenizer, bundle.device
@@ -268,6 +360,9 @@ def main() -> int:
         prompts=prompts,
         target_token_ids=target_token_ids,
         contrast_token_ids=contrast_token_ids,
+        target_label=target_label,
+        contrast_label=contrast_label,
+        label_normalization=args.label_normalization,
         model=base_model,
         tokenizer=tokenizer,
         editor=editor,
@@ -285,7 +380,7 @@ def main() -> int:
     for draw_index in range(int(args.random_sets)):
         random_ids = _random_dimension_ids(
             hidden_size,
-            int(args.k),
+            len(dimension_ids),
             exclude=dimension_ids,
             seed=int(cfg.get("seed", 0)) + draw_index,
         )
@@ -295,6 +390,9 @@ def main() -> int:
             prompts=prompts,
             target_token_ids=target_token_ids,
             contrast_token_ids=contrast_token_ids,
+            target_label=target_label,
+            contrast_label=contrast_label,
+            label_normalization=args.label_normalization,
             model=base_model,
             tokenizer=tokenizer,
             editor=random_editor,
@@ -339,6 +437,7 @@ def main() -> int:
             "paired_proxy_slug": args.paired_proxy_slug,
             "split": args.split,
             "effective_k": int(args.k),
+            "effective_dimension_count": len(dimension_ids),
             "dimension_ids": dimension_ids,
             "intervention": {
                 "layer": int(args.layer),
@@ -346,7 +445,16 @@ def main() -> int:
                 "dimension_ids": dimension_ids,
                 "target_token_ids": target_token_ids,
                 "contrast_token_ids": contrast_token_ids,
-                "prompt_template_name": "proxy_forced_choice_template",
+                "prompt_template_name": str(args.prompt_template_key),
+                "prompt_variant_name": str(args.prompt_variant_name),
+                "target_label": target_label,
+                "contrast_label": contrast_label,
+                "label_normalization": str(args.label_normalization),
+                "target_label_token_count": len(target_token_ids),
+                "contrast_label_token_count": len(contrast_token_ids),
+                "selection_mode": str(args.selection_mode),
+                "selected_ablation_energy": selected_ablation_energy,
+                "target_ablation_energy": args.target_ablation_energy,
                 "model_id": str(cfg.get("model_id", "")),
             },
             "mean_target_margin_drop": float(target_margin_drop.mean()) if target_margin_drop.size else float("nan"),
