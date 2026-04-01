@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gc
 import json
 import math
 import subprocess
@@ -224,6 +225,23 @@ class InternalFeatureExtractor:
         matrix = np.concatenate(outputs, axis=0) if outputs else np.zeros((0, 1), dtype=np.float32)
         self._feature_cache[cache_key] = matrix
         return matrix
+
+    def close(self) -> None:
+        self._feature_cache.clear()
+        self._sae_cache.clear()
+        self.model = None
+        self.tokenizer = None
+        self.bundle = None
+
+
+def _release_cuda_memory() -> None:
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        try:
+            torch.cuda.ipc_collect()
+        except RuntimeError:
+            pass
 
 
 def _split_rows_by_docs(
@@ -1854,6 +1872,10 @@ def run_sparse_sae_feature_bank(
         payload["selected_layer"] = fitted_banks[payload["source_task_id"]]["selected_layer"]
     result["consistency"] = consistency
     result["cross_family_controls"] = cross_controls
+    extractor.close()
+    extractor = None
+    del _score_target
+    _release_cuda_memory()
     result["causality"] = _run_proxy_causality_suite(benchmark_config, task_registry, intermediate_root, fitted_banks)
     return result
 
