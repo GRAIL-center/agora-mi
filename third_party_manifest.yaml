@@ -1,0 +1,31 @@
+repositories:
+  - name: sae_lens
+    repo_url: https://github.com/jbloomAus/SAELens
+    package: sae_lens
+    installed_version: 6.22.2
+    role: sae_loading_and_sparse_feature_utilities
+    integration_mode: adapter_only
+  - name: nnsight
+    repo_url: https://github.com/ndif-team/nnsight
+    package: nnsight
+    installed_version: 0.5.14
+    role: intervention_and_tracing_backend
+    integration_mode: adapter_only
+  - name: mosaic
+    repo_url: https://github.com/shan23chen/MOSAIC
+    package: null
+    installed_version: null
+    role: baseline_orchestration_reference
+    integration_mode: manifest_only
+  - name: sae_vis
+    repo_url: https://github.com/callummcdougall/sae_vis
+    package: null
+    installed_version: null
+    role: feature_visualization_reference
+    integration_mode: manifest_only
+  - name: nnpatch
+    repo_url: https://github.com/jkminder/nnpatch
+    package: null
+    installed_version: null
+    role: dense_residual_intervention_reference
+    integration_mode: manifest_only

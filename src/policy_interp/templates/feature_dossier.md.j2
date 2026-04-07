@@ -1,0 +1,36 @@
+# {{ feature.generated_name or feature.display_name or ("Layer " ~ feature.layer ~ " feature " ~ feature.feature_id) }}
+
+Layer: {{ feature.layer }}
+Layer stage: {{ feature.layer_stage }}
+Ranking family: {{ feature.ranking_family }}
+Rank: {{ feature.rank }}
+Feature id: {{ feature.feature_id }}
+Best proxy: {{ overlay.best_proxy or feature.best_proxy or "unknown" }}
+Best proxy test AUC: {{ "%.3f"|format((overlay.test_auc or feature.best_proxy_test_auc or 0.0)|float) }}
+Semantic tag: {{ feature.semantic_tag or "unknown" }}
+Causal badge: {{ feature.causal_badge or "unassigned" }}
+Faithfulness score: {{ "%.3f"|format(feature.faithfulness_score|float) if feature.faithfulness_score is defined and feature.faithfulness_score == feature.faithfulness_score else "n/a" }}
+
+## Rationale
+{{ feature.generated_rationale or feature.template_summary or "No generated rationale available." }}
+
+## Boundary
+{{ feature.boundary_text or "No boundary text available." }}
+
+## Template Summary
+{{ feature.template_summary or "No template summary available." }}
+
+## Top Positive Logit Tokens
+{% for token in (logit.top_positive_tokens or [])[:12] %}
+{{ loop.index }}. {{ token }}
+{% endfor %}
+
+## Positive Exemplars
+{% for item in positive_exemplars %}
+{{ loop.index }}. {{ item.text[:320] }}
+{% endfor %}
+
+## Contrastive Negatives
+{% for item in negative_exemplars %}
+{{ loop.index }}. {{ item.text[:320] }}
+{% endfor %}

@@ -1,0 +1,100 @@
+name: full_layer12_16k
+dataset:
+  base_dir: .
+  segments_csv: AGORA Data/segments.csv
+  documents_csv: AGORA Data/documents.csv
+  authorities_csv: AGORA Data/authorities.csv
+  collections_csv: AGORA Data/collections.csv
+  fulltext_dir: AGORA Data/fulltext
+  working_dir: artifacts
+splits:
+  train_ratio: 0.68
+  dev_ratio: 0.16
+  test_ratio: 0.16
+  seed: 17
+matching:
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 32
+  max_length: 256
+backbone:
+  model_name: google/gemma-2-2b
+  device: cuda
+  dtype: float16
+  max_length: 512
+  trust_remote_code: false
+sae:
+  release: gemma-scope-2b-pt-res-canonical
+  sae_id: layer_24/width_16k/canonical
+  device: cuda
+extract:
+  layers: [12]
+  max_segments_per_shard: 64
+  max_tokens_per_shard: 4096
+  max_layers_per_pass: 1
+  flush_every_shard: true
+  pooling_method: max
+  residual_pooling_method: mean
+  store_segment_top_features: true
+  segment_top_feature_count: 32
+  segment_top_token_positions_per_feature: 5
+  top_contexts_per_feature: 5
+  context_window: 12
+discovery:
+  graph_metric: jaccard
+  active_feature_source: segment_top_features
+  top_ngrams_per_module: 15
+  ngram_range: [1, 3]
+validity:
+  graph_metric: jaccard
+  edge_thresholds: [0.05, 0.1, 0.15]
+  community_method: leiden
+  resolutions: [0.5, 1.0, 1.5]
+  canonical_threshold: 0.1
+  canonical_resolution: 1.0
+  min_module_size: 3
+  max_module_size: 50
+  min_presence_configs: 5
+  min_best_match_jaccard: 0.5
+  enrichment_test_method: permutation
+  enrichment_random_trials: 1000
+  enrichment_alpha: 0.05
+  enrichment_correction: bh_fdr
+  enrichment_match_bins: 10
+labeling:
+  template_enabled: true
+  llm_hook_enabled: true
+  generator_model: google/gemma-2-2b-it
+  num_top_contexts: 5
+  num_exemplars: 5
+  num_negative_controls: 5
+  negative_snippet_strategy: metadata_matched_low_activation
+  max_new_tokens: 120
+baselines:
+  sentence_embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  logistic_c: 1.0
+  max_iter: 1000
+  sparse_binarize_threshold: 0.0
+  individual_feature_top_k: 64
+  compute_feature_module_overlap: true
+masking:
+  anchor_top_k: 10
+  mask_token: "[MASK]"
+ablation:
+  target_proxies: [privacy, bias]
+  candidate_set_sizes: [1, 3, 5]
+  random_control_trials: 100
+  dense_control_type: pca_subspace
+  dense_control_rank_policy: match_sparse_cardinality
+  bootstrap_iterations: 2000
+  ci_level: 0.95
+steering:
+  enabled: true
+  alpha_grid: [0.5, 1.0, 2.0]
+  target_layers: [12]
+  min_dev_positives_for_sweep: 10
+  default_alpha_if_small_dev: 1.0
+  report_overlap_with_sae: true
+report:
+  export_dir: paper_exports
+  dossier_format: md
+  heatmap_dpi: 180

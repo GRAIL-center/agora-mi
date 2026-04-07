@@ -1,0 +1,21 @@
+# {{ stable_module_id }}
+
+Layer: {{ layer }}
+Top proxy: {{ top_proxy }}
+Generated name: {{ generated_name }}
+
+## Summary
+{{ generated_rationale }}
+
+## Template Summary
+{{ template_summary }}
+
+## Exemplars
+{% for item in exemplars %}
+{{ loop.index }}. {{ item.text[:320] }}
+{% endfor %}
+
+## Contrastive Negatives
+{% for item in contrastive_negatives %}
+{{ loop.index }}. {{ item.text[:320] }}
+{% endfor %}

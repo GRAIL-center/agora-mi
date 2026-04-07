@@ -1,221 +1,104 @@
-# Policy Proxy Sparse Feature Localization
+# Auditing Policy Representations in Language Models via Sparse Features
 
-This repository contains the code, configs, tutorials, and benchmark wrappers for a mechanistic NLP project on policy text.
-
-The central question is whether sparse autoencoder features aligned to a pretrained language model can localize policy-relevant proxies, remain stable under stress, show selective causal support in some cases, and then be rendered into analyst-facing policy support objects.
-
-## What this project claims
-
-1. Sparse SAE features can be used as **proxy-specific evidence objects** rather than only as opaque model internals.
-2. Mechanistic evidence should be evaluated in stages: localization, stability, selective causal support, pair-linked transfer, and assistant rendering.
-3. Sparse features do not need to win the aggregate benchmark to still be useful scientifically.
-
-## What this project does not claim
-
-1. It does not claim that sparse SAE is the best overall predictor across all baselines.
-2. It does not claim a universal family-level shared mechanism.
-3. It does not present the assistant as an end-to-end policy judge.
-
-## Project scope
-
-The benchmark uses six proxy tasks organized into three pairs.
-
-1. Bias and Discrimination
-2. Privacy and Rights violation
-3. Transparency and Interpretability
-
-The first two pairs are the main headline pairs. Transparency and Interpretability is kept as appendix-level evidence because the available sample size is much smaller.
-
-## Start here
-
-If you are new to the project, start with the tutorial notebook.
-
-`docs/tutorials/policy_representation_tutorial.ipynb`
-
-The notebook explains the full pipeline at a high level and includes the main formulas used in the benchmark and assistant summaries.
-
-It walks through:
-
-1. AGORA segments and grouped splits
-2. Proxy manifests and matched negatives
-3. Dense representations and SAE features
-4. Proxy-specific feature discovery
-5. Stability and masking
-6. Pair-linked transfer
-7. Targeted proxy feature-set ablation
-8. Benchmark aggregation
-9. Assistant highlighting, retrieval, and triage
-10. Locked Lambda rerun commands and saved outputs
+This repository contains a feature first mechanistic auditing pipeline for policy relevant model behavior in language models. The current codebase focuses on Gemma 2 2B with Gemma Scope sparse autoencoders and the AGORA policy corpus. The project treats sparse features as an audit surface for inspecting how a model processes statutory and governance text, rather than as a competitive classifier.
 
 ## Repository layout
 
-```text
-configs/      Benchmark, assistant, and model configs
-caches/       Optional local model caches
-data/         Processed manifests, matched negatives, and summaries
-docs/         Tutorials, figures, and runbooks
-results/      Benchmark outputs, assistant outputs, and analysis artifacts
-scripts/      Runnable entry points for manifests, benchmark runs, and controls
-src/          Library code for data IO, matching, model hooks, SAE handling, and evaluation
-tests/        Unit tests for benchmark and assistant code paths
-```
+`src/policy_interp`
+Core pipeline code for data preparation, activation extraction, feature catalog construction, AutoInterp, audit evaluation, causal interventions, and report export.
 
-## High-level pipeline
+`experiments`
+Versioned experiment configurations for pilot runs, full layer runs, causal runs, and the revised four layer audit setup.
 
-The current pipeline has five stages.
+`scripts`
+Utility scripts for rebuilding paper figures.
 
-1. **Proxy manifests and matched negatives**
-   Build positive and negative segment sets for each proxy while preserving document-grouped splits.
-2. **Proxy-specific feature discovery**
-   Select a layer, fit proxy scoring functions, and build a sparse feature dossier for each proxy.
-3. **Stability and transfer diagnostics**
-   Measure bootstrap stability, masking retention, feature overlap across reseeds, and pair-linked transfer.
-4. **Targeted causal intervention**
-   Ablate top sparse feature sets and compare the resulting margin drop against matched random controls.
-5. **Assistant rendering**
-   Surface feature-backed cards for highlighting, retrieval, and triage.
+`tests`
+Unit tests for the pipeline.
 
-## Core benchmark quantities
+`paper`
+ICML 2026 workshop style draft, bibliography, template files, and exported figures.
 
-The tutorial notebook gives the full derivations. The main benchmark uses the following high-level quantities.
+`references.md`
+Working reference inventory used during paper development.
 
-1. **Coverage**
-   Mean held-out AUROC across proxy tasks.
-2. **Robustness**
-   Mean clipped masking retention across proxy tasks.
-3. **Consistency**
-   Mean directed transfer gap relative to cross-family controls.
-4. **CoreScore**
-   Equal-weight average of Coverage, Robustness, and Consistency.
-5. **CausalSelectivity**
-   Mean per-example improvement of target feature-set ablation over matched random controls.
+`Main Plan.md`
+Research planning document that motivated the current feature first direction.
 
-Sparse-only causal evidence is reported separately from the mixed all-method comparison table.
+## Main ideas
 
-## Local setup
+The pipeline is organized around five questions.
 
-Create a virtual environment and install dependencies.
+1. Which sparse features activate on policy relevant text
+2. Which token spans trigger those features
+3. Which features look policy specific rather than generic
+4. How do those features vary across layers
+5. Which features or small sparse sets have measurable causal influence on model behavior
 
-```bash
+The current paper framing is:
+
+`Auditing Policy Representations in Language Models via Sparse Features`
+
+## Installation
+
+Use Python 3.12 or newer.
+
+```powershell
 python -m venv .venv
-source .venv/bin/activate
+.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -e .
 ```
 
-## Data expectations
+## Core CLI commands
 
-The repository is designed to work from processed manifests under `data/processed/public_values/`.
+Validate an experiment configuration:
 
-If raw AGORA data is available locally, some helper scripts can rebuild manifests and negatives. The main benchmark and assistant runs, however, are expected to start from the processed manifests.
-
-## Locked ICML run package
-
-The paper numbers should come from the locked Lambda package, not from ad hoc local rehearsal runs.
-
-### Locked 2B benchmark and assistant
-
-1. Benchmark config
-   `configs/policy_feature_benchmark_locked_2b.yaml`
-2. Assistant config
-   `configs/policy_analysis_assistant_locked_2b.yaml`
-3. Dense intervention control script
-   `scripts/run_dense_subspace_control_eval.py`
-
-### Locked 9B primary replication
-
-1. Benchmark config
-   `configs/policy_feature_benchmark_locked_9b_primary.yaml`
-
-## Lambda quickstart
-
-Gemma access is gated on Hugging Face. Make sure the account used by your token already has access to the Gemma model pages.
-
-### One-line login
-
-```bash
-export HF_TOKEN='PASTE_YOUR_TOKEN_HERE' && python -c "from huggingface_hub import login; import os; login(token=os.environ['HF_TOKEN']); print('HF login complete')"
+```powershell
+policy-interp validate-config experiments\revised_mvp_2b_16k.yaml
 ```
 
-### One-line Gemma access check
+Prepare AGORA tables and split manifests:
 
-```bash
-python -c "from transformers import AutoTokenizer; AutoTokenizer.from_pretrained('google/gemma-2-2b'); print('Gemma access OK')"
+```powershell
+policy-interp prepare-agora experiments\revised_mvp_2b_16k.yaml
+policy-interp build-matches experiments\revised_mvp_2b_16k.yaml
 ```
 
-### Locked 2B full package
+Run extraction and audit stages:
 
-```bash
-cd ~/agora-mi && source .venv/bin/activate && python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark_locked_2b.yaml --output_root results/policy_feature_benchmark_locked_2b && python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_locked_2b.yaml --output_root results/policy_feature_benchmark_locked_2b && python scripts/aggregate_policy_feature_benchmark.py --config configs/policy_feature_benchmark_locked_2b.yaml --output_root results/policy_feature_benchmark_locked_2b && python scripts/run_dense_subspace_control_eval.py --config configs/policy_mech_interp.yaml --manifest_root data/processed/public_values --family equality_neutrality --proxy_slug risk_factors_bias --paired_proxy_slug harms_discrimination --layer 20 --site resid_post --split test --max_samples 100 --random_sets 100 --k 3 && python scripts/run_dense_subspace_control_eval.py --config configs/policy_mech_interp.yaml --manifest_root data/processed/public_values --family individual_rights --proxy_slug risk_factors_privacy --paired_proxy_slug harms_violation_of_civil_or_human_rights_including_privacy --layer 24 --site resid_post --split test --max_samples 100 --random_sets 100 --k 3 && python scripts/run_policy_analysis_experiments.py --config configs/policy_analysis_assistant_locked_2b.yaml --output_root results/policy_analysis_assistant_locked_2b && printf '%s
-' 'The agency shall publish an annual transparency report describing system deployment, audit procedures, and material incidents. Any system processing personal data must include retention limits, access controls, and independent review. Operators should assess whether deployment could create discriminatory effects for protected groups and document mitigation steps before rollout.' > sample_policy_doc.txt && python scripts/run_policy_document_analysis.py --input_path sample_policy_doc.txt --config configs/policy_analysis_assistant_locked_2b.yaml --output_path results/policy_document_analysis_locked_2b.json --document_id lambda_doc_1 --title 'Lambda Document' --source_type lambda_text
+```powershell
+policy-interp extract-activations experiments\revised_mvp_2b_16k.yaml
+policy-interp build-feature-catalog experiments\revised_mvp_2b_16k.yaml
+policy-interp run-autointerp experiments\revised_mvp_2b_16k.yaml
+policy-interp run-audit-eval experiments\revised_mvp_2b_16k.yaml
+policy-interp export-reports experiments\revised_mvp_2b_16k.yaml
 ```
 
-### Locked 9B primary replication
+Generate an audit record for a new text file:
 
-```bash
-cd ~/agora-mi && source .venv/bin/activate && python scripts/run_policy_feature_benchmark.py --preflight_only --config configs/policy_feature_benchmark_locked_9b_primary.yaml --output_root results/policy_feature_benchmark_locked_9b_primary && python scripts/run_policy_feature_benchmark.py --config configs/policy_feature_benchmark_locked_9b_primary.yaml --output_root results/policy_feature_benchmark_locked_9b_primary && python scripts/aggregate_policy_feature_benchmark.py --config configs/policy_feature_benchmark_locked_9b_primary.yaml --output_root results/policy_feature_benchmark_locked_9b_primary
+```powershell
+policy-interp run-batch-scorer experiments\revised_mvp_2b_16k.yaml --input-path path\to\document.txt --output-name audit_demo
 ```
 
-### Bundle the locked outputs
+## Data and artifacts
 
-```bash
-cd ~/agora-mi && tar -czf icml_locked_lambda_bundle.tar.gz results/policy_feature_benchmark_locked_2b results/policy_analysis_assistant_locked_2b results/policy_feature_benchmark_locked_9b_primary results/policy_document_analysis_locked_2b.json
-```
+Raw AGORA data and generated artifacts are intentionally not committed in this branch.
 
-## Main saved artifacts
+Expected local directories:
 
-After a locked benchmark run, the most important summary files are:
+1. `AGORA Data` for raw corpus files
+2. `artifacts` for experiment outputs
 
-1. `results/policy_feature_benchmark_locked_2b/summary/table_main_benchmark_results.csv`
-2. `results/policy_feature_benchmark_locked_2b/summary/table_proxy_mechanistic_evidence.csv`
-3. `results/policy_feature_benchmark_locked_2b/summary/table_pair_transfer_and_causality.csv`
-4. `results/policy_feature_benchmark_locked_2b/summary/proxy_feature_summary.csv`
-5. `results/policy_feature_benchmark_locked_2b/summary/proxy_causal_summary.csv`
-6. `results/policy_feature_benchmark_locked_2b/summary/proxy_causal_samples.csv`
-7. `results/policy_feature_benchmark_locked_2b/summary/proxy_causal_random_controls.csv`
-8. `results/policy_feature_benchmark_locked_2b/summary/proxy_off_target_effects.csv`
-9. `results/policy_feature_benchmark_locked_2b/summary/feature_concept_cards.jsonl`
+The code assumes experiment outputs live under the run root specified by each YAML configuration.
 
-After the locked assistant run, the most important summary files are:
+## Current scope
 
-1. `results/policy_analysis_assistant_locked_2b/summary/assistant_leaderboard.json`
-2. `results/policy_analysis_assistant_locked_2b/summary/assistant_feature_cards.jsonl`
-3. `results/policy_analysis_assistant_locked_2b/summary/assistant_feature_usage.csv`
-4. `results/policy_analysis_assistant_locked_2b/summary/assistant_card_dossier_links.jsonl`
-5. `results/policy_document_analysis_locked_2b.json`
+The repository reflects a medium local setup used for the current paper draft.
 
-## Reading results in the right order
+1. Gemma 2 2B
+2. Gemma Scope residual SAEs
+3. Layers 12, 16, 20, and 24
+4. Feature first audit reports, cross layer maps, AutoInterp labels, and causal diagnostics
 
-A good reading order is:
-
-1. `table_main_benchmark_results.csv`
-2. `table_proxy_mechanistic_evidence.csv`
-3. `proxy_causal_summary.csv`
-4. `table_pair_transfer_and_causality.csv`
-5. `assistant_leaderboard.json`
-6. `assistant_feature_cards.jsonl`
-7. `feature_concept_cards.jsonl`
-
-This order mirrors the intended interpretation ladder.
-
-1. localization
-2. stability
-3. selective causal support
-4. pair-linked support
-5. assistant rendering
-
-## Testing
-
-Run the benchmark and assistant unit tests with:
-
-```bash
-pytest tests/test_policy_feature_benchmark.py -q
-pytest tests/test_policy_analysis_assistant.py -q
-```
-
-## Notes on security and reproducibility
-
-1. Gemma downloads require authenticated Hugging Face access.
-2. If a token was pasted into a shell or chat session, rotate it after the run is finished.
-3. The locked Lambda package should be treated as the paper source of truth.
-4. Local runs remain useful for rehearsal, debugging, and figure prototyping, but not for final paper numbers.
+Module discovery remains in the codebase as a secondary analysis path, but the main paper and pipeline now prioritize feature level auditing.

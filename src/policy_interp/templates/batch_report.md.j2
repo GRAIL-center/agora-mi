@@ -1,0 +1,24 @@
+# {{ output_name }}
+
+Segment mode: {{ segment_mode }}
+Segment count: {{ segment_count }}
+
+## Top Feature Evidence
+{% for item in top_feature_evidence %}
+{{ loop.index }}. {{ item.display_name }} on {{ item.segment_id }} at layer {{ item.layer }} with pooled activation {{ "%.4f"|format(item.pooled_activation|float) }}. Token span: {{ item.top_token_span_text or "" }}
+{% endfor %}
+
+## Layer Profile
+{% for item in layer_profile %}
+{{ loop.index }}. Layer {{ item.layer }} is {{ item.layer_stage }} with {{ item.activated_catalog_features }} activated catalog features, mean pooled activation {{ "%.4f"|format(item.mean_pooled_activation|float) }}, and max pooled activation {{ "%.4f"|format(item.max_pooled_activation|float) }}.
+{% endfor %}
+
+## Proxy Overlay Summary
+{% for item in overlay_summary %}
+{{ loop.index }}. Proxy {{ item.proxy }} has total weighted signal {{ "%.4f"|format(item.total_weighted_proxy_signal|float) }}, mean test AUC {{ "%.3f"|format(item.mean_test_auc|float) }}, and {{ item.activated_feature_count }} activated features.
+{% endfor %}
+
+## Causal Notes
+{% for item in causal_notes %}
+{{ loop.index }}. {{ item.display_name }} overlaps with {{ item.target_name }} for proxy {{ item.primary_proxy }}. KL delta {{ "%.4f"|format((item.kl_divergence_delta or 0.0)|float) }}, paired delta {{ "%.4f"|format((item.paired_delta or 0.0)|float) }}, badge {{ item.causal_badge or "unassigned" }}.
+{% endfor %}
