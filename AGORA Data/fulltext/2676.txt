@@ -1,0 +1,638 @@
+Preamble
+Federal Senate
+Bill
+No. 2338, 2023
+Provides for the use of Artificial Intelligence.
+AUTHORSHIP: Senator Rodrigo Pacheco (PSD/MG)
+
+CHAPTER I PRELIMINARY PROVISIONS
+
+Art. 1
+This Law establishes general rules of a national character for the development, implementation and responsible use of artificial intelligence (AI) systems in Brazil, with the objective of protecting fundamental rights and ensuring the implementation of safe and reliable systems, for the benefit of the human person, the democratic regime and scientific and technological development.
+
+Art. 2
+The development, implementation and use of artificial intelligence systems in Brazil are based on:
+I - the centrality of the human person;
+II - respect for human rights and democratic values;
+III - the free development of personality;
+IV - the protection of the environment and sustainable development;
+V - equality, non-discrimination, plurality and respect for labor rights;
+VI - technological development and innovation;
+VII - free enterprise, free competition and consumer protection;
+VIII - privacy, data protection and informational self-determination;
+IX - the promotion of research and development with the purpose of stimulating innovation in the productive sectors and in the public power; and
+X - access to information and education, and awareness about artificial intelligence systems and their applications.
+
+Art. 3
+The development, implementation and use of artificial intelligence systems will observe good faith and the following principles:
+I - inclusive growth, sustainable development and well-being;
+II - self-determination and freedom of decision and choice;
+III - human participation in the artificial intelligence cycle and effective human oversight;
+IV - non-discrimination;
+V - fairness, equity and inclusion;
+VI - transparency, explainability, intelligibility and auditability;
+VII - reliability and robustness of artificial intelligence systems and information security;
+VIII - due process of law, contestability and adversarial proceedings;
+IX - traceability of decisions during the life cycle of artificial intelligence systems as a means of accountability and attribution of responsibilities to a natural or legal person;
+X - accountability, liability and full reparation of damages;
+XI - prevention, precaution and mitigation of systemic risks derived from intentional or unintentional uses and from unforeseen effects of artificial intelligence systems; and
+XII - non-maleficence and proportionality between the methods employed and the determined and legitimate purposes of artificial intelligence systems.
+
+Art. 4
+For the purposes of this Law, the following definitions are adopted:
+I - artificial intelligence system: computational system, with different degrees of autonomy, designed to infer how to achieve a given set of objectives, using approaches based on machine learning and/or knowledge logic and representation, through input data from machines or humans, with the objective of producing predictions, recommendations or decisions that can influence the virtual or real environment;
+
+II - artificial intelligence system provider: natural or legal person, public or private, who develops an artificial intelligence system, directly or by order, with a view to its placement on the market or its application in a service provided by it, under its own name or brand, for a fee or free of charge;
+
+III - artificial intelligence system operator: natural or legal person, public or private, who employs or uses, in its name or benefit, an artificial intelligence system, unless such system is used in the scope of a non-professional personal activity;
+
+IV - artificial intelligence agents: providers and operators of artificial intelligence systems;
+
+V - competent authority: agency or entity of the Federal Public Administration responsible for ensuring, implementing and supervising compliance with this Law throughout the national territory;
+
+VI - discrimination: any distinction, exclusion, restriction or preference, in any area of public or private life, whose purpose or effect is to nullify or restrict the recognition, enjoyment or exercise, under conditions of equality, of one or more rights or freedoms provided for in the legal system, due to personal characteristics such as geographical origin, race, color or ethnicity, gender, sexual orientation, socioeconomic class, age, disability, religion or political opinions;
+
+VII - indirect discrimination: discrimination that occurs when an apparently neutral rule, practice or criterion has the capacity to cause disadvantage to people belonging to a specific group, or place them at a disadvantage, unless that rule, practice or criterion has some reasonable and legitimate objective or justification in light of the right to equality and other fundamental rights;
+
+VIII - text and data mining: process of extracting and analyzing large amounts of data or partial or full excerpts of textual content, from which patterns and correlations are extracted that will generate relevant information for the development or use of artificial intelligence systems.
+
+CHAPTER II RIGHTS
+Section I General Provisions
+
+Art. 5
+Persons affected by artificial intelligence systems have the following rights, to be exercised in the form and under the conditions described in this Chapter:
+
+I - right to prior information regarding their interactions with artificial intelligence systems;
+
+II - right to explanation about the decision, recommendation or prediction made by artificial intelligence systems;
+
+III - right to contest decisions or predictions of artificial intelligence systems that produce legal effects or that significantly impact the interests of the affected party;
+
+IV - right to human determination and participation in decisions of artificial intelligence systems, taking into account the context and the state of the art of technological development;
+
+V - right to non-discrimination and correction of direct, indirect, illegal or abusive discriminatory biases; and
+
+VI - right to privacy and protection of personal data, under the terms of the relevant legislation.
+Sole paragraph. Artificial intelligence agents shall inform, clearly and easily accessible, the procedures necessary for the exercise of the rights described in the caput.
+
+Art. 6
+The defense of the interests and rights provided for in this Law may be exercised before the competent administrative bodies, as well as in court, individually or collectively, in the form of the provisions of the relevant legislation regarding the instruments of individual, collective and diffuse protection.
+
+
+Section II Rights associated with information and understanding of decisions made by artificial intelligence systems
+
+Art. 7
+Persons affected by artificial intelligence systems have the right to receive, prior to contracting or using the system, clear and adequate information regarding the following aspects:
+
+I - automated nature of the interaction and decision in processes or products that affect the person;
+
+II - general description of the system, types of decisions, recommendations or predictions it is intended to make and consequences of its use for the person;
+
+III - identification of the operators of the artificial intelligence system and governance measures adopted in the development and use of the system by the organization;
+
+IV - role of the artificial intelligence system and the humans involved in the decision-making, prediction or recommendation process;
+
+V - categories of personal data used in the context of the operation of the artificial intelligence system;
+
+VI - security, non-discrimination and reliability measures adopted, including accuracy, precision and coverage; and
+
+VII - other information defined in regulation.
+
+§ 1 Without prejudice to the provision of complete information through open physical or digital means to the public, the information referred to in item I of the caput of this article shall also be provided, when appropriate, with the use of easily recognizable icons or symbols.
+
+§ 2 Persons exposed to emotion recognition systems or biometric categorization systems shall be informed about the use and operation of the system in the environment where the exposure occurs.
+
+§ 3 Artificial intelligence systems intended for vulnerable groups, such as children, adolescents, the elderly and people with disabilities, shall be developed in such a way that these persons are able to understand their operation and their rights in relation to artificial intelligence agents.
+
+Art. 8
+The person affected by an artificial intelligence system may request an explanation about the decision, prediction or recommendation, with information regarding the criteria and procedures used, as well as the main factors that affect such specific prediction or decision, including information about:
+
+I - the rationality and logic of the system, the meaning and the expected consequences of such decision for the affected person;
+
+II - the degree and level of contribution of the artificial intelligence system to decision-making;
+
+III - the data processed and its source, the criteria for decision-making and, when appropriate, their weighting, applied to the situation of the affected person;
+
+IV - the mechanisms through which the person can contest the decision; and
+
+V - the possibility of requesting human intervention, under the terms of this Law.
+
+Sole paragraph. The information mentioned in the caput shall be provided through a free and facilitated procedure, in language that allows the person to understand the result of the decision or prediction in question, within a period of up to fifteen days from the request, allowing for a one-time extension for an equal period, depending on the complexity of the case.
+
+Section III Right to contest decisions and request human intervention
+
+Art. 9
+The person affected by an artificial intelligence system shall have the right to contest and request the review of decisions, recommendations or predictions generated by such system that produce relevant legal effects or that significantly impact their interests.
+
+§ 1 The right to correct incomplete, inaccurate or outdated data used by artificial intelligence systems is guaranteed, as well as the right to request the anonymization, blocking or elimination of unnecessary, excessive or data processed in non-compliance with the legislation, under the terms of art. 18 of Law No. 13,709, of August 14, 2018 and the relevant legislation.
+
+§ 2 The right to contest provided for in the caput of this article also covers decisions, recommendations or predictions supported by discriminatory, unreasonable inferences or that violate objective good faith, understood as inferences that:
+
+I - are based on inadequate or abusive data for the purposes of the processing;
+
+II - are based on imprecise or statistically unreliable methods; or
+
+III - do not adequately consider the individuality and personal characteristics of the individuals.
+
+Art. 10
+When the decision, prediction or recommendation of an artificial intelligence system produces relevant legal effects or significantly impacts the interests of the person, including through the generation of profiles and the making of inferences, the person may request human intervention or review.
+
+Sole paragraph. Human intervention or review shall not be required if its implementation is proven to be impossible, in which case the party responsible for the operation of the artificial intelligence system shall implement effective alternative measures, in order to ensure the re-analysis of the contested decision, taking into consideration the arguments raised by the affected person, as well as the reparation of any damages generated.
+
+Art. 11
+In scenarios where decisions, predictions or recommendations generated by artificial intelligence systems have an irreversible or difficult to reverse impact or involve decisions that may generate risks to the life or physical integrity of individuals, there shall be significant human involvement in the decision-making process and final human determination.
+
+Section IV Right to non-discrimination and correction of direct, indirect, illegal or abusive discriminatory biases
+
+Art. 12
+Persons affected by decisions, predictions or recommendations of artificial intelligence systems have the right to fair and equal treatment, and the implementation and use of artificial intelligence systems that may lead to direct, indirect, illegal or abusive discrimination is prohibited, including:
+
+I - as a result of the use of sensitive personal data or disproportionate impacts due to personal characteristics such as geographical origin, race, color or ethnicity, gender, sexual orientation, socioeconomic class, age, disability, religion or political opinions; or
+
+II - due to the establishment of disadvantages or worsening of the situation of vulnerability of persons belonging to a specific group, even if apparently neutral criteria are used.
+
+Sole paragraph. The prohibition provided for in the caput does not prevent the adoption of differentiation criteria between individuals or groups when such differentiation occurs due to demonstrated, reasonable and legitimate objectives or justifications in light of the right to equality and other fundamental rights.
+
+CHAPTER III RISK CATEGORIZATION
+
+Section I Preliminary Assessment
+
+Art. 13
+Prior to its placement on the market or use in service, every artificial intelligence system shall undergo a preliminary assessment carried out by the provider to classify its degree of risk, whose record shall consider the criteria set forth in this chapter.
+
+§ 1 Providers of general-purpose artificial intelligence systems shall include in their preliminary assessment the intended purposes or applications, under the terms of art. 17 of this law.
+
+§ 2 There shall be a record and documentation of the preliminary assessment carried out by the provider for purposes of accountability and rendering of accounts in case the artificial intelligence system is not classified as high risk.
+
+§ 3 The competent authority may determine the reclassification of the artificial intelligence system, upon prior notification, as well as determine the performance of an algorithmic impact assessment to instruct the ongoing investigation.
+
+§ 4 If the result of the reclassification identifies the artificial intelligence system as high risk, the performance of an algorithmic impact assessment and the adoption of the other governance measures provided for in Chapter IV shall be mandatory, without prejudice to any penalties in case of fraudulent, incomplete or untruthful preliminary assessment.
+
+Section II Excessive Risk
+
+Art. 14
+The implementation and use of artificial intelligence systems are prohibited:
+
+I - that employ subliminal techniques that aim at or result in inducing a natural person to behave in a way that is harmful or dangerous to their health or safety or against the foundations of this Law;
+
+II - that exploit any vulnerabilities of specific groups of natural persons, such as those associated with their age or physical or mental disability, in order to induce them to behave in a way that is harmful to their health or safety or against the foundations of this Law;
+
+III - by the public power, to assess, classify or rank natural persons, based on their social behavior or personality attributes, through universal scoring, for access to goods and services and public policies, illegitimately or disproportionately.
+
+Art. 15
+Within the scope of public security activities, the use of remote biometric identification systems, continuously in spaces accessible to the public, is only allowed when there is a specific provision in federal law and judicial authorization in connection with the individualized criminal prosecution activity, in the following cases:
+
+I - prosecution of crimes subject to a maximum penalty of imprisonment exceeding two years;
+
+II - search for victims of crimes or missing persons; or
+
+III - crime in flagrante delicto.
+
+Sole paragraph. The law referred to in the caput shall provide for proportional measures that are strictly necessary to serve the public interest, observing due process of law and judicial control, as well as the principles and rights provided for in this Law, especially the guarantee against discrimination and the need for review of the algorithmic inference by the responsible public agent, before taking any action against the identified person.
+
+Art. 16
+It shall be the responsibility of the competent authority to regulate artificial intelligence systems of excessive risk.
+
+Section III High Risk
+
+Art. 17
+The following are considered high-risk artificial intelligence systems those used for the following purposes:
+
+I - application as safety devices in the management and operation of critical infrastructures, such as traffic control and water and electricity supply networks;
+
+II - education and professional training, including systems for determining access to educational institutions or professional training or for evaluating and monitoring students;
+
+III - recruitment, screening, filtering, evaluation of candidates, decision-making on promotions or terminations of employment relationships, distribution of tasks and control and evaluation of the performance and behavior of persons affected by such artificial intelligence applications in the areas of employment, worker management and access to self-employment;
+
+IV - evaluation of eligibility criteria, access, granting, revision, reduction or revocation of private and public services that are considered essential, including systems used to evaluate the eligibility of natural persons for social assistance and social security benefits;
+
+V - assessment of the indebtedness capacity of natural persons or establishment of their credit rating;
+
+VI - dispatch or establishment of priorities for emergency response services, including firefighters and medical assistance;
+
+VII - administration of justice, including systems that assist judicial authorities in investigating the facts and applying the law;
+
+VIII - autonomous vehicles, when their use may generate risks to the physical integrity of persons;
+
+IX - applications in the area of health, including those intended to assist in medical diagnoses and procedures;
+
+X - biometric identification systems;
+
+XI - criminal investigation and public security, especially for individual risk assessments by the competent authorities, in order to determine the risk of a person committing offenses or recidivism, or the risk for potential victims of criminal offenses or to assess personality traits and characteristics or past criminal behavior of individuals or groups;
+
+XII - crime analytical study related to natural persons, allowing police authorities to search large and complex datasets, related or unrelated, available in different data sources or in different data formats, in order to identify unknown patterns or discover hidden relationships in the data;
+
+XIII - investigation by administrative authorities to assess the credibility of evidence in the course of investigating or prosecuting offenses, to predict the occurrence or recurrence of a real or potential offense based on profiling of individuals; or
+
+XIV - migration management and border control.
+
+Art. 18
+It shall be the responsibility of the competent authority to update the list of excessive or high-risk artificial intelligence systems, identifying new cases, based on at least one of the following criteria:
+
+I - the implementation is on a large scale, taking into account the number of people affected and the geographical extent, as well as its duration and frequency;
+
+II - the system may negatively impact the exercise of rights and freedoms or the use of a service;
+
+III - the system has a high potential for material or moral harm, as well as discrimination;
+
+IV - the system affects people from a specific vulnerable group;
+
+V - the possible harmful results of the artificial intelligence system are irreversible or difficult to reverse;
+
+VI - a similar artificial intelligence system has previously caused material or moral damage;
+
+VII - low degree of transparency, explainability and auditability of the artificial intelligence system, which hinders its control or supervision;
+
+VIII - high level of identifiability of the data subjects, including the processing of genetic and biometric data for the purposes of uniquely identifying a natural person, especially when the processing includes combination, matching or comparison of data from several sources;
+
+IX - when there are reasonable expectations of the affected party regarding the use of their personal data in the artificial intelligence system, especially the expectation of confidentiality, such as in the processing of confidential or sensitive data.
+
+Sole paragraph. The updating of the list mentioned in the caput by the competent authority shall be preceded by consultation with the competent sectoral regulatory body, if any, as well as by public consultation and hearings and by regulatory impact analysis.
+
+CHAPTER IV GOVERNANCE OF ARTIFICIAL INTELLIGENCE SYSTEMS
+
+Section I General Provisions
+
+Art. 19
+Artificial intelligence agents shall establish governance structures and internal processes capable of ensuring the security of systems and meeting the rights of affected persons, under the terms provided for in Chapter II of this Law and the relevant legislation, which shall include at least:
+
+I - transparency measures regarding the use of artificial intelligence systems in the interaction with natural persons, which includes the use of adequate and sufficiently clear and informative human-machine interfaces;
+
+II - transparency regarding the governance measures adopted in the development and use of the artificial intelligence system by the organization;
+
+III - adequate data management measures for the mitigation and prevention of potential discriminatory biases;
+
+IV - legitimization of data processing in accordance with data protection legislation, including through the adoption of privacy-by-design and by-default measures and the adoption of techniques that minimize the use of personal data;
+
+V - adoption of adequate parameters for the separation and organization of data for training, testing and validation of the results of the system; and
+
+VI - adoption of adequate information security measures from design to operation of the system.
+
+§ 1 The governance measures for artificial intelligence systems are applicable throughout their entire life cycle, from initial conception to termination of activities and discontinuation.
+
+§ 2 The technical documentation of high-risk artificial intelligence systems shall be prepared before their availability on the market or their use for service provision and shall be kept up-to-date during their use.
+
+Section II Governance Measures for High-Risk Artificial Intelligence Systems
+
+Art. 20
+In addition to the measures indicated in art. 19, artificial intelligence agents who provide or operate high-risk systems shall adopt the following governance measures and internal processes:
+
+I - documentation, in the format appropriate to the development process and the technology used, regarding the operation of the system and the decisions involved in its construction, implementation and use, considering all relevant stages in the life cycle of the system, such as design, development, evaluation, operation and discontinuation of the system;
+
+II - use of automatic logging tools for the operation of the system, in order to allow the evaluation of its accuracy and robustness and to ascertain potential discriminatory effects, and implementation of the adopted risk mitigation measures, with special attention to adverse effects;
+
+III - conducting tests to assess appropriate levels of reliability, according to the sector and type of application of the artificial intelligence system, including robustness, accuracy, precision and coverage tests;
+
+IV - data management measures to mitigate and prevent discriminatory biases, including:
+a) a) evaluation of the data with appropriate measures to control human cognitive biases that may affect the collection and organization of the data and to avoid the generation of biases due to problems in classification, failures or lack of information regarding affected groups, lack of coverage or distortions in representativeness, according to the intended application, as well as corrective measures to avoid the incorporation of structural social biases that may be perpetuated and amplified by technology; and
+b) b) composition of an inclusive team responsible for the design and development of the system, guided by the pursuit of diversity.
+
+V - adoption of technical measures to enable the explainability of the results of artificial intelligence systems and measures to make available to operators and potentially impacted individuals general information about the functioning of the artificial intelligence model employed, explaining the logic and relevant criteria for producing results, as well as, upon request by the interested party, providing adequate information that allows the interpretation of the concretely produced results, respecting industrial and commercial secrecy.
+
+Sole paragraph. Human oversight of high-risk artificial intelligence systems shall seek to prevent or minimize risks to the rights and freedoms of persons that may arise from their normal use or from their use under reasonably foreseeable misuse conditions, enabling the persons responsible for human oversight to:
+
+I - understand the capabilities and limitations of the artificial intelligence system and properly control its operation, so that signs of anomalies, dysfunctions and unexpected performance can be identified and resolved as quickly as possible;
+
+II - be aware of the possible tendency to automatically trust or overly rely on the result produced by the artificial intelligence system;
+
+III - correctly interpret the result of the artificial intelligence system taking into account the characteristics of the system and the available interpretation tools and methods;
+
+IV - decide, in any specific situation, not to use the high-risk artificial intelligence system or to ignore, override or reverse its result; and
+
+V - intervene in the operation of the high-risk artificial intelligence system or interrupt its operation.
+
+Art. 21
+In addition to the governance measures established in this chapter, public bodies and entities of the Union, States, Federal District and Municipalities, when contracting, developing or using artificial intelligence systems considered to be high risk, shall adopt the following measures:
+
+I - conducting prior public consultation and hearings on the planned use of artificial intelligence systems, with information on the data to be used, the general logic of operation and results of tests performed;
+
+II - definition of access and use protocols for the system that allow the recording of who used it, for which specific situation, and for what purpose;
+
+III - use of data from secure sources, which are accurate, relevant, updated and representative of the affected populations and tested against discriminatory biases, in accordance with Law No. 13,709, of August 14, 2018, and its regulatory acts;
+
+IV - guaranteed facilitated and effective right for citizens, before the public power, to explanation and human review of decisions by artificial intelligence systems that generate relevant legal effects or that significantly impact the interests of the affected party, to be carried out by the competent public agent;
+
+V - use of an application programming interface that allows its use by other systems for interoperability purposes, as regulated; and
+
+VI - publicizing in easily accessible media, preferably on their websites, the preliminary assessments of artificial intelligence systems developed, implemented or used by the public power of the Union, States, Federal District and Municipalities, regardless of the degree of risk, without prejudice to the provisions of art. 43.
+
+§ 1 The use of biometric systems by the public power of the Union, States, Federal District and Municipalities shall be preceded by the enactment of a normative act that establishes guarantees for the exercise of the rights of the affected person and protection against direct, indirect, illegal or abusive discrimination, prohibited the processing of race, color or ethnicity data, except as expressly provided by law.
+
+§ 2 In the impossibility of substantial elimination or mitigation of the risks associated with the artificial intelligence system identified in the algorithmic impact assessment provided for in article 22 of this Law, its use shall be discontinued.
+
+Section III Algorithmic Impact Assessment
+
+Art. 22
+The algorithmic impact assessment of artificial intelligence systems is an obligation of artificial intelligence agents, whenever the system is considered high risk by the preliminary assessment.
+Sole paragraph. The competent authority shall be notified about the high-risk system, through the sharing of preliminary and algorithmic impact assessments.
+
+Art. 23
+The algorithmic impact assessment shall be carried out by a professional or team of professionals with the necessary technical, scientific and legal knowledge to prepare the report and with functional independence.
+
+Sole paragraph. It shall be the responsibility of the competent authority to regulate the cases in which the performance or audit of the impact assessment shall necessarily be conducted by a professional or team of professionals external to the provider;
+
+Art. 24
+The impact assessment methodology shall contain at least the following steps:
+
+I - preparation;
+
+II - risk cognition;
+
+III - mitigation of the risks found;
+
+IV - monitoring.
+
+§ 1 The impact assessment shall consider and record at least:
+a) a) known and foreseeable risks associated with the artificial intelligence system at the time it was developed, as well as the risks that can reasonably be expected from it;
+b) b) benefits associated with the artificial intelligence system;
+c) c) likelihood of adverse consequences, including the number of people potentially impacted;
+d) d) severity of adverse consequences, including the effort required to mitigate them;
+e) e) logic of operation of the artificial intelligence system;
+f) f) process and result of tests and assessments and mitigation measures taken to verify possible impacts on rights, with special emphasis on potential discriminatory impacts;
+g) g) training and awareness actions of the risks associated with the artificial intelligence system;
+h) h) mitigation measures and indication and justification of the residual risk of the artificial intelligence system, accompanied by frequent quality control tests; and
+i) i) transparency measures to the public, especially to potential users of the system, regarding residual risks, especially when involving a high degree of harm or danger to the health or safety of users, under the terms of articles 9 and 10 of Law No. 8,078, of September 11, 1990 (Consumer Protection Code).
+
+§ 2 In accordance with the precautionary principle, when using artificial intelligence systems that may generate irreversible or difficult to reverse impacts, the algorithmic impact assessment shall also take into account incipient, incomplete or speculative evidence.
+
+§ 3 The competent authority may establish other criteria and elements for the preparation of the impact assessment, including the participation of different affected social segments, according to the risk and economic size of the organization.
+
+§ 4 It shall be the responsibility of the competent authority to regulate the frequency of updating impact assessments, considering the life cycle of high-risk artificial intelligence systems and the fields of application, and may incorporate sectoral best practices.
+
+§ 5 Artificial intelligence agents who, after their introduction to the market or use in service, become aware of unexpected risk to the rights of natural persons, shall immediately communicate the fact to the competent authorities and to the persons affected by the artificial intelligence system.
+
+Art. 25
+The algorithmic impact assessment shall consist of a continuous iterative process, carried out throughout the entire life cycle of high-risk artificial intelligence systems, requiring periodic updates.
+
+§ 1 It shall be the responsibility of the competent authority to regulate the frequency of updating impact assessments.
+
+§ 2 The updating of the algorithmic impact assessment shall also include public participation, through a procedure for consultation with interested parties, even if in a simplified manner.
+
+Art. 26
+Guaranteed industrial and commercial secrets, the conclusions of the impact assessment shall be public, containing at least the following information:
+
+I - description of the intended purpose for which the system will be used, as well as its context of use and territorial and temporal scope;
+
+II - risk mitigation measures, as well as their residual level, once such measures are implemented; and
+
+III - description of the participation of different affected segments, if any, under the terms of § 3 of art. 24 of this Law.
+
+CHAPTER V CIVIL LIABILITY
+
+Art. 27
+The provider or operator of an artificial intelligence system that causes patrimonial, moral, individual or collective damage is obliged to fully repair it, regardless of the degree of autonomy of the system.
+
+§ 1 When it comes to a high-risk or excessive-risk artificial intelligence system, the provider or operator shall be objectively liable for the damages caused, to the extent of their participation in the damage.
+
+§ 2 When it does not involve a high-risk artificial intelligence system, the fault of the agent causing the damage shall be presumed, applying the inversion of the burden of proof in favor of the victim.
+
+Art. 28
+Artificial intelligence agents shall not be held liable when:
+
+I - they prove that they did not put the artificial intelligence system into circulation, employ it or profit from it; or
+
+II - they prove that the damage is due to the exclusive fault of the victim or a third party, as well as fortuitous event or force majeure.
+
+Art. 29
+The hypotheses of civil liability arising from damages caused by artificial intelligence systems within the scope of consumer relations remain subject to the rules provided for in Law No. 8,078, of September 11, 1990 (Consumer Protection Code), without prejudice to the application of the other norms of this Law.
+
+CHAPTER VI CODES OF BEST PRACTICES AND GOVERNANCE
+
+Art. 30
+Artificial intelligence agents may, individually or through associations, formulate codes of best practices and governance that establish the conditions of organization, operating rules, procedures, including complaints from affected persons, security standards, technical standards, specific obligations for each implementation context, educational actions, internal oversight and risk mitigation mechanisms, and appropriate technical and organizational security measures for managing the risks arising from the application of the systems.
+
+§ 1 When establishing best practice rules, the purpose, likelihood and severity of the risks and benefits arising shall be considered, such as the methodology set forth in art. 24 of this Law.
+
+§ 2 Developers and operators of artificial intelligence systems may:
+I - implement a governance program that, at a minimum:
+a) a) demonstrates their commitment to adopting internal processes and policies that ensure comprehensive compliance with norms and best practices related to non-maleficence and proportionality between the methods employed and the determined and legitimate purposes of artificial intelligence systems;
+b) b) is adapted to their structure, scale and volume of operations, as well as their potential for harm;
+c) c) aims to establish a relationship of trust with affected persons, through transparent action and ensuring participation mechanisms under the terms of art. 24, § 3, of this Law;
+d) d) is integrated into their general governance structure and establishes and applies internal and external oversight mechanisms;
+e) e) includes response plans for reversing possible harmful results of the artificial intelligence system; and
+f) f) is constantly updated based on information obtained from continuous monitoring and periodic evaluations.
+
+§ 3 Voluntary adherence to a code of best practices and governance may be considered an indicator of good faith by the agent and shall be taken into account by the competent authority for the purposes of applying administrative sanctions.
+
+§ 4 The competent authority may establish a procedure for analyzing the compatibility of the code of conduct with the current legislation, with a view to its approval, publicization and periodic updating.
+
+CHAPTER VII REPORTING OF SERIOUS INCIDENTS
+
+Art. 31
+Artificial intelligence agents shall report to the competent authority the occurrence of serious security incidents, including when there is a risk to life and physical integrity of persons, interruption of the functioning of critical infrastructure operations, serious damage to property or the environment, as well as serious violations of fundamental rights, under the terms of the regulation.
+
+§ 1 The communication shall be made within a reasonable period, as defined by the competent authority.
+
+§ 2 The competent authority shall verify the severity of the incident and may, if necessary, order the agent to take steps and measures to reverse or mitigate the effects of the incident.
+
+CHAPTER VIII SUPERVISION AND INSPECTION
+
+Section I The Competent Authority
+
+Art. 32
+The Executive Branch shall designate a competent authority to ensure the implementation and enforcement of this Law.
+Sole paragraph. It is the responsibility of the competent authority to:
+
+I - ensure the protection of fundamental rights and other rights affected by the use of artificial intelligence systems;
+
+II - promote the development, updating and implementation of the Brazilian Artificial Intelligence Strategy with the bodies of related competence;
+
+III - promote and prepare studies on best practices in the development and use of artificial intelligence systems;
+
+IV - stimulate the adoption of best practices, including codes of conduct, in the development and use of artificial intelligence systems;
+
+V - promote cooperation actions with authorities for the protection and promotion of the development and use of artificial intelligence systems from other countries, of an international or transnational nature;
+
+VI - issue norms for the regulation of this Law, including on:
+a) a) procedures associated with the exercise of the rights provided for in this Law;
+b) b) procedures and requirements for the elaboration of the algorithmic impact assessment;
+c) c) form and requirements for the information to be publicized about the use of artificial intelligence systems; and
+d) d) procedures for certification of the development and use of high-risk systems.
+
+VII - coordinate with public regulatory authorities to exercise their powers in specific sectors of economic and governmental activities subject to regulation;
+
+VIII - inspect, independently or in conjunction with other competent public bodies, the disclosure of the information provided for in arts. 7 and 43;
+
+IX - inspect and apply sanctions, in case of development or use of artificial intelligence systems carried out in non-compliance with the legislation, through an administrative process that ensures the right to adversarial proceedings, full defense and the right to appeal;
+
+X - request, at any time, from public entities that develop or use artificial intelligence systems, a specific report on the scope, nature of the data and other details of the processing performed, with the possibility of issuing a complementary technical opinion to ensure compliance with this Law;
+
+XI - enter, at any time, into a commitment with artificial intelligence agents to eliminate irregularities, legal uncertainty or contentious situations within the scope of administrative proceedings, in accordance with the provisions of Decree-Law No. 4,657, of September 4, 1942;
+
+XII - consider petitions against the operator of an artificial intelligence system, after proven submission of a complaint not resolved within the period established in regulation; and
+
+XIII - prepare annual reports on its activities.
+
+Sole paragraph. When exercising the attributions of the caput, the competent body may establish conditions, requirements, communication and disclosure channels differentiated for providers and operators of artificial intelligence systems qualified as micro or small companies, under the terms of Complementary Law No. 123, of December 14, 2006, and startups, under the terms of Complementary Law No. 182, of June 1, 2021.
+
+Art. 33
+The competent authority shall be the central body for the application of this Law and the establishment of norms and guidelines for its implementation.
+
+Art. 34
+The competent authority and the public bodies and entities responsible for the regulation of specific sectors of economic and governmental activity shall coordinate their activities, in the corresponding spheres of action, with a view to ensuring compliance with this Law.
+
+§ 1 The competent authority shall maintain a permanent forum for communication, including through technical cooperation, with public administration bodies and entities responsible for the regulation of specific sectors of economic and governmental activity, in order to facilitate their regulatory, inspection and sanctioning powers.
+
+§ 2 In experimental regulatory environments (regulatory sandbox) involving artificial intelligence systems, conducted by public bodies and entities responsible for the regulation of specific sectors of economic activity, the competent authority shall be notified and may express its opinion regarding compliance with the purposes and principles of this law.
+
+Art. 35
+The regulations and norms issued by the competent authority shall be preceded by public consultation and hearings, as well as by regulatory impact analyses, under the terms of arts. 6 to 12 of Law No. 13,848, of June 25, 2019, as applicable.
+
+Section II Administrative Sanctions
+
+Art. 36
+Artificial intelligence agents, due to infractions committed against the norms provided for in this Law, are subject to the following administrative sanctions applicable by the competent authority:
+
+I - warning;
+
+II - simple fine, limited, in total, to R$ 50,000,000.00 (fifty million reais) per infraction, being, in the case of a private legal entity, up to 2% (two percent) of its revenue, of its group or conglomerate in Brazil in its last fiscal year, excluding taxes;
+
+III - publicizing the infraction after being duly investigated and confirmed its occurrence;
+
+IV - prohibition or restriction to participate in the regulatory sandbox regime provided for in this Law, for up to five years;
+
+V - partial or total, temporary or definitive suspension of the development, supply or operation of the artificial intelligence system; and
+
+VI - prohibition of processing certain databases.
+
+§ 1 The sanctions shall be applied after an administrative procedure that allows the opportunity for full defense, in a gradual manner, isolated or cumulatively, according to the peculiarities of the specific case and considering the following parameters and criteria:
+
+I - the severity and nature of the infractions and the possible violation of rights;
+
+II - the good faith of the offender;
+
+III - the advantage obtained or intended by the offender;
+
+IV - the economic condition of the offender;
+
+V - recidivism;
+
+VI - the degree of damage;
+
+VII - the cooperation of the offender;
+
+VIII - the repeated and demonstrated adoption of mechanisms and internal procedures capable of minimizing risks, including the algorithmic impact analysis and effective implementation of a code of ethics;
+
+IX - the adoption of a policy of best practices and governance;
+
+X - the prompt adoption of corrective measures;
+
+XI - the proportionality between the severity of the fault and the intensity of the sanction; and
+
+XII - the cumulation with other administrative sanctions eventually already definitively applied for the same illicit act.
+
+§ 2 Before or during the administrative procedure of § 1, the competent authority may adopt preventive measures, including a comminatory fine, observing the total limit referred to in item II of the caput, when there is evidence or well-founded fear that the artificial intelligence agent:
+I - causes or may cause irreparable or difficult to repair damage; or
+II - renders the final result of the process ineffective.
+
+§ 3 The provisions of this article do not replace the application of administrative, civil or criminal sanctions defined in Law No. 8,078, of September 11, 1990, Law No. 13,709, of August 14, 2018, and specific legislation.
+
+§ 4 In the case of development, supply or use of excessive risk artificial intelligence systems, there shall be, at a minimum, application of a fine and, in the case of a legal entity, partial or total, provisional or definitive suspension of its activities.
+
+§ 5 The application of the sanctions provided for in this article does not exclude, under any circumstances, the obligation to fully repair the damage caused, under the terms of art. 27.
+
+Art. 37
+The competent authority shall define, through its own regulation, the procedure for investigating and criteria for applying administrative sanctions for infractions of this Law, which shall be subject to public consultation, without prejudice to the provisions of Decree-Law No. 4,657, of September 4, 1942, Law No. 9,784, of January 29, 1999, and other pertinent legal provisions.
+
+Sole paragraph. The methodologies referred to in the caput of this article shall be previously published and shall objectively present the forms and dosimetry of the sanctions, which shall contain a detailed justification of all their elements, demonstrating compliance with the criteria set forth in this Law.
+
+Section III Measures to foster innovation
+
+Art. 38
+The competent authority may authorize the operation of an experimental regulatory environment for innovation in artificial intelligence (regulatory sandbox) for entities that request it and meet the requirements specified by this Law and in regulation.
+
+Art. 39
+Requests for authorization for regulatory sandboxes shall be submitted to the competent body through a project whose characteristics include, among others:
+
+I - innovation in the use of technology or in the alternative use of existing technologies;
+
+II - improvements in terms of efficiency gains, cost reduction, increased security, risk reduction, benefits to society and consumers, among others;
+
+III - discontinuity plan, with provision for measures to be taken to ensure the operational viability of the project once the sandbox regulatory authorization period has ended.
+
+Art. 40
+The competent authority shall issue regulations to establish the procedures for requesting and authorizing the operation of regulatory sandboxes, and may limit or interrupt their operation, as well as issue recommendations, taking into consideration, among other aspects, the preservation of fundamental rights, the rights of potentially affected consumers and the security and protection of personal data that are subject to processing.
+
+Art. 41
+Participants in the artificial intelligence regulation testing environment shall continue to be liable, under the terms of the applicable legislation on liability, for any damage inflicted on third parties as a result of experimentation that occurs in the testing environment.
+
+Art. 42
+The automated use of works, such as extraction, reproduction, storage and transformation, in text and data mining processes in artificial intelligence systems, in activities carried out by research organizations and institutions, journalism and by museums, archives and libraries, does not constitute a violation of copyright, provided that:
+
+I - it does not have as its objective the simple reproduction, display or dissemination of the original work itself;
+
+II - the use occurs to the extent necessary for the objective to be achieved;
+
+III - it does not unjustifiably harm the economic interests of the owners; and
+
+IV - it does not compete with the normal exploitation of the works.
+
+§ 1 Any reproductions of works for the data mining activity shall be kept under strict security conditions, and only for the time necessary to carry out the activity or for the specific purpose of verifying the results of scientific research.
+
+§ 2 The provisions of the caput apply to the activity of text and data mining for other analytical activities in artificial intelligence systems, in compliance with the conditions of the items of the caput and § 1, provided that the activities do not communicate the work to the public and that access to the works has been obtained legitimately.
+
+§ 3 The activity of text and data mining that involves personal data shall be subject to the provisions of Law No. 13,709, of August 14, 2018 (General Personal Data Protection Law).
+
+Section IV Public artificial intelligence database
+
+Art. 43
+It is the responsibility of the competent authority to create and maintain a high-risk artificial intelligence database, accessible to the public, containing the public documents of the impact assessments, respecting commercial and industrial secrets, under the terms of the regulation.
+
+CHAPTER IX FINAL PROVISIONS
+
+Art. 44
+The rights and principles expressed in this Law do not exclude others provided for in the national legal system or in international treaties to which the Federative Republic of Brazil is a party.
+
+Art. 45
+This Law enters into force one year after its publication.
+
+JUSTIFICATION
+The development and popularization of artificial intelligence technologies have revolutionized various areas of human activity. Furthermore, predictions indicate that artificial intelligence (AI) will cause even more profound economic and social changes in the near future.
+
+Recognizing the relevance of this issue, some legislative proposals were recently presented, both in the Federal Senate and in the Chamber of Deputies, with the objective of establishing guidelines for the development and application of artificial intelligence systems in Brazil.
+
+In particular, the following stand out: Bill (PL) No. 5,051, of 2019, authored by Senator Styvenson Valentim, which establishes the principles for the use of Artificial Intelligence in Brazil; PL No. 21, of 2020, by Federal Deputy Eduardo Bismarck, which establishes foundations, principles and guidelines for the development and application of artificial intelligence in Brazil, and provides other measures, and which was approved by the Chamber of Deputies; and PL No. 872, of 2021, by Senator Veneziano Vital do Rêgo, which provides for the use of Artificial Intelligence.
+
+On February 3, 2022, these three projects began to be processed jointly in the Federal Senate and, subsequently, on February 17 of the same year, through Act No. 4 of the President of the Federal Senate, of 2022, of my authorship, at the suggestion of Senator Eduardo Gomes, bearing in mind the elaboration of a legal text with the most advanced technicality, the Commission of Jurists was instituted to subsidize the elaboration of a draft substitute for them.
+
+Composed of renowned jurists, the commission had as members great specialists in the fields of civil law and digital law, whom I thank for their time, dedication and sharing of the final text, which I now present. The collegiate was composed of: Minister of the Superior Court of Justice, Ricardo Villas Bôas Cueva (President); Laura Schertel Ferreira Mendes (Rapporteur); Ana de Oliveira Frazão; Bruno Ricardo Bioni; Danilo Cesar Maganhoto Doneda (in memoriam); Fabrício de Mota Alves; Miriam Wimmer; Wederson Advincula Siqueira; Claudia Lima Marques; Juliano Souza de Albuquerque Maranhão; Thiago Luís Santos Sombra; Georges Abboud; Frederico Quadros D'Almeida; Victor Marcel Pinheiro; Estela Aranha; Clara Iglesias Keller; Mariana Giorgetti Valente and Filipe José Medon Affonso. I could not fail to thank, furthermore, the technical staff of the Federal Senate, especially the Legislative Consultancy and the servers who provided support to the collegiate: Reinilson Prado dos Santos; Renata Felix Perez and Donaldo Portela Rodrigues.
+
+The aforementioned Commission held a series of public hearings, in addition to an international seminar, listening to more than seventy specialists on the subject, representatives of various segments: organized civil society, government, academia and the private sector. It also opened the opportunity for the participation of any interested parties, through written contributions, having received 102 manifestations, individually analyzed and organized according to their proposals. Finally, the Commission requested the Legislative Consultancy of the Federal Senate to study the regulation of artificial intelligence in more than thirty member countries of the Organization for Economic Cooperation and Development (OECD), which allowed analyzing the global regulatory panorama of the matter.
+
+Based on all this extensive material, on December 6, 2022, the Commission of Jurists presented its final report, together with a draft bill for the regulation of artificial intelligence.
+
+In this context, the present initiative is based on the conclusions of the aforementioned Commission and seeks to reconcile, in legal discipline, the protection of fundamental rights and freedoms, the valorization of work and human dignity, and the technological innovation represented by artificial intelligence.
+
+The project has a double objective. On the one hand, it establishes rights for the protection of the most vulnerable link in question, the natural person who is already daily impacted by artificial intelligence systems, from the recommendation of content and targeting of advertising on the Internet to their analysis of eligibility for credit and for certain public policies. On the other hand, by providing governance tools and an institutional arrangement for inspection and supervision, it creates conditions of predictability about its interpretation and, ultimately, legal certainty for innovation and technological development.
+
+The proposition starts from the premise, therefore, that there is no trade-off between the protection of fundamental rights and freedoms, the valorization of work and human dignity in face of the economic order and the creation of new value chains. On the contrary, its foundations and its principled basis seek such harmonization, under the terms of the Federal Constitution.
+
+Structurally, the proposition establishes a risk-based regulation and a regulatory modeling based on rights. It also presents governance instruments for an adequate accountability of the economic agents who develop and use artificial intelligence, encouraging good faith action and effective risk management.
+
+The proposed text initially defines general foundations and principles for the development and use of artificial intelligence systems, which guide all other specific provisions.
+
+It dedicates a specific chapter to the protection of the rights of persons affected by artificial intelligence systems, in which it: guarantees appropriate access to information and adequate understanding of decisions made by these systems; establishes and regulates the right to contest automated decisions and to request human intervention; and disciplines the right to non-discrimination and the correction of discriminatory biases.
+
+In addition to establishing basic and transversal rights for any and all contexts in which there is interaction between machine and human being, such as information and transparency, it intensifies such obligation when the AI system produces relevant legal effects or significantly impacts the subjects (ex: right of contestation and human intervention). Thus, the weight of regulation is calibrated according to the potential risks of the context of application of the technology. Symmetrically to the rights, certain general and specific governance measures were established for, respectively, artificial intelligence systems with any degree of risk and for those categorized as high risk.
+
+When addressing the risk categorization of artificial intelligence, the proposition establishes the requirement for preliminary assessment; defines prohibited applications, due to excessive risk; and defines high-risk applications, subject to stricter control standards.
+
+Regarding the governance of systems, the project lists the measures to be adopted to ensure transparency and mitigation of biases; establishes additional measures for high-risk systems and for governmental artificial intelligence systems; and regulates the procedure for algorithmic impact assessment.
+
+The text also addresses the rules of civil liability involving artificial intelligence systems, including defining the hypotheses in which those responsible for their development and use will not be held liable.
+
+In accordance with the gradation of norms according to the risk posed by the system - which permeates the entire draft of the proposition - an important differentiation is made in the chapter on civil liability: when dealing with a high-risk or excessive-risk AI system, the provider or operator will be objectively liable for the damages caused, to the extent of each one's participation in the damage. And when dealing with AI that is not high risk, the fault of the agent causing the damage will be presumed, applying the reversal of the burden of proof in favor of the victim.
+
+The project also reinforces protection against discrimination, through various instruments, such as the right to information and understanding, the right to contestation, and a specific right to correct direct, indirect, illegal or abusive discriminatory biases, in addition to preventive governance measures. In addition to adopting definitions of direct and indirect discrimination - thus incorporating definitions from the Inter-American Convention against Racism, promulgated in 2022 - the text has as a point of attention (hyper)vulnerable groups both for the qualification of what constitutes a high-risk system and for the reinforcement of certain rights.
+
+When providing for the inspection of artificial intelligence, the project determines that the Executive Branch designates an authority to ensure compliance with the established norms and specifies its competencies and establishes administrative sanctions.
+
+Measures to foster innovation in artificial intelligence are also provided for, with emphasis on the experimental regulatory environment (regulatory sandbox).
+
+With this, based on a mixed approach of ex-ante and ex-post provisions, the proposition outlines criteria for the purpose of evaluating and triggering what types of actions should be taken to mitigate the risks at stake, also involving the interested sectors in the regulatory process, through co-regulation.
+
+Still, in line with international law, it sets guidelines to conform copyright and intellectual property rights to the notion that data should be a common good and, therefore, circulate for machine training and the development of artificial intelligence systems - without, however, implying harm to the holders of such rights. There are, with this, developments on how regulation can foster innovation.
+
+In view of the above, and aware of the challenge that the matter represents, we count on the collaboration of our noble colleagues for the improvement of this proposal.
+
+Senate Sessions, Senator Rodrigo Pacheco 

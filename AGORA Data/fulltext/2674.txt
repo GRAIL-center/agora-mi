@@ -1,0 +1,103 @@
+CHAMBEROFDEPUTIES 
+
+Establishes foundations, principles, and guidelines for artificial intelligence development and application in Brazil and establishes other provisions.
+
+THE NATIONAL CONGRESS decrees:
+
+Art. 1 This Law establishes the foundations and principles for artificial intelligence development and application in Brazil and guidelines for the promotion and performance of public authorities in this area.
+
+Art. 2 For the purposes of this Law, an artificial intelligence system is defined as a system based on a computational process that, from a set of goals defined by humans, can, through data and information processing, learn to perceive and interpret the external environment, as well as interact with it, making predictions, recommendations, categorizations, or decisions, and utilizing, but not limited to, techniques such as:
+I	– machine learning systems, including supervised, unsupervised, and reinforcement learning;
+II	– systems based on knowledge or logic;
+III	– statistical approaches, Bayesian inference, research and optimization methods.
+
+Sole Paragraph. This Law does not apply to the automation processes exclusively guided by predefined programming parameters that do not include the system’s ability to learn to perceive and interpret the external environment and interact with it, based on known actions and received information.
+
+Art. 3 Artificial intelligence implementation in Brazil is aimed at scientific and technological development, as well as:
+I	– the promotion of sustainable and inclusive economic development and the well-being of society;
+II	– the increase in Brazilian competitiveness and productivity;
+III	– Brazil’s competitive insertion in global value chains;
+IV	– improvement in the provision of public services and the implementation of public policies;
+V	– research and development promotion to stimulate innovation in the productive sectors; and
+VI	–protection and preservation of the environment.
+
+Art. 4 The foundations for artificial intelligence development and implementation in Brazil are:
+I	– scientific and technological development, as well as innovation;
+II	– free enterprise and free competition;
+III	– respect for ethics, human rights, and democratic values;
+IV –	the	free	expression	of	thought and
+intellectual,	artistic,	scientific,	and	communication
+freedom;
+V	– non-discrimination, plurality, respect for regional diversities, inclusion, and respect for citizens’ fundamental rights and guarantees;
+VI	– recognition of its digital, cross sectional, and dynamic nature;
+VII	– the encouragement of self-regulation, through the adoption of codes of conduct and guides to good practices, observing the principles provided for in art. 5 of this Law, and good global practices;
+VIII	– the security, and the protection of privacy and personal data;
+IX	– information security; X – information access;
+XI	– national defense, state security, and national sovereignty;
+XII	– the freedom of business models, as long as it
+does not conflict with the provisions outlined in this Law;
+XIII	– the preservation of the stability, security, resilience, and functionality of artificial intelligence systems,	through	technical	measures	compatible	with international standards and the encouragement of the use of good practices;
+XIV	– the protection of free competition and against abusive market practices, under Law No. 12,529, of November 30, 2011; and
+XV	– alignment with Laws No. 13.709, of August 14, 2018 (General Personal Data Protection Law), 12.965, of April
+23, 2014, 12.529, of November 30, 2011, 8078, of September 11, 1990 (Consumer Protection Code), and 12.527 of November 18, 2011.
+Sole Paragraph. The codes of conduct and good practice guides mentioned in item VII of the head provision of this article may serve as indicative elements of compliance.
+
+Art. 5 The principles for artificial intelligence development and application in Brazil are:
+I	– beneficial purpose: search for beneficial results for humanity through artificial intelligencesystems;
+II	–human centrality: respect for human dignity, privacy, personal data, and fundamental rights protection, when the system deals with issues related to human beings;
+III	–	non-discrimination:	mitigation	of	the possibility of using the systems for discriminatory, illegal, or abusive purposes;
+IV	– search for neutrality: recommendations for agents acting in the development and operation chain of artificial intelligence systems to identify and mitigate biases contrary to the provisions of current legislation;
+V	– transparency: the people's right to be informed in a clear, accessible, and accurate way about the use of artificial intelligence solutions, unless otherwise provided by law and observing commercial and industrial secrets, in the following cases:
+a)	on the fact that they are communicating directly with artificial intelligence systems, such as through conversation robots for personalized online service (chatbot), when using these systems;
+b)	on the identity of the natural person, when one operates the system autonomously and individually, or of the legal entity responsible for the operation of artificial intelligence systems;
+c)	on general criteria that guide the functioning of the artificial intelligence system, ensuring thatcommercial
+and industrial secrets are safeguarded, when there is a potential for a relevant risk to fundamental rights;
+VI	– security and prevention: use of technical, organizational, and administrative measures, considering the usage of reasonable and available means at the time, compatible with best practices, international standards, and economic feasibility, aimed at allowing the management and mitigation of risks arising from the operation of artificial intelligence systems throughout their life cycle and their continuous operation;
+VII	– responsible innovation: guarantee of adoption of the provisions of this Law by the agents that work in the development and operation chain of artificial intelligence systems that are in usage, documenting their internal management process and taking responsibility for the results of the functioning of these systems, within the limits of their respective participation, context, and available technologies;
+VIII	– data availability: non-infringement of copyright by the usage of data, databases, and texts protected by it to train artificial intelligence systems, provided that there is no impact on the normal exploitation of the work by its owner.
+
+Art. 6 When regulating the artificial intelligence implementation, the State shall observe the following guidelines:
+I	– subsidiary intervention: specific rules shall be implemented for the usage of artificial intelligence systems only when absolutely necessary to guarantee compliance with
+the provisions of current legislation;
+II	– sectoral action: the State shall act through the competent body or entity, considering the specific context and regulatory framework of each sector;
+III	– risk-based management: the development and usage of artificial intelligence systems shall consider the specific risks and definitions of the need to regulate artificial intelligence systems, and the respective degree of intervention shall always be proportional to the specific risks offered by each system and the probability of occurrence of these risks, always evaluated in comparison with:
+a)	the potential social and financial benefits of the artificial intelligence system; and
+b)	the risks presented by similar systems that do not involve artificial intelligence, according to item V of this head provision;
+IV	– social and interdisciplinary participation: the adoption of norms that impact the development and operation of artificial intelligence systems will be evidence-based and preceded by public consultation, preferably carried out via the Internet and with broad prior disclosure, to enable the participation of all interested stakeholders and the various specialties involved;
+V	– regulatory impact analysis: regulatory impact analysis will precede the adoption of standards that impact the development and operation of artificial intelligence systems analysis, according to Decree No. 10,411 of June 30,
+2020, and Law No. 13,874, of September 20, 2019; and
+VI	–liability: unless otherwise provided for in Law, the rules on the liability of agents acting in the development and operation chain of artificial intelligence systems shall be based on subjective liability and consider the effective participation of these agents, the specific damages that are to be avoided or remedied, and how these agents can demonstrate compliance with applicable regulations through reasonable efforts consistent with international standards and best market practices.
+Paragraph 1. In the risk-based management referred to in item III of the head provision of this article, the government shall, in cases of low risk, encourage responsible innovation with flexible regulatory techniques.
+Paragraph 2. In the risk-based management referred to in item III of the head provision of this article, the government, in specific cases in which high risk is found, may, within the scope of its competence, request information on security measures and prevention listed in item VI of the head provision of art. 5 of this Law, and respective safeguards, under the terms and within the limits of transparency established by this Law, observing commercial and industrial secrets.
+Paragraph 3. When the usage of the artificial intelligence system involves consumer relations, the agent will respond regardless of guilt for repairing the damages caused to consumers, within the limit of their effective participation in the harmful event, under the terms of
+Law No. 8.078 of September 11, 1990 (Consumer Protection
+Code).
+Paragraph 4. Legal entities governed by public law and those governed by private law that provide public services shall be liable for damages that their agents, in this capacity, cause to third parties, ensuring the right of recourse against the person responsible in cases of intent or fault.
+
+Art. 7 It is part of the guidelines for the performance of the Union, the States, the Federal District, and the Municipalities concerning the usage and promotion of artificial intelligence in Brazil:
+I – the promotion of trust in artificial intelligence technologies, with the dissemination of information and knowledge about their ethical and responsible uses;
+II – incentives to investment intelligence research and development;	in artificial
+III –	the	promotion	of	technological
+interoperability of artificial intelligence systems used by the public authorities, to allow for exchange of information and speed of proceedings;
+IV	– incentive for the development and adoption of artificial intelligence systems in the public and private sectors;
+V	– incentive for capacity-building of individuals for the restructuring of the job market;
+VI	– the stimulus to innovative pedagogical practices, with a multidisciplinary vision and emphasis on the relevance of re-signification of teacher training
+processes to deal with the challenges arising from the insertion of artificial intelligence as a pedagogical tool in the classroom;
+VII	– the stimulus to the adoption of regulatory instruments that promote innovation, such as experimental regulatory environments (regulatory sandboxes), regulatory impact analyzes, and sectoral self-regulation;
+VIII	– the stimulus to the creation of transparent and	collaborative	governance	mechanisms,	with	the collaboration of government officials, the business sector, civil society, and the scientific community; and
+IX	– promotion of international cooperation by encouraging the sharing of knowledge about artificial intelligence systems and the negotiation of treaties, agreements, and global technical standards that facilitate interoperability between systems and the accordance of legislation.
+Sole Paragraph. For the purposes of this article, the federal government will promote strategic management and guidelines regarding the transparent and ethical usage of artificial intelligence systems in the public sector, according to strategic public policies for the sector.
+
+Art. 8 In accordance with regulations of the Federal Executive Branch, the guidelines addressed by arts. 6 and 7 of this Law shall be applied by sectoral bodies and entities with technical competence in the matter, which shall:
+I	– monitor the risk management of artificial intelligence systems, as it relates to concrete cases of risk, evaluating the risks of the implementation and the mitigation measures in its area of competence;
+
+II	–	establish	rights,	duties,	and responsibilities; and
+III	– recognize self-regulatory institutions.
+Art. 9 For the purposes of this Law, artificial intelligence systems are technological representations derived from the field of information technology and computer science, and the Union is exclusively responsible for legislating and regulating the matter for the promotion of legal uniformity throughout the national territory, observing the provisions in item IV of the head provision of art. 22 of the Federal
+Constitution.
+Art. 10. This Law enters into force after 90 (ninety) days of its official publication.
+CHAMBER OF DEPUTIES, September 30, 2021.
+ARTHUR LIRA
+President
+CHAMBEROFDEPUTIES
+ 

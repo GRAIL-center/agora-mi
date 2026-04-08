@@ -15,7 +15,6 @@ build/
 dist/
 *.egg-info/
 
-AGORA Data/
 artifacts/
 outputs/
 results/

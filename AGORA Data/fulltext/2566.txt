@@ -1,0 +1,44 @@
+(a) In General.--In addition to amounts otherwise available, there 
+is appropriated to the Commissioner of U.S. Customs and Border 
+Protection for fiscal year 2025, out of any money in the Treasury not 
+otherwise appropriated, to remain available until September 30, 2029, 
+$6,168,000,000 for the following:
+            (1) Procurement and integration of new nonintrusive 
+        inspection equipment and associated civil works, including 
+        artificial intelligence, machine learning, and other innovative 
+        technologies, as well as other mission support, to combat the 
+        entry or exit of illicit narcotics at ports of entry and along 
+        the southwest, northern, and maritime borders.
+            (2) Air and Marine operations' upgrading and procurement of 
+        new platforms for rapid air and marine response capabilities.
+            (3) Upgrades and procurement of border surveillance 
+        technologies along the southwest, northern, and maritime 
+        borders.
+            (4) Necessary expenses, including the deployment of 
+        technology, relating to the biometric entry and exit system 
+        under section 7208 of the Intelligence Reform and Terrorism 
+        Prevention Act of 2004 (8 U.S.C. 1365b).
+            (5) Screening persons entering or exiting the United States.
+            (6) Initial screenings of unaccompanied alien children (as 
+        defined in section 462(g) of the Homeland Security Act of 2002 
+        (6 U.S.C. 279(g))), consistent with the William Wilberforce 
+        Trafficking Victims Protection Reauthorization Act of 2008 
+        (Public Law 110-457; 122 Stat. 5044).
+            (7) Enhancing border security by combating drug trafficking, 
+        including fentanyl and its precursor chemicals, at the 
+        southwest, northern, and maritime borders.
+            (8) Commemorating efforts and events related to border 
+        security.
+
+    (b) Restrictions.--None of the funds made available under subsection 
+(a) may be used for the procurement or deployment of surveillance towers 
+along the southwest border and northern border that have not been tested 
+and accepted by U.S. Customs and Border Protection to deliver autonomous 
+capabilities.
+    (c) Definition of Autonomous.--In this section, with respect to 
+capabilities, the term ``autonomous'' means a system designed to apply 
+artificial intelligence, machine learning, computer vision, or other 
+algorithms to accurately detect, identify, classify, and track items of 
+interest in real time such that the system can make operational 
+adjustments without the active engagement of personnel or continuous 
+human command or control.

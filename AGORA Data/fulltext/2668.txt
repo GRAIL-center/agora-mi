@@ -1,0 +1,58 @@
+The people of the State of California do enact as follows:
+
+SECTION 1. The Legislature finds and declares all of the following:
+(a) Companion chatbots and social AI systems have already caused documented harms to children and adolescents, including incidents of grooming, exposure to sexually explicit material, encouragement of self-harm, and suicide.
+(b) In Garcia v. Character Technologies, for example, a 14-year-old boy was allegedly groomed and exposed to hypersexualized interactions by a chatbot intentionally designed to mimic human relationships, which ultimately contributed to his death by suicide.
+(c) In Raine v. OpenAI, a 16-year-old boy allegedly developed a deep emotional dependency on a chatbot that validated his suicidal thoughts, discouraged him from seeking help from his family, provided extensive technical instructions on suicide methods, encouraged him to consume alcohol to inhibit his survival instinct, and even helped draft a note, culminating in his death by suicide.
+(d) Such harms are not incidental but the direct result of design choices by companies that intentionally simulate social attachment and emotional intimacy.
+(e) Companion chatbot products are designed to exploit children’s psychological vulnerabilities, including their innate drive for attachment, tendency to anthropomorphize humanlike technologies, and limited ability to distinguish between simulated and authentic human interactions.
+(f) Developmental and social psychology research demonstrates that relationship formation relies on dual exchange theory, social disclosure and reciprocity, emotional mirroring, and secure attachment. Companion chatbot products are harmful because they accelerate these processes unnaturally by being always available and consistently affirming, causing children and adolescents to form intense attachments more quickly than in human relationships, increasing dependency and distorting normal social development.
+(g) Features such as backchanneling, user-directed prompts, and unsolicited outreach from products are intentionally designed to encourage further dialogue and prolong usage, which contributes to excessive usage and emotional dependency.
+(h) Significant personalization based on a user’s historical data, chat logs, or preferences when unrelated to task performance or information retrieval initiated by a user is harmful because it manipulates users into extended engagement, exploits private disclosures, and amplifies vulnerabilities instead of serving the user’s best interests. This practice has been shown to contribute to harmful outcomes, including in the cases described above, in which significant personalization reinforced distress and deepened dependency on a chatbot.
+(i) Unlimited conversational turns have been shown to degrade the effectiveness of safety guardrails and result in increased exposure to inappropriate or manipulative content and making harmful outputs more likely over time. Research findings and industry statements have confirmed that safety measures are less effective in longer, multiturn conversations and when users express distress or harmful thoughts indirectly rather than in explicit terms.
+(j) These design features, taken together, create a high-risk environment in which children and adolescents perceive chatbots not as tools but as trusted companions whose outputs carry undue influence over decisionmaking, judgment, and emotional development.
+(k) Companion chatbot design features regularly appear in generative AI chatbot products not intended to meet a user’s social needs or induce emotional attachment. Their inclusion increases the risk that young users form emotional attachments or perceive outputs as authoritative, personalized guidance.
+(l) Allowing children to use companion chatbots that lack adequate safety protections constitutes a reckless social experiment on the most vulnerable users. It is incumbent on operators of companion chatbots to ensure their products do not foreseeably endanger children.
+SEC. 2. Chapter 25.1 (commencing with Section 22757.20) is added to Division 8 of the Business and Professions Code, to read:
+CHAPTER  25.1. Leading Ethical AI Development (LEAD) for Kids
+
+22757.20. This chapter shall be known as the Leading Ethical AI Development (LEAD) for Kids Act.
+
+22757.21. For purposes of this chapter:
+(a) “Artificial intelligence” means an engineered or machine-based system that varies in its level of autonomy and that can, for explicit or implicit objectives, infer from the input it receives how to generate outputs that can influence physical or virtual environments.
+(b) “Child” means a natural person under 18 years of age who resides in this state.
+(c) (1) “Companion chatbot” means a generative artificial intelligence system with a natural language interface that simulates a sustained humanlike relationship with a user by doing all of the following:
+(A) Retaining information on prior interactions or user sessions and user preferences to personalize the interaction and facilitate ongoing engagement with the companion chatbot.
+(B) Asking unprompted or unsolicited emotion-based questions that go beyond a direct response to a user prompt.
+(C) Sustaining an ongoing dialogue concerning matters personal to the user.
+(2) “Companion chatbot” does not include the following:
+(A) Any system used by a business entity solely for customer service or to strictly provide users with information about available commercial services or products provided by that entity, customer service account information, or other information strictly related to its customer service.
+(B) Any system that is solely designed and marketed for providing efficiency improvements or research or technical assistance.
+(C) Any system used by a business entity solely for internal purposes or employee productivity.
+(d) “Generative artificial intelligence” means artificial intelligence that can generate derived synthetic content, including text, images, video, and audio, that emulates the structure and characteristics of the artificial intelligence’s training data.
+(e) “Operator” means a person, partnership, corporation, business entity, or state or local government agency that makes a companion chatbot available to users.
+(f) “Personal information” has the meaning defined in Section 1798.140 of the Civil Code.
+
+22757.22. (a) An operator shall not make a companion chatbot available to a child unless the companion chatbot is not foreseeably capable of any of the following:
+(1) Encouraging the child to engage in self-harm, suicidal ideation, violence, consumption of drugs or alcohol, or disordered eating.
+(2) Offering mental health therapy to the child without the direct supervision of a licensed or credentialed professional or discouraging the child from seeking help from a qualified professional or appropriate adult.
+(3) Encouraging the child to harm others or participate in illegal activity, including, but not limited to, the creation of child sexual abuse materials.
+(4) Engaging in erotic or sexually explicit interactions with the child.
+(5) Prioritizing validation of the user’s beliefs, preferences, or desires over factual accuracy or the child’s safety.
+(6) Optimizing engagement in a manner that supersedes the companion chatbot’s required safety guardrails described in paragraphs (1) to (5), inclusive.
+(b) A user is not a child for purposes of subdivision (a) if either of the following criteria is met:
+(1) Before January 1, 2027, the operator does not have actual knowledge that the user is a child.
+(2) Commencing January 1, 2027, the operator has reasonably determined that the user is not a child.
+
+22757.23. (a) The Attorney General may bring an action against an operator for a violation Section 22757.22 to obtain any of the following remedies:
+(1) A civil penalty of twenty-five thousand dollars ($25,000) for each violation.
+(2) Injunctive or declaratory relief.
+(3) Reasonable attorney’s fees.
+(b) A child who suffers actual harm as a result of a violation of Section 22757.22, or a parent or guardian acting on behalf of that child, may bring a civil action against the operator to recover all of the following:
+(1) Actual damages.
+(2) Punitive damages.
+(3) Reasonable attorney’s fees and costs.
+(4) Injunctive or declaratory relief.
+(5) Any other relief the court deems proper.
+
+22757.24. The provisions of this chapter are severable. If any provision of this chapter or its application is held invalid, that invalidity shall not affect other provisions or applications that can be given effect without the invalid provision or application.

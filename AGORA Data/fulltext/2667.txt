@@ -1,0 +1,64 @@
+The people of the State of California do enact as follows:
+
+SECTION 1. Title 15.3 (commencing with Section 3115) is added to Part 4 of Division 3 of the Civil Code, to read:
+TITLE 15.3. Copyrighted Materials Used for Artificial Intelligence Training
+
+3115. For the purposes of this title, the following definitions apply:
+(a) “Approximate content fingerprint” or “fingerprint” means an abstract representation of digital content that encodes distinctive features of the content and that is all of the following:
+(1) Distinct to the digital content being represented.
+(2) Robust to minor variations in the original digital content.
+(3) Incapable of being used to reconstruct the original digital content.
+(4) Capable of being used to readily identify digital content in a dataset.
+(b) “Artificial intelligence” or “AI” means an engineered or machine-based system that varies in its level of autonomy and that can, for explicit or implicit objectives, infer from the input it receives how to generate outputs that can influence physical or virtual environments.
+(c) “Covered material” means a material registered, preregistered, or indexed with the United States Copyright Office pursuant to Title 17 of the United States Code, Public Law 94-553 (17 U.S.C. Sec. 101 et seq.).
+(d) “Rights owner” means either of the following:
+(1) The owner of a copyright enforceable under the copyright laws of the United States pursuant to Title 17 of the United States Code, Public Law 94-553 (17 U.S.C. Sec. 101 et seq.).
+(2) The owner of a sound recording fixed before February 15, 1972, enforceable under Title 17 of the United States Code (17 U.S.C. Sec. 1401).
+(e) “Developer” means a business, person, partnership, corporation, or other entity that designs, codes, produces, or substantially modifies a GenAI model and that does either of the following:
+(1) Uses the GenAI model commercially in California.
+(2) Makes the GenAI model available to Californians for use.
+(f) “Generative artificial intelligence” or “GenAI” means an artificial intelligence system that can generate derived synthetic content, including text, images, video, and audio, that emulates the structure and characteristics of the system’s training data.
+
+3116. A developer of a GenAI model shall do all of the following:
+(a) (1) Document any covered materials that the developer knows were used by the developer to train the GenAI model.
+(2) Make reasonable efforts to identify and document any other covered materials that were used by the developer to train the GenAI model.
+(3) Document the rights owner of each covered material documented pursuant to this subdivision.
+(b) (1) Make available information on the developer’s internet website sufficient to enable a natural person to generate a fingerprint that is both of the following:
+(A) Compatible with any covered materials used by the developer to train the GenAI model.
+(B) Generated according to widely accepted industry standards.
+(2) The obligation to make available information pursuant to this subdivision may be satisfied by directing rights owners to an external tool that is free to use, nondiscriminatory, and reasonably accessible.
+(c) (1) Make available a mechanism on the developer’s internet website allowing a rights owner to submit a request for information about the developer’s use of covered materials.
+(2) The mechanism made available pursuant to this subdivision shall allow a rights owner to provide the developer with all of the following:
+(A) Documentation sufficient to establish the rights owner’s identity.
+(B) The physical or electronic signature of the rights owner or a third party authorized to act on behalf of the rights owner.
+(C) Registration, preregistration, or index numbers and fingerprints for one or more covered materials.
+(d) Document any requests received using the mechanism established pursuant to subdivision (c).
+(e) Retain the documentation required under subdivisions (a) and (d) for as long as the developer uses the GenAI model commercially in California or makes the GenAI model available to Californians for use, whichever is longer, plus five years.
+
+3117. (a) Within 30 days of receiving a request for information from a rights owner using the mechanism established pursuant to subdivision (c) of Section 3116, a developer shall do both of the following:
+(1) (A) For each fingerprint provided by the rights owner, assess whether the covered material represented by the fingerprint is likely to be present in the developer’s dataset.
+(B) A developer shall not be required to assess a fingerprint that was not generated according to widely accepted industry standards.
+(2) Provide the rights owner with the following information:
+(A) (i) A list of covered materials held by the rights owner that the developer documented pursuant to subdivision (a) of Section 3116.
+(ii) A rights owner shall not be required to provide a registration number, preregistration number, index number, or fingerprint to a developer in order to receive the information required under this subparagraph.
+(B) A list of covered materials held by the rights owner that a fingerprint assessment suggests are likely to be present in the developer’s dataset pursuant to paragraph (1).
+(b) A developer’s collection, use, retention, and sharing of information from a rights owner pursuant to this section shall be reasonably necessary and proportionate to achieve the purposes for which the information was collected and processed, or for another disclosed purpose that is compatible with the context in which the information was collected, and not further processed in a manner that is incompatible with those purposes.
+(c) Each day after the 30-day period described in subdivision (a) that a developer fails to provide a rights owner with the information required under this title constitutes a discrete violation.
+(d) A developer shall not be required to respond to a request that is either of the following:
+(1) Not accompanied by documentation sufficient to establish the rights owner’s identity.
+(2) Made in violation of Section 3118.
+
+3118. (a) A rights owner, or any person acting on their behalf, shall not submit more than one request per calendar quarter to the same developer concerning the same GenAI model, unless the subsequent request includes material new information not available to the rights owner at the time of the prior request.
+(b) A request submitted pursuant to this section may pertain to multiple covered materials.
+
+3119. A rights owner that has complied in good faith with Section 3118 and that is not provided with the information as required by this title may bring a civil action against the developer for any of the following:
+(a) One thousand dollars ($1,000) per violation or actual damages, whichever is greater.
+(b) Injunctive or declaratory relief.
+(c) Reasonable attorney’s costs and fees.
+(d) Any other relief the court deems appropriate.
+
+3119.5. This title shall not apply to a GenAI model that is any of the following:
+(a) Trained exclusively using data the developer makes publicly available at no cost to users of the developer’s internet website.
+(b) Developed and used exclusively for noncommercial academic or governmental research.
+(c) Not trained using covered materials.
+(d) Trained exclusively using covered materials for which the developer is the rights owner.

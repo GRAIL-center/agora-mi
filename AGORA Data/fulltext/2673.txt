@@ -1,0 +1,325 @@
+Stage 1
+
+As outlined above, the idea of the first stage of the approach is to introduce specific tools that will help both business and the state prepare for the implementation of future regulation. The
+introduction and use of such tools will have a positive impact on the level of human rights
+protection against the risks posed by AI and its misuse. We propose to take a closer look at each of
+the tools and then move on to the benefits that the use of such tools will have for each of the three
+key stakeholders: citizens, businesses, and the state.
+
+Methodology for Assessing the Impact of AI on Human Rights
+
+A key tool, which is also necessary for the other two – the regulatory sandbox and the legal
+advisory platform – is the development and/or adaptation of a methodology for assessing the AI
+impact on human rights. An impact assessment methodology is a set of questions and derived
+refinements that allow assessing the impact of a particular AI product on human rights (low,
+medium, high). The methodology can be applied to both private sector products and those
+produced or used by the state. Determining the human rights impact of an AI product is a key
+element in preparing for both future national regulation and EU market access. Both regulations
+will be based on a risk-based approach: the degree of requirements for an AI product will depend
+on the degree of risk it poses to human rights.
+
+Having a methodology in place is also an initial step in the use of the other two proposed tools. The
+methodology, along with the internal selection rules, is one of the two key criteria for determining
+whether a product will be approved for participation in the regulatory sandbox. Given the
+somewhat limited resources available to the state to process products within the sandbox, as well
+as the goals of its operation, only a certain share of AI products will be of interest for its processing. It is expected that these will be primarily AI products that have a medium or high impact on human rights. The methodology will also be a key element and entry point for such a tool as a legal aid platform for compliance – without determining the degree of impact (risk) of a particular product on human rights, further work on bringing such an AI product into compliance with (future)
+legislation is not possible. The methodology can also be used by companies on their own at their
+own discretion (without participating in any of the tools) or serve as a guide for internal legal
+departments or compliance officers.
+
+By methodology implementation, we mean not only and not so much the development of our own
+Ukrainian methodology, but also the adaptation and/or elaboration of the methodology in
+accordance with the domestic Ukrainian context. We remain aware of the considerable amount of
+work done by experts to develop similar methodologies in other countries and organizations,
+including the EU and the Council of Europe, and plan to use the best international experience for
+our purposes. In addition to the actual existence of such a methodology, it is also important that
+the state will assist in the application of the methodology, in particular, within the framework of the two aforesaid tools. Such assistance is extremely important, as the process of determining the
+degree of risk in the AI sector is a rather difficult task. According to the developers of the approach, this is a more complex and resource-intensive process than, for example, assessing the impact of personal data processing or other apparently similar assessment methodologies in other areas. To strengthen the state competence in conducting such an assessment and using the methodology,
+Ukraine will also participate in a pilot project on the use of a similar methodology being developed
+within the framework of the Council of Europe’s Artificial Intelligence Committee for the Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law.
+
+@@Regulatory Sandbox
+
+The Ministry of Digital Transformation intends to create and is already working on creating a
+regulatory sandbox for high-tech products and industries. In addition to artificial intelligence, the
+regulatory sandbox is expected to cover such areas as WEB-3, blockchain, and some other
+innovative areas. A regulatory sandbox is a controlled environment within which, in our case, AI
+products will be able to be developed or tested under the supervision and with the involvement of
+expert (and other types of support) of the state for compliance with future regulation. An
+important feature and difference between the sandbox and the impact assessment methodology is
+that within the sandbox, products will be “screened” for compliance with the entire range of
+(future) regulatory requirements. In other words, the regulatory sandbox is a broader and more far-
+reaching tool than the methodology, which actually serves as an entry point. Considering this and
+limited resources of the state to put a significant number of AI products through the sandbox, the
+sandbox will primarily include those products whose development within the sandbox will be of
+sufficient interest to the state (medium and high impact on human rights), as well as those that
+meet other selection criteria. These are expected to include, for example, criteria such as the social significance of the product. There will also be certain selection privileges for small and medium-sized businesses and startups. The goal of the sandbox is not only to help participating products, but also to build the state capacity to evaluate products, in particular, in the context of future regulation and the subsequent need to create a regulatory authority.
+
+@@AI Legal Advisory Platform
+
+As noted in the overview of the previous tool, not all AI products will be eligible for the regulatory sandbox, and the state is likely to have limited resources to provide access to the sandbox tool to everyone. Recognizing this and trying to help as many AI products as possible prepare for regulation, we aim to create a platform for legal aid in compliance with (future) legislation. The idea is to provide recommendations for companies based on the results of the the impact assessment of a particular product, which can be implemented by the company internal resources (legal
+departments, compliance officers/responsible persons) or by engaging law firms that will provide
+certain services pro bono.
+
+@@Voluntary Labeling of AI Systems
+Labeling of AI systems is the provision of clear and structured information about the design,
+functions, algorithms, and other aspects of artificial intelligence systems. This process is aimed at
+ensuring transparency and openness regarding the way intelligent systems operate. Following the
+disclosure of information about the system by the developer, such a system receives the
+appropriate labeling tags. The labeling of artificial intelligence systems can be compared to food labeling, as both processes aim to provide consumers with information to make informed
+decisions. Labeling AI systems and transparently disclosing how they are constructed is crucial to
+the safety and control of AI from the bottom up for the following reasons.
+
+
+Accountability and Responsibility. Clear labeling demonstrates that AI developers and system
+integrators are responsible for their products and their implementation is transparent in terms of
+disclosing information about the system. If an AI system causes damage or behaves in an
+unexpected way (not in line with predefined expectations), it is important to know who is
+responsible in order to remedy the situation. Transparency of the design and functionality of an AI
+system allows stakeholders to understand the choices made during the development and training
+of the system.
+
+Building Trust. User trust: labeled and therefore transparent AI systems help to build trust among
+users. Knowledge of AI system operations and information about its capabilities and limitations
+allow users to make informed decisions about their interaction with the technology, similar to how
+end users can choose their diet through food ingredient labeling. Industry Trust: in the industry,
+transparency fosters trust between companies, researchers, and developers of safety policies and
+regulations. Open sharing of information about AI systems encourages collaboration and the
+development of best safety practices.
+
+Ethical Considerations. Avoiding bias and discrimination: transparent labeling can help to identify
+and eliminate bias in AI systems caused by training data. Understanding the principles of training
+data annotation, algorithms, and decision-making processes allows for careful identification and
+correction of biases, helping to mitigate possible discriminatory outcomes of AI systems. Human
+Rights and Privacy: clear labeling that provides information on how AI systems may affect human
+privacy rights allows for an assessment of whether the system is being used ethically and
+demonstrates that such systems are in line with societal values in terms of personal data
+protection.
+
+Compliance with Regulatory Requirements: many of the above requirements (accountability and
+transparency of systems, anti-discrimination, etc.) will be provided for in future national and EU
+legislation that will soon come into force. Thus, by voluntarily publishing the necessary information, labeling can be used both by system owners to prepare for future mandatory requirements and by the state to plan safety and accountability measures for AI systems in a particular sector or area.
+
+Approach to System Labeling
+
+The developer undergoes the labeling procedure voluntarily, for example, using a web form. The
+web form allows the developer or owner of the system to share about the AI system in a
+standardized form, voluntarily providing information about three key elements: training data,
+algorithms, and decision space. The depth of disclosure is voluntary and is determined by the
+developer, which allows for a balance between transparency and intellectual property
+considerations. As a result of the disclosure process, the automatically generated visual label and
+accompanying code can be integrated by the developer into the system website, providing
+transparency to end users and providing access to the disclosure in the open data format. It is
+important to note that the presence of voluntary labeling marks does not imply any certifications
+or permits, but is an indicator that the developer has voluntarily taken appropriate measures to
+increase the transparency of the system.
+
+Elements of system labeling
+- Training data (describe the process of marking up data for training
+- Algorithms (describe the principles of using the main components and related risks
+- Decision space (describe the output decision space of the system
+- Privacy (measures to ensure the protection of personal data
+- Monitoring (involvement of people in the validation of automatic processing results
+- Interpretation (additional information for interpretability of automatic processing results
+- Bias (measures to reduce the risk of bias)
+
+General and Sectoral Recommendations
+
+Despite the tools already proposed and outlined (as well as those that will be developed and
+implemented in the near future) to prepare for the entry into force of our future regulation, a
+natural question arises: “What should we do in the period before the introduction of legally binding
+regulation?” Understanding such a request, both from private sector representatives and our
+citizens, in particular, in a slightly different light: “How will my safety be guaranteed in interaction with AI?”, we see the importance of using other tools – soft law tools (as opposed to training tools). These are primarily general and sectoral recommendations. Of course, given their advisory nature and the absence of legal obligation to follow such recommendations, these tools cannot and in no way are considered in our approach as an alternative to legally binding regulation in the future. At the same time, for objective reasons (premature introduction of mandatory regulation at the current stage, a high probability of lack of resources to create a regulatory body, etc.), we do not currently have a better tool.
+
+We intend to and have already started the process of developing, adapting and planning the
+implementation of both general and sectoral recommendations together with other government
+agencies and non-governmental organizations. It is important to emphasize that general
+recommendations mean the development of recommendations that will address the vast majority
+of challenges in the AI sector across the board. In other words, there may be several general
+recommendations, for example, for the public and private sectors. At the same time, sectoral
+recommendations mean a set of norms of a recommendatory nature in a specific area or several
+related areas at the intersection: the sector of journalism, healthcare, law enforcement etc. With a
+high degree of probability, such recommendations will “survive” the introduction of mandatory
+regulation and will be finalized and updated in light of relevant changes.
+
+At the same time, the importance of such a tool as recommendations will not disappear with the
+introduction of mandatory regulation, which, although it will cover many areas and nuances of AI
+development and use, will not cover everything and will not answer all questions. The global
+approach is that even if there is legally binding regulation, there are a large number of additional
+recommendations and guides that detail the norms and principles of legally binding regulation in a
+particular area. The role of sectoral recommendations will become especially important after the
+law is implemented.
+
+Voluntary Codes of Conduct
+
+In an effort to offer more and somewhat strengthen the legally non-binding role of general and
+sectoral guidance, we would like to propose another tool – a set of voluntary commitments in the
+form of codes of conduct. In our approach, codes of conduct will serve as an intermediate point
+between the realm of general and sectoral recommendations and legally binding regulation. In this
+area, we have high expectations for responsible businesses that are willing to participate in the
+development and signing of such codes.
+
+Although voluntary codes of conduct will not be legally binding, it is expected that compliance will
+be enforced not through coercive elements, as in the case of regulation, but through reputational
+considerations. Without wishing to interfere with the internal processes of building a culture of
+self-regulation (for example, by forming a self-regulatory body) or to shape such a culture from the
+top down, the Ministry of Digital Transformation is ready to develop and offer such a code(s) for
+signature upon request from the industry. We believe that an important element of such an
+ecosystem of self- or co-regulation is the availability of a tool for monitoring the fulfillment of
+obligations. Without in any way forcing business to any mandatory reporting (which we do not have
+the authority to do in the absence of regulation), we are considering various forms of such
+monitoring (periodic voluntary reports, quarterly meetings of signatory companies, etc.) and would
+like to encourage readers of this White Paper to share their thoughts and suggestions on the form
+of monitoring the fulfillment of voluntary commitments.
+
+Responsible AI Centre
+
+The last but not least tool in our approach is the web portal of the Responsible AI Centre. The goal
+is to provide convenient access to all the previously described tools, as well as to keep all our key
+stakeholders informed about how Ukraine is moving towards mandatory regulation and how we are
+implementing it.
+
+By providing convenient access to existing and future tools, we mean integrating them as much as
+possible into the portal as technically and practically possible. Our goal is to build a one-stop shop web portal where stakeholders can use the tools, get access to all available recommendations, and learn about the latest news in the AI sector regulation in Ukraine. We also envisage an information and education component, in particular for citizens, through the publication of information and reference materials on how to protect themselves from the risks and misuse of AI.
+
+Impact of Tools on Stakeholders
+Having examined each of the instruments in more detail, we propose to address the question:
+“What positive impact will they have on the interests and capacities of all three key stakeholders?”
+
+Citizens
+
+At first glance, it may seem that the tools we have described are aimed solely at helping businesses
+prepare for the introduction of future national regulation and access to global markets, including
+the EU market. And while this is certainly the reasoning behind the creation of the tools, we also
+expect a positive impact on the level of human rights protection against AI risks. First of all, this
+applies to soft law tools: general and sectoral guidelines and voluntary codes of conduct – we
+provide clear guidance on what needs to be considered when developing and using AI products. In
+the case of voluntary guidelines, this impact is reinforced by a form of reputational obligation,
+including through our proposed monitoring of companies compliance with their commitments.
+The positive impact on human rights of training tools is less obvious. But if we take a closer look, it becomes clear that this positive impact of training tools can be no less, and perhaps even greater. Such an impact will be indirect: the more responsible and implementing elements of the future legislation of AI products we have on the market, the higher the level of human rights protection within the country. We are convinced that such an indirect impact will be much more effective than, for example, the early introduction of legally binding regulation without providing time and tools for business to prepare. In such a scenario, imposing sanctions for violations would not be an effective defence mechanism – the state, not being able to track all offending companies, would simply not be physically able to fine or ban all products that would violate the requirements of such prematurely introduced legislation.
+
+Business
+
+Given the detailed objectives and nature of the assistance that businesses will receive through the
+use of the proposed tools, we will not repeat ourselves and review each of them in detail. At the
+same time, we would like to emphasize a few common points and features that are inherent in all of
+our tools. Firstly, all of our instruments are designed to be compliant with both future national
+legislation and the EU Regulation. This is crucial for entering the EU market and avoiding penalties,
+including significant sanctions from the regulatory authorities of the member states. Secondly, the
+use of our tools will reduce the cost of legal support services for the development and
+implementation of a product. Even those tools that do not cover the full range of (future)
+legislation requirements allow to assess the state of compliance of a product and assess the risks of
+non-compliance, for example, with the EU Regulation and the nature and amount of potential
+sanctions. Thirdly, the use of the tools will allow cooperation with potential foreign partners, even if a particular enterprise is not aimed at entering global markets. Thus, getting access to certain
+technical solutions or other cases of interaction and involvement of technologies will not be
+complicated, as companies using the tools will be able to demonstrate to their potential partners a
+certain level of ethics and responsibility. The requirement to demonstrate such a level may be
+contained in the legislation of the partner company’s country or, for example, in the requirements
+for donor funds or external financing. The reputational aspect is equally important: the responsible
+use of AI is a great opportunity to show your users the benefits of using this particular AI product
+and to set yourself apart from competitors.
+
+State
+
+Although the state does not have a vested interest in implementing a particular approach and the
+main goal of the state is to balance the interests of business and citizens, as well as to fulfill our future obligations for EU accession, we expect a positive impact on the capacities of the state as well. First of all, it is about building the capacities of the future regulatory body, understanding the AI market in the country and the degree of risk of products, as well as the ability to assess the effectiveness of certain provisions of future legislation based on empirical experience. Thus, the formation of the state regulatory capacity is planned to be achieved through the involvement of governmental authorities to the work of the regulatory sandbox and the deployment of a methodology for assessing the AI impact on human rights. Practical consideration of AI scenarios
+will help to develop approaches and experience that will allow for better and more efficient
+supervision of compliance with future regulation. It is also important to understand the market for
+AI products within the country and, in particular, the number and ratio of products with different
+degrees of human rights risk. This will allow the state to develop approaches to regulating (or, in
+certain cases, banning) such products that pose unacceptable risks to society, national security, law
+and order, etc. Assessing the effectiveness and efficiency of the provisions of future legislation
+based on practical experience will allow the state, if not to change the relevant provisions, to adapt their application, for example, by publishing additional explanations or recommendations, or to
+introduce additional provisions where the relevant nature of social relations requires it and/or
+where legislative gaps exist.
+
+To summarize, we can responsibly expect a comprehensive and multifaceted positive impact from
+the use of the instruments and confidently approach the second stage – the introduction of
+mandatory regulation.
+
+Stage 2
+
+The second stage of our approach, the introduction of mandatory regulation through the
+implementation of the EU Regulation, is a logical, consistent, and objectively determined step. It is
+determined both by the goal of Ukraine to join the EU and the necessity to ensure an adequate
+level of human rights protection. At first glance, this step seems to be about adapting the EU
+Regulation and does not require detailed explanations, but rather consistent technical and legal
+work. This view is not incorrect – we propose to start the process of drafting of the law immediately
+after the final adoption of the Regulation in the EU. At the same time, there is one feature that
+gives us reason to expect the bottom-up approach to be applied at the second stage. This feature
+is the partial and gradual implementation of the EU Artificial Intelligence Regulation and deferring
+of entering into force of certain AI Act’s provisions in order to provide even more time for both
+business and the state to prepare, in particular, to establish a regulatory body.
+
+In April of this year, an explanatory meeting was held between Ukraine, Moldova on the one hand,
+and the EU on the other, during which the EU's vision and position on how the candidate countries
+should implement EU legislation, in particular, in the digital domain, was received. During the
+meeting, the EU side emphasized the need for Ukraine to implement (transpose) the EU Artificial
+Intelligence Regulation.
+
+During the meeting, it was emphasized that Ukraine should not simply expect to join the EU when
+the EU Artificial Intelligence Regulation will apply directly, leaving the field of AI outside of any
+regulation in the interim. Early transposition of the EU Regulation into national legislation is
+necessary. There is a need for a supervisory body to already exist at the time of accession and
+direct application of the Regulation in Ukraine: this is necessary so that when the Regulation
+comes into force in Ukraine, we already have a competent body that could effectively apply the
+legislation. The EU side also emphasized the importance of building the capabilities and experience
+of such a future body, which we plan to achieve at the first stage as described in the relevant
+sections of this document.
+
+Also, during the meeting, the EU side emphasized the inadequacy of relying on other legal
+frameworks, for example, on the Council of Europe Framework Convention on Artificial Intelligence
+and Human Rights, Democracy and the Rule of Law as an alternative to the transposition of the EU
+Regulation. At the same time, there were no requirements from the EU regarding the terms of
+entry into force of provisions identical to the Regulation. Accordingly, we may leave some flexibility as to when and which provisions come into effect.
+
+At the same time, this possibility of phased implementation should not lead to cases where certain
+provisions of the EU Regulation that we do not immediately introduce into national regulation and/
+or defer entering into force will be replaced by similar (in terms of scope/direction) provisions of
+other countries legislation. It is important to avoid mixing up the provisions of the EU Regulation
+and national laws of other countries, as this may lead to complications in the further
+implementation of the EU Regulation.
+
+Cooperation Offer for Large AI Platforms
+
+In the absence of mandatory regulation during the first stage, we aim to use all available
+opportunities, including partnerships. In this context, we have high expectations for responsible
+businesses and, above all, for large AI platforms.
+
+The structure of the global generative AI market in terms of models and platforms tends to
+crystallize into 5 major AI players, which, according to IOT Analytics 2023, collectively occupy 84%
+of the AI platform market. It is possible to cover ≈ 84% of possible human rights violations by
+signing 4 partnership agreements: Open AI, Microsoft, AWS, Google.
+
+We propose to apply the Trusted Flagger concept (used in another landmark regulation in the
+digital sector – the EU Digital Services Regulation). The essence of the concept is to involve leading Ukrainian civil society organizations in the function of Trusted Flagger, a trusted observer who takes on the function of filtering complaints about violations of the user terms of each platform in terms of human rights violations in connection with the use of AI. Upon receipt of a complaint,
+such a trusted observer reviews the complaint for possible violations and, if it concludes that a
+violation has occurred, transmits the complaint directly to the platform, which is reviewed on a
+priority basis. We are convinced that such a mechanism will be mutually beneficial for all parties:
+the user – quick consideration of the complaint in case of violation; platforms – reducing the
+volume of complaints to be processed (filtering by a third party); the state – another tool for
+protecting human rights here and now. The Ministry of Digital Transformation has already reached
+preliminary agreements to engage two leading Ukrainian NGOs with extensive experience in the
+sector of digital rights: NGO Digital Security Lab and Center for Democracy and Rule of Law. These
+organizations have already expressed their willingness to join the work as Trusted Flaggers, and
+other organizations, if interested, can express their desire to cooperate by responding to the White
+Paper.
+
+The above considerations for cooperation with AI platforms are an open call for cooperation from
+the Ministry of Digital Transformation. We are also open to discussing possible proposals to revise
+the proposed cooperation scheme, as well as to consider alternative mechanisms to protect the
+rights of users.
+
+Conclusions: Further Plans, Give Feedback
+
+This White Paper reflects the vision of the Ministry of Digital Transformation regarding the optimal
+approach to the regulation of artificial intelligence systems in Ukraine and serves as a document
+for consultation and receiving feedback. We welcome suggestions, comments and feedback from
+other government bodies, businesses, academia, representatives of the public sector and all other
+interested parties.
+
+The expected term for giving feedback is 3 months from the date of publication. We reserve the
+right to extend the consultation period.
+
+You can provide feedback in any form by sending an e-mail to the e-mail box:
+hello@thedigital.gov.ua (please specify "White Paper on AI" in the subject of the e-mail) or by filling out the appropriate forms at the link.

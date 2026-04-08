@@ -83,12 +83,13 @@ policy-interp run-batch-scorer experiments\revised_mvp_2b_16k.yaml --input-path 
 
 ## Data and artifacts
 
-Raw AGORA data and generated artifacts are intentionally not committed in this branch.
+The branch includes the `AGORA Data` directory required for preparation and matching stages.
 
-Expected local directories:
+Generated experiment outputs are still excluded from version control.
 
-1. `AGORA Data` for raw corpus files
-2. `artifacts` for experiment outputs
+Expected local output directory:
+
+1. `artifacts` for experiment outputs
 
 The code assumes experiment outputs live under the run root specified by each YAML configuration.
 
