@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch
 from safetensors.torch import load_file
 
 from policy_interp.io import read_parquet
@@ -45,7 +46,7 @@ def load_residual_matrix(manifest_path: str | Path) -> pd.DataFrame:
     for item in manifest.itertuples(index=False):
         tensor_path = str(item.tensor_path)
         if tensor_path not in cache:
-            cache[tensor_path] = load_file(tensor_path)["residual_pooled"].cpu().numpy()
+            cache[tensor_path] = load_file(tensor_path)["residual_pooled"].to(torch.float32).cpu().numpy()
         values = cache[tensor_path][int(item.row_index)]
         rows.append(
             {
