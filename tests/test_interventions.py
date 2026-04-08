@@ -7,6 +7,7 @@ from policy_interp.interventions import (
     _build_ablation_targets,
     _mean_metric_dicts,
     _mean_token_kl_divergence,
+    _select_probe_top_features,
     bootstrap_ci,
 )
 from policy_interp.schemas import DatasetConfig, ExperimentConfig
@@ -238,3 +239,9 @@ def test_bootstrap_ci_singleton_returns_same_value() -> None:
     low, high = bootstrap_ci([0.25], iterations=50, ci_level=0.95)
     assert low == 0.25
     assert high == 0.25
+
+
+def test_select_probe_top_features_returns_empty_for_missing_columns() -> None:
+    selected = _select_probe_top_features("privacy", pd.DataFrame(), top_k=3)
+
+    assert selected == []

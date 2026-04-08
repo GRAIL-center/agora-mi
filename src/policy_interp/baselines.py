@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -26,7 +27,7 @@ class BaselineArtifacts:
 
 def run_baselines(config: ExperimentConfig, discovery: DiscoveryArtifacts | None = None) -> BaselineArtifacts:
     segments = read_parquet(config.run_root / config.dataset.prepared_segments_name)
-    stable_modules = read_parquet(config.run_root / "discovery" / "module_stability.parquet")
+    stable_modules = _read_stable_modules(config.run_root / "discovery" / "module_stability.parquet")
     extraction_root = config.run_root / "extraction"
     baseline_root = config.run_root / "baselines"
     baseline_root.mkdir(parents=True, exist_ok=True)
@@ -72,6 +73,13 @@ def run_baselines(config: ExperimentConfig, discovery: DiscoveryArtifacts | None
         str(sparse_feature_selection_path),
         str(overlap_path),
     )
+
+
+def _read_stable_modules(path: object) -> pd.DataFrame:
+    parquet_path = pd.io.common.stringify_path(path)
+    if not Path(parquet_path).exists():
+        return pd.DataFrame(columns=["stable_module_id", "layer", "stable", "feature_ids", "module_size"])
+    return read_parquet(path)
 
 
 def _run_sentence_embedding_baseline(segments: pd.DataFrame, config: ExperimentConfig) -> list[dict[str, object]]:

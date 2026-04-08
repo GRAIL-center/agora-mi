@@ -110,7 +110,8 @@ def run_masking_retention(config: ExperimentConfig) -> Path:
 def mask_text(text: str, anchors: list[str], mask_token: str) -> str:
     masked = text
     for anchor in sorted({anchor for anchor in anchors if anchor}, key=len, reverse=True):
-        pattern = re.compile(rf"(?i)(?<!\w){re.escape(anchor).replace('\\ ', r'\\s+')}(?!\w)")
+        escaped_anchor = re.escape(anchor).replace(r"\ ", r"\s+")
+        pattern = re.compile(rf"(?i)(?<!\w){escaped_anchor}(?!\w)")
         masked = pattern.sub(mask_token, masked)
     return masked
 

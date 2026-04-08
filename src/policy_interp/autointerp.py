@@ -523,14 +523,12 @@ def _generate_text(generator: dict[str, object], prompt: str, max_new_tokens: in
             [{"role": "user", "content": prompt}],
             add_generation_prompt=True,
             return_tensors="pt",
-        ).to(model.device)
-        attention_mask = torch.ones_like(encoded, device=model.device)
-        model_inputs = {"input_ids": encoded, "attention_mask": attention_mask}
-        prompt_length = int(encoded.shape[-1])
+        )
+        model_inputs = _coerce_model_inputs(encoded, model.device)
     else:
-        encoded = tokenizer(prompt, return_tensors="pt").to(model.device)
-        model_inputs = dict(encoded)
-        prompt_length = int(encoded["input_ids"].shape[-1])
+        encoded = tokenizer(prompt, return_tensors="pt")
+        model_inputs = _coerce_model_inputs(encoded, model.device)
+    prompt_length = int(model_inputs["input_ids"].shape[-1])
     with torch.inference_mode():
         output = model.generate(
             **model_inputs,
@@ -540,6 +538,29 @@ def _generate_text(generator: dict[str, object], prompt: str, max_new_tokens: in
         )
     generated_tokens = output[0][prompt_length:]
     return tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
+
+
+def _coerce_model_inputs(encoded: object, device: torch.device | str) -> dict[str, torch.Tensor]:
+    if hasattr(encoded, "to"):
+        encoded = encoded.to(device)
+    if isinstance(encoded, torch.Tensor):
+        return {
+            "input_ids": encoded,
+            "attention_mask": torch.ones_like(encoded, device=device),
+        }
+    if isinstance(encoded, dict):
+        model_inputs = {
+            str(key): value.to(device) if hasattr(value, "to") else value
+            for key, value in encoded.items()
+        }
+        input_ids = model_inputs.get("input_ids")
+        if not isinstance(input_ids, torch.Tensor):
+            raise TypeError("Tokenizer output must include input_ids tensor.")
+        attention_mask = model_inputs.get("attention_mask")
+        if not isinstance(attention_mask, torch.Tensor):
+            model_inputs["attention_mask"] = torch.ones_like(input_ids, device=device)
+        return model_inputs
+    raise TypeError(f"Unsupported tokenizer output type: {type(encoded)!r}")
 
 
 def _predict_activation_label(

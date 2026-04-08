@@ -602,6 +602,9 @@ def _normalize_target_proxy(proxy: object, config: ExperimentConfig) -> str:
 
 
 def _selected_probe_layer(proxy: str, sparse_feature_selection: pd.DataFrame) -> int:
+    required_columns = {"proxy", "selected_layer"}
+    if not required_columns.issubset(set(sparse_feature_selection.columns)):
+        return 0
     row = sparse_feature_selection.loc[sparse_feature_selection["proxy"] == proxy].iloc[0]
     return int(row["selected_layer"])
 
@@ -632,10 +635,15 @@ def _select_proxy_module(
 
 
 def _select_probe_top_features(proxy: str, sparse_feature_selection: pd.DataFrame, top_k: int) -> list[int]:
+    required_columns = {"proxy", "selected_feature_ids"}
+    if not required_columns.issubset(set(sparse_feature_selection.columns)):
+        return []
     rows = sparse_feature_selection.loc[sparse_feature_selection["proxy"] == proxy]
     if rows.empty:
         return []
     feature_ids = rows.iloc[0]["selected_feature_ids"]
+    if feature_ids is None or (isinstance(feature_ids, float) and math.isnan(feature_ids)):
+        return []
     return list(map(int, list(feature_ids)[:top_k]))
 
 

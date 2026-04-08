@@ -43,13 +43,15 @@ policy-interp build-matches experiments/lambda_full_swap_2b_16k.yaml | tee lambd
 ### 2.3 Run the four-layer feature pipeline
 
 ```bash
-policy-interp extract-activations experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_extract.log
-policy-interp build-feature-catalog experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_catalog.log
-policy-interp run-autointerp experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_autointerp.log
-policy-interp run-baselines experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_baselines.log
-policy-interp run-interventions experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_interventions.log
-policy-interp export-reports experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_reports.log
-policy-interp hash-artifacts experiments/lambda_full_swap_2b_16k.yaml | tee lambda_full_swap_hashes.log
+set -o pipefail
+policy-interp extract-activations experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_extract.log
+policy-interp discover-modules experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_discovery.log
+policy-interp build-feature-catalog experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_catalog.log
+policy-interp run-autointerp experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_autointerp.log
+policy-interp run-baselines experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_baselines.log
+policy-interp run-interventions experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_interventions.log
+policy-interp export-reports experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_reports.log
+policy-interp hash-artifacts experiments/lambda_full_swap_2b_16k.yaml 2>&1 | tee lambda_full_swap_hashes.log
 ```
 
 ### 2.4 Primary outputs
@@ -86,11 +88,13 @@ policy-interp build-matches experiments/lambda_9b_robustness_partial.yaml | tee 
 ### 3.3 Run extraction, cataloging, and AutoInterp
 
 ```bash
-policy-interp extract-activations experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_extract.log
-policy-interp build-feature-catalog experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_catalog.log
-policy-interp run-autointerp experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_autointerp.log
-policy-interp export-reports experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_reports.log
-policy-interp hash-artifacts experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_hashes.log
+set -o pipefail
+policy-interp extract-activations experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_extract.log
+policy-interp discover-modules experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_discovery.log
+policy-interp build-feature-catalog experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_catalog.log
+policy-interp run-autointerp experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_autointerp.log
+policy-interp export-reports experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_reports.log
+policy-interp hash-artifacts experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_hashes.log
 ```
 
 ### 3.4 Optional causal add-on
@@ -98,8 +102,9 @@ policy-interp hash-artifacts experiments/lambda_9b_robustness_partial.yaml | tee
 This step is more expensive and can be skipped if the first goal is overlap and feature-faithfulness robustness only.
 
 ```bash
-policy-interp run-baselines experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_baselines.log
-policy-interp run-interventions experiments/lambda_9b_robustness_partial.yaml | tee lambda_9b_interventions.log
+set -o pipefail
+policy-interp run-baselines experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_baselines.log
+policy-interp run-interventions experiments/lambda_9b_robustness_partial.yaml 2>&1 | tee lambda_9b_interventions.log
 ```
 
 ### 3.5 Primary outputs
