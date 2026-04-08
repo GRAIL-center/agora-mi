@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 import math
 import re
 from dataclasses import dataclass
@@ -548,7 +549,7 @@ def _coerce_model_inputs(encoded: object, device: torch.device | str) -> dict[st
             "input_ids": encoded,
             "attention_mask": torch.ones_like(encoded, device=device),
         }
-    if isinstance(encoded, dict):
+    if isinstance(encoded, Mapping):
         model_inputs = {
             str(key): value.to(device) if hasattr(value, "to") else value
             for key, value in encoded.items()

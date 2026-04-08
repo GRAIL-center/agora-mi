@@ -1,5 +1,6 @@
 import pandas as pd
 import torch
+from transformers.tokenization_utils_base import BatchEncoding
 
 from policy_interp.autointerp import (
     _build_autointerp_candidates,
@@ -181,3 +182,17 @@ def test_coerce_model_inputs_builds_attention_mask_for_tensor() -> None:
 
     assert torch.equal(model_inputs["input_ids"], encoded)
     assert torch.equal(model_inputs["attention_mask"], torch.ones_like(encoded))
+
+
+def test_coerce_model_inputs_supports_batch_encoding_object() -> None:
+    encoded = BatchEncoding(
+        data={
+            "input_ids": torch.tensor([[7, 8, 9]], dtype=torch.long),
+            "attention_mask": torch.tensor([[1, 1, 1]], dtype=torch.long),
+        }
+    )
+
+    model_inputs = _coerce_model_inputs(encoded, "cpu")
+
+    assert torch.equal(model_inputs["input_ids"], torch.tensor([[7, 8, 9]], dtype=torch.long))
+    assert torch.equal(model_inputs["attention_mask"], torch.tensor([[1, 1, 1]], dtype=torch.long))
