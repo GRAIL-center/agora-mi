@@ -503,7 +503,7 @@ def _load_text_generator(model_name: str, config: ExperimentConfig) -> dict[str,
             tokenizer.pad_token = tokenizer.eos_token
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            dtype=torch.float16 if config.backbone.dtype == "float16" else torch.float32,
+            torch_dtype=torch.float16 if config.backbone.dtype == "float16" else torch.float32,
         )
         model.to(config.backbone.device)
         model.eval()

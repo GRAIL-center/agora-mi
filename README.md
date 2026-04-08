@@ -103,3 +103,4 @@ The repository reflects a medium local setup used for the current paper draft.
 4. Feature first audit reports, cross layer maps, AutoInterp labels, and causal diagnostics
 
 Module discovery remains in the codebase as a secondary analysis path, but the main paper and pipeline now prioritize feature level auditing.
+
