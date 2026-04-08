@@ -1,10 +1,13 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from policy_interp.audit_eval import (
     _compute_autointerp_validation,
+    _compute_discriminativeness_statistics,
     _compute_failure_transparency,
+    _compute_report_robustness_statistics,
     _summarize_autointerp_validation,
 )
 from policy_interp.schemas import DatasetConfig, ExperimentConfig
@@ -144,3 +147,92 @@ def test_compute_failure_transparency_summarizes_negative_findings(tmp_path: Pat
         "single_feature_near_zero_effect_rate",
         "flat_proxy_overlay_rate",
     }
+
+
+def test_compute_discriminativeness_statistics_reports_ci_and_pvalues(tmp_path: Path) -> None:
+    config = ExperimentConfig(name="unit_test", dataset=DatasetConfig(base_dir=tmp_path))
+    config.ablation.bootstrap_iterations = 40
+    config.validity.enrichment_random_trials = 40
+    case_manifest = pd.DataFrame(
+        [
+            {"case_id": "a1", "family_id": "family_a"},
+            {"case_id": "a2", "family_id": "family_a"},
+            {"case_id": "b1", "family_id": "family_b"},
+            {"case_id": "b2", "family_id": "family_b"},
+        ]
+    )
+    case_scores = pd.DataFrame(
+        [
+            {"case_id": "a1", "ranking_family": "policy_specific", "pooled_activation": 3.0, "layer": 20, "feature_id": 101, "feature_key": "L20_F101"},
+            {"case_id": "a1", "ranking_family": "global_dominance", "pooled_activation": 2.0, "layer": 12, "feature_id": 1, "feature_key": "L12_F1"},
+            {"case_id": "a2", "ranking_family": "policy_specific", "pooled_activation": 2.5, "layer": 20, "feature_id": 101, "feature_key": "L20_F101"},
+            {"case_id": "a2", "ranking_family": "global_dominance", "pooled_activation": 2.0, "layer": 12, "feature_id": 1, "feature_key": "L12_F1"},
+            {"case_id": "b1", "ranking_family": "policy_specific", "pooled_activation": 3.0, "layer": 20, "feature_id": 202, "feature_key": "L20_F202"},
+            {"case_id": "b1", "ranking_family": "global_dominance", "pooled_activation": 2.0, "layer": 12, "feature_id": 1, "feature_key": "L12_F1"},
+            {"case_id": "b2", "ranking_family": "policy_specific", "pooled_activation": 2.5, "layer": 20, "feature_id": 202, "feature_key": "L20_F202"},
+            {"case_id": "b2", "ranking_family": "global_dominance", "pooled_activation": 2.0, "layer": 12, "feature_id": 1, "feature_key": "L12_F1"},
+        ]
+    )
+
+    stats = _compute_discriminativeness_statistics(config, case_manifest, case_scores)
+
+    assert {"view_name", "cosine_gap_ci_low", "cosine_gap_ci_high", "retrieval_accuracy_permutation_pvalue"}.issubset(
+        set(stats.columns)
+    )
+    policy_row = stats.loc[stats["view_name"] == "policy_specific_view"].iloc[0]
+    assert float(policy_row["cosine_gap"]) > 0.0
+    assert float(policy_row["retrieval_accuracy"]) >= 0.5
+    assert 0.0 <= float(policy_row["retrieval_accuracy_permutation_pvalue"]) <= 1.0
+
+
+def test_compute_report_robustness_statistics_handles_array_rankings(tmp_path: Path) -> None:
+    config = ExperimentConfig(name="unit_test", dataset=DatasetConfig(base_dir=tmp_path))
+    config.ablation.bootstrap_iterations = 40
+    robustness_case_scores = pd.DataFrame(
+        [
+            {
+                "case_id": "case_1",
+                "source_case_id": "case_1",
+                "perturbation": "original",
+                "policy_specific_feature_set": ["L20_F1", "L20_F2"],
+                "overall_feature_set": ["L12_F1"],
+                "proxy_ranking": np.array(["privacy", "bias"]),
+                "layer_vector": {"L20_mean": 1.0, "L20_max": 2.0},
+            },
+            {
+                "case_id": "case_2",
+                "source_case_id": "case_2",
+                "perturbation": "original",
+                "policy_specific_feature_set": ["L24_F3"],
+                "overall_feature_set": ["L12_F1"],
+                "proxy_ranking": np.array(["bias", "privacy"]),
+                "layer_vector": {"L20_mean": 2.0, "L20_max": 3.0},
+            },
+            {
+                "case_id": "case_1__heading_removal",
+                "source_case_id": "case_1",
+                "perturbation": "heading_removal",
+                "policy_specific_feature_set": ["L20_F1"],
+                "overall_feature_set": ["L12_F1"],
+                "proxy_ranking": np.array(["privacy", "bias"]),
+                "layer_vector": {"L20_mean": 1.0, "L20_max": 2.0},
+            },
+            {
+                "case_id": "case_2__heading_removal",
+                "source_case_id": "case_2",
+                "perturbation": "heading_removal",
+                "policy_specific_feature_set": ["L24_F3"],
+                "overall_feature_set": ["L12_F1"],
+                "proxy_ranking": np.array(["privacy", "bias"]),
+                "layer_vector": {"L20_mean": 2.1, "L20_max": 3.0},
+            },
+        ]
+    )
+
+    stats = _compute_report_robustness_statistics(config, robustness_case_scores)
+
+    assert len(stats) == 1
+    row = stats.iloc[0]
+    assert row["perturbation"] == "heading_removal"
+    assert float(row["policy_specific_jaccard_ci_low"]) <= float(row["mean_policy_specific_jaccard"])
+    assert float(row["proxy_rank_spearman_ci_high"]) >= float(row["mean_proxy_rank_spearman"])

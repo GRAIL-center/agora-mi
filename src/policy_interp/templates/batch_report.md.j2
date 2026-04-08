@@ -22,3 +22,23 @@ Segment count: {{ segment_count }}
 {% for item in causal_notes %}
 {{ loop.index }}. {{ item.display_name }} overlaps with {{ item.target_name }} for proxy {{ item.primary_proxy }}. KL delta {{ "%.4f"|format((item.kl_divergence_delta or 0.0)|float) }}, paired delta {{ "%.4f"|format((item.paired_delta or 0.0)|float) }}, badge {{ item.causal_badge or "unassigned" }}.
 {% endfor %}
+
+{% if oracle_warning_note %}
+## Activation Oracle Note
+{{ oracle_warning_note }}
+{% endif %}
+
+## AO Bundle Explanation
+{% for item in oracle_bundle_explanations %}
+{{ loop.index }}. Segment {{ item.segment_id }} maps to {{ item.obligation_family or "unassigned" }} with specificity {{ item.specificity_label or "unassigned" }}. Summary: {{ item.concept_summary or "" }}
+{% endfor %}
+
+## AO Activation Window Explanation
+{% for item in oracle_segment_explanations %}
+{{ loop.index }}. Segment {{ item.segment_id }} maps to {{ item.obligation_family or "unassigned" }} with specificity {{ item.specificity_label or "unassigned" }}. Summary: {{ item.concept_summary or "" }}
+{% endfor %}
+
+## AO Agreement Note
+{% for item in oracle_report_summary %}
+{{ loop.index }}. Segment {{ item.segment_id }} has agreement status {{ item.agreement_status }}. Bundle family {{ item.bundle_obligation_family or "unassigned" }}, window family {{ item.window_obligation_family or "unassigned" }}.
+{% endfor %}

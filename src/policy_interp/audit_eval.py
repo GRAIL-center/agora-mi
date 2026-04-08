@@ -13,6 +13,18 @@ import seaborn as sns
 import torch
 from matplotlib import pyplot as plt
 
+from policy_interp.activation_oracle import (
+    AO_REAL_CONDITION,
+    ActivationOracleBackend,
+    OracleEvaluationArtifacts,
+    activation_oracle_skip_reason,
+    build_gold_label_sheet,
+    build_oracle_requests,
+    build_scaffold_manifest,
+    summarize_human_eval_sheet,
+    summarize_oracle_predictions,
+    build_human_eval_sheet,
+)
 from policy_interp.adapters.modeling import HuggingFaceBackboneAdapter, SaeLensAdapter
 from policy_interp.batch_scorer import (
     _build_document_feature_scores,
@@ -40,10 +52,18 @@ from policy_interp.utils import ensure_dir, normalize_text, set_seed
 class AuditEvaluationArtifacts:
     case_manifest_path: str
     discriminativeness_summary_path: str
+    discriminativeness_statistics_path: str
     robustness_summary_path: str
+    robustness_statistics_path: str
     autointerp_validation_path: str
     failure_transparency_path: str
     causal_concentration_path: str
+    oracle_predictions_path: str | None = None
+    oracle_condition_summary_path: str | None = None
+    oracle_scaffold_summary_path: str | None = None
+    oracle_gold_labels_path: str | None = None
+    oracle_human_eval_sheet_path: str | None = None
+    oracle_human_eval_summary_path: str | None = None
 
 
 def _read_optional_parquet(path: Path) -> pd.DataFrame:
@@ -81,9 +101,15 @@ def run_audit_evaluation(config: ExperimentConfig) -> AuditEvaluationArtifacts:
         case_manifest=case_manifest,
         case_scores=case_scores,
     )
+    discriminativeness_statistics = _compute_discriminativeness_statistics(
+        config=config,
+        case_manifest=case_manifest,
+        case_scores=case_scores,
+    )
     write_parquet(discriminativeness_summary, audit_root / "audit_discriminativeness_summary.parquet")
     write_parquet(pairwise_similarity, audit_root / "audit_discriminativeness_pairwise.parquet")
     write_parquet(retrieval_summary, audit_root / "audit_discriminativeness_retrieval.parquet")
+    write_parquet(discriminativeness_statistics, audit_root / "audit_discriminativeness_statistics.parquet")
 
     robustness_summary, robustness_case_scores = _compute_report_robustness(
         config=config,
@@ -92,8 +118,13 @@ def run_audit_evaluation(config: ExperimentConfig) -> AuditEvaluationArtifacts:
         labels=labels,
         overlay=overlay,
     )
+    robustness_statistics = _compute_report_robustness_statistics(
+        config=config,
+        robustness_case_scores=robustness_case_scores,
+    )
     write_parquet(robustness_summary, audit_root / "audit_report_robustness_summary.parquet")
     write_parquet(robustness_case_scores, audit_root / "audit_report_robustness_case_scores.parquet")
+    write_parquet(robustness_statistics, audit_root / "audit_report_robustness_statistics.parquet")
 
     autointerp_validation = _compute_autointerp_validation(
         autointerp_scores=autointerp_scores,
@@ -119,19 +150,36 @@ def run_audit_evaluation(config: ExperimentConfig) -> AuditEvaluationArtifacts:
         autointerp_scores=autointerp_scores,
     )
     write_parquet(causal_concentration, audit_root / "audit_causal_concentration_summary.parquet")
+    oracle_artifacts = None
+    if config.activation_oracle.enabled and config.audit.scaffold_eval.enabled:
+        oracle_artifacts = _run_oracle_evaluation(
+            config=config,
+            case_manifest=case_manifest,
+            catalog=catalog,
+            labels=labels,
+        )
 
     return AuditEvaluationArtifacts(
         case_manifest_path=str(audit_root / "audit_case_manifest.parquet"),
         discriminativeness_summary_path=str(audit_root / "audit_discriminativeness_summary.parquet"),
+        discriminativeness_statistics_path=str(audit_root / "audit_discriminativeness_statistics.parquet"),
         robustness_summary_path=str(audit_root / "audit_report_robustness_summary.parquet"),
+        robustness_statistics_path=str(audit_root / "audit_report_robustness_statistics.parquet"),
         autointerp_validation_path=str(audit_root / "autointerp_validation_feature_scores.parquet"),
         failure_transparency_path=str(audit_root / "failure_transparency_summary.parquet"),
         causal_concentration_path=str(audit_root / "audit_causal_concentration_summary.parquet"),
+        oracle_predictions_path=oracle_artifacts.predictions_path if oracle_artifacts else None,
+        oracle_condition_summary_path=oracle_artifacts.condition_summary_path if oracle_artifacts else None,
+        oracle_scaffold_summary_path=oracle_artifacts.scaffold_summary_path if oracle_artifacts else None,
+        oracle_gold_labels_path=oracle_artifacts.gold_labels_path if oracle_artifacts else None,
+        oracle_human_eval_sheet_path=oracle_artifacts.human_eval_sheet_path if oracle_artifacts else None,
+        oracle_human_eval_summary_path=oracle_artifacts.human_eval_summary_path if oracle_artifacts else None,
     )
 
 
 def export_audit_reports(config: ExperimentConfig, export_root: Path) -> dict[str, str]:
     audit_root = config.run_root / "audit_eval"
+    oracle_root = config.run_root / "oracle_eval"
     outputs: dict[str, str] = {}
     if not audit_root.exists():
         return outputs
@@ -139,6 +187,7 @@ def export_audit_reports(config: ExperimentConfig, export_root: Path) -> dict[st
     discriminativeness_path = audit_root / "audit_discriminativeness_summary.parquet"
     pairwise_path = audit_root / "audit_discriminativeness_pairwise.parquet"
     retrieval_path = audit_root / "audit_discriminativeness_retrieval.parquet"
+    discriminativeness_stats_path = audit_root / "audit_discriminativeness_statistics.parquet"
     if discriminativeness_path.exists() and pairwise_path.exists() and retrieval_path.exists():
         discriminativeness = read_parquet(discriminativeness_path)
         pairwise = read_parquet(pairwise_path)
@@ -146,16 +195,27 @@ def export_audit_reports(config: ExperimentConfig, export_root: Path) -> dict[st
         csv_path = export_root / "audit_discriminativeness_summary.csv"
         discriminativeness.to_csv(csv_path, index=False)
         outputs["audit_discriminativeness_summary"] = str(csv_path)
+        if discriminativeness_stats_path.exists():
+            stats = read_parquet(discriminativeness_stats_path)
+            stats_csv_path = export_root / "audit_discriminativeness_statistics.csv"
+            stats.to_csv(stats_csv_path, index=False)
+            outputs["audit_discriminativeness_statistics"] = str(stats_csv_path)
         figure_path = export_root / "audit_discriminativeness.png"
         _export_audit_discriminativeness_figure(discriminativeness, pairwise, retrieval, figure_path)
         outputs["audit_discriminativeness_figure"] = str(figure_path)
 
     robustness_path = audit_root / "audit_report_robustness_summary.parquet"
+    robustness_stats_path = audit_root / "audit_report_robustness_statistics.parquet"
     if robustness_path.exists():
         robustness = read_parquet(robustness_path)
         csv_path = export_root / "audit_report_robustness_summary.csv"
         robustness.to_csv(csv_path, index=False)
         outputs["audit_report_robustness_summary"] = str(csv_path)
+        if robustness_stats_path.exists():
+            stats = read_parquet(robustness_stats_path)
+            stats_csv_path = export_root / "audit_report_robustness_statistics.csv"
+            stats.to_csv(stats_csv_path, index=False)
+            outputs["audit_report_robustness_statistics"] = str(stats_csv_path)
         figure_path = export_root / "audit_report_robustness.png"
         _export_audit_robustness_figure(robustness, figure_path)
         outputs["audit_report_robustness_figure"] = str(figure_path)
@@ -192,7 +252,236 @@ def export_audit_reports(config: ExperimentConfig, export_root: Path) -> dict[st
         _export_audit_causal_concentration_figure(concentration, figure_path)
         outputs["audit_causal_concentration_figure"] = str(figure_path)
 
+    oracle_condition_path = oracle_root / "oracle_condition_summary.parquet"
+    oracle_scaffold_path = oracle_root / "oracle_scaffold_summary.parquet"
+    oracle_human_eval_path = oracle_root / "oracle_human_eval_summary.parquet"
+    if oracle_condition_path.exists():
+        condition_summary = read_parquet(oracle_condition_path)
+        csv_path = export_root / "oracle_condition_summary.csv"
+        condition_summary.to_csv(csv_path, index=False)
+        outputs["oracle_condition_summary"] = str(csv_path)
+    if oracle_scaffold_path.exists():
+        scaffold_summary = read_parquet(oracle_scaffold_path)
+        csv_path = export_root / "oracle_scaffold_summary.csv"
+        scaffold_summary.to_csv(csv_path, index=False)
+        outputs["oracle_scaffold_summary"] = str(csv_path)
+        figure_path = export_root / "oracle_scaffold_retention.png"
+        _export_oracle_scaffold_figure(scaffold_summary, figure_path)
+        outputs["oracle_scaffold_retention_figure"] = str(figure_path)
+    if oracle_human_eval_path.exists():
+        human_eval_summary = read_parquet(oracle_human_eval_path)
+        csv_path = export_root / "oracle_human_eval_summary.csv"
+        human_eval_summary.to_csv(csv_path, index=False)
+        outputs["oracle_human_eval_summary"] = str(csv_path)
+
     return outputs
+
+
+def run_oracle_evaluation(config: ExperimentConfig) -> OracleEvaluationArtifacts:
+    feature_root = config.run_root / "features"
+    segments = read_parquet(config.run_root / config.dataset.prepared_segments_name)
+    documents = read_parquet(config.run_root / config.dataset.prepared_documents_name)
+    catalog = read_parquet(feature_root / "feature_catalog.parquet")
+    labels = _load_feature_label_frame(feature_root)
+    case_manifest = _build_case_manifest(config, segments, documents)
+    return _run_oracle_evaluation(
+        config=config,
+        case_manifest=case_manifest,
+        catalog=catalog,
+        labels=labels,
+    )
+
+
+def _run_oracle_evaluation(
+    config: ExperimentConfig,
+    case_manifest: pd.DataFrame,
+    catalog: pd.DataFrame,
+    labels: pd.DataFrame,
+) -> OracleEvaluationArtifacts:
+    oracle_root = ensure_dir(config.run_root / "oracle_eval")
+    source_cases = (
+        case_manifest.groupby("family_id", group_keys=False)
+        .head(int(config.audit.scaffold_eval.max_cases_per_family))
+        .copy()
+    )
+    source_cases["source_case_id"] = source_cases["case_id"].astype(str)
+    source_cases["segment_id"] = source_cases["case_id"].astype(str)
+    write_parquet(source_cases, oracle_root / "oracle_case_manifest.parquet")
+
+    scaffold_manifest = build_scaffold_manifest(source_cases, config)
+    write_parquet(scaffold_manifest, oracle_root / "oracle_scaffold_manifest.parquet")
+    skip_reason = activation_oracle_skip_reason(config)
+
+    if scaffold_manifest.empty:
+        empty = pd.DataFrame()
+        predictions_path = write_parquet(empty, oracle_root / "oracle_predictions.parquet")
+        condition_path = write_parquet(empty, oracle_root / "oracle_condition_summary.parquet")
+        scaffold_path = write_parquet(empty, oracle_root / "oracle_scaffold_summary.parquet")
+        gold_path = oracle_root / "oracle_gold_labels.csv"
+        human_sheet_path = oracle_root / "oracle_human_eval_sheet.csv"
+        human_summary_path = write_parquet(empty, oracle_root / "oracle_human_eval_summary.parquet")
+        pd.DataFrame().to_csv(gold_path, index=False)
+        pd.DataFrame().to_csv(human_sheet_path, index=False)
+        return OracleEvaluationArtifacts(
+            case_manifest_path=str(oracle_root / "oracle_case_manifest.parquet"),
+            scaffold_manifest_path=str(oracle_root / "oracle_scaffold_manifest.parquet"),
+            predictions_path=str(predictions_path),
+            condition_summary_path=str(condition_path),
+            scaffold_summary_path=str(scaffold_path),
+            gold_labels_path=str(gold_path),
+            human_eval_sheet_path=str(human_sheet_path),
+            human_eval_summary_path=str(human_summary_path),
+        )
+
+    if skip_reason:
+        gold_path = oracle_root / "oracle_gold_labels.csv"
+        existing_gold = pd.read_csv(gold_path) if gold_path.exists() else pd.DataFrame()
+        gold_labels = build_gold_label_sheet(source_cases=source_cases, config=config, existing=existing_gold)
+        gold_labels.to_csv(gold_path, index=False)
+        human_sheet_path = oracle_root / "oracle_human_eval_sheet.csv"
+        human_eval_sheet = build_human_eval_sheet(
+            source_cases=source_cases,
+            requests=pd.DataFrame(),
+            predictions=pd.DataFrame(),
+            config=config,
+        )
+        human_eval_sheet.to_csv(human_sheet_path, index=False)
+        predictions = pd.DataFrame(
+            [{"condition": AO_REAL_CONDITION, "unit_type": "feature_bundle", "skip_reason": skip_reason}]
+        )
+        condition_summary = pd.DataFrame(
+            [{"condition": AO_REAL_CONDITION, "unit_type": "feature_bundle", "skip_reason": skip_reason}]
+        )
+        scaffold_summary = pd.DataFrame()
+        human_eval_summary = summarize_human_eval_sheet(human_eval_sheet, gold_labels)
+        predictions_path = write_parquet(predictions, oracle_root / "oracle_predictions.parquet")
+        condition_path = write_parquet(condition_summary, oracle_root / "oracle_condition_summary.parquet")
+        scaffold_path = write_parquet(scaffold_summary, oracle_root / "oracle_scaffold_summary.parquet")
+        human_summary_path = write_parquet(human_eval_summary, oracle_root / "oracle_human_eval_summary.parquet")
+        return OracleEvaluationArtifacts(
+            case_manifest_path=str(oracle_root / "oracle_case_manifest.parquet"),
+            scaffold_manifest_path=str(oracle_root / "oracle_scaffold_manifest.parquet"),
+            predictions_path=str(predictions_path),
+            condition_summary_path=str(condition_path),
+            scaffold_summary_path=str(scaffold_path),
+            gold_labels_path=str(gold_path),
+            human_eval_sheet_path=str(human_sheet_path),
+            human_eval_summary_path=str(human_summary_path),
+        )
+
+    feature_scores = _score_manifest_segment_features(
+        config=config,
+        manifest=scaffold_manifest,
+        catalog=catalog,
+        labels=labels,
+        output_root=oracle_root / "scaffold_extraction",
+        split_name="oracle_eval",
+    )
+    requests = build_oracle_requests(
+        scored_features=feature_scores,
+        manifest=scaffold_manifest,
+        config=config,
+        include_controls=True,
+    )
+    backend = ActivationOracleBackend(config, [family.family_id for family in config.audit.families])
+    try:
+        predictions = backend.explain(requests) if not requests.empty else pd.DataFrame()
+    finally:
+        backend.close()
+    if skip_reason and not predictions.empty:
+        predictions["skip_reason"] = skip_reason
+
+    gold_path = oracle_root / "oracle_gold_labels.csv"
+    existing_gold = pd.read_csv(gold_path) if gold_path.exists() else pd.DataFrame()
+    gold_labels = build_gold_label_sheet(source_cases=source_cases, config=config, existing=existing_gold)
+    gold_labels.to_csv(gold_path, index=False)
+
+    human_sheet_path = oracle_root / "oracle_human_eval_sheet.csv"
+    human_eval_sheet = build_human_eval_sheet(
+        source_cases=source_cases,
+        requests=requests,
+        predictions=predictions,
+        config=config,
+    )
+    human_eval_sheet.to_csv(human_sheet_path, index=False)
+
+    condition_summary, scaffold_summary = summarize_oracle_predictions(predictions, gold_labels)
+    human_eval_summary = summarize_human_eval_sheet(human_eval_sheet, gold_labels)
+
+    predictions_path = write_parquet(predictions, oracle_root / "oracle_predictions.parquet")
+    condition_path = write_parquet(condition_summary, oracle_root / "oracle_condition_summary.parquet")
+    scaffold_path = write_parquet(scaffold_summary, oracle_root / "oracle_scaffold_summary.parquet")
+    human_summary_path = write_parquet(human_eval_summary, oracle_root / "oracle_human_eval_summary.parquet")
+    return OracleEvaluationArtifacts(
+        case_manifest_path=str(oracle_root / "oracle_case_manifest.parquet"),
+        scaffold_manifest_path=str(oracle_root / "oracle_scaffold_manifest.parquet"),
+        predictions_path=str(predictions_path),
+        condition_summary_path=str(condition_path),
+        scaffold_summary_path=str(scaffold_path),
+        gold_labels_path=str(gold_path),
+        human_eval_sheet_path=str(human_sheet_path),
+        human_eval_summary_path=str(human_summary_path),
+    )
+
+
+def _score_manifest_segment_features(
+    config: ExperimentConfig,
+    manifest: pd.DataFrame,
+    catalog: pd.DataFrame,
+    labels: pd.DataFrame,
+    output_root: Path,
+    split_name: str,
+) -> pd.DataFrame:
+    if manifest.empty:
+        return pd.DataFrame()
+    scoring_segments = manifest[["segment_id", "text"]].copy()
+    scoring_segments["document_id"] = np.arange(len(scoring_segments), dtype=int)
+    scoring_segments["split"] = split_name
+    extraction_root = ensure_dir(output_root)
+
+    scoring_config = config.model_copy(deep=True)
+    scoring_config.extract.layers = sorted(catalog["layer"].dropna().astype(int).unique().tolist())
+    scoring_config.extract.segment_top_feature_count = max(scoring_config.extract.segment_top_feature_count, 256)
+
+    backbone = HuggingFaceBackboneAdapter(scoring_config.backbone).load()
+    sae_loader = SaeLensAdapter(scoring_config.sae)
+    try:
+        run_extraction_for_segments(
+            config=scoring_config,
+            prepared_segments=scoring_segments[["segment_id", "document_id", "split", "text"]],
+            extraction_root=extraction_root,
+            backbone_bundle=backbone,
+            sae_loader=sae_loader,
+            sae_cache={},
+        )
+    finally:
+        if hasattr(backbone, "model"):
+            del backbone.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    extraction_frames: list[pd.DataFrame] = []
+    for layer in scoring_config.extract.layers:
+        path = extraction_root / f"segment_top_features_layer_{layer}.parquet"
+        if path.exists():
+            extraction_frames.append(read_parquet(path))
+    if not extraction_frames:
+        return pd.DataFrame()
+    extraction_features = pd.concat(extraction_frames, ignore_index=True)
+    feature_scores = _build_document_feature_scores(
+        extraction_features=extraction_features,
+        catalog=catalog,
+        labels=labels,
+        segments=scoring_segments[["segment_id", "text"]],
+    )
+    merge_columns = [column for column in ["segment_id", "source_case_id", "family_id", "family_label", "scaffold_frame"] if column in manifest.columns]
+    if merge_columns:
+        feature_scores = feature_scores.merge(
+            manifest[merge_columns].drop_duplicates("segment_id"),
+            on="segment_id",
+            how="left",
+        )
+    return feature_scores
 
 
 def _build_case_manifest(
@@ -384,6 +673,216 @@ def _compute_discriminativeness(
     return pd.DataFrame(summary_rows), pairwise, retrieval
 
 
+def _compute_discriminativeness_statistics(
+    config: ExperimentConfig,
+    case_manifest: pd.DataFrame,
+    case_scores: pd.DataFrame,
+) -> pd.DataFrame:
+    observed_summary, pairwise, retrieval = _compute_discriminativeness(
+        config=config,
+        case_manifest=case_manifest,
+        case_scores=case_scores,
+    )
+    views = {
+        "overall_view": _build_case_feature_matrix(case_scores, ranking_family=None, top_k=config.audit.overall_top_k),
+        "policy_specific_view": _build_case_feature_matrix(case_scores, ranking_family="policy_specific", top_k=config.audit.policy_specific_top_k),
+        "layer_profile_view": _build_layer_profile_matrix(case_scores),
+    }
+    jaccard_views = {
+        "overall_view": _build_topk_sets(case_scores, ranking_family=None, top_k=config.audit.overall_top_k),
+        "policy_specific_view": _build_topk_sets(case_scores, ranking_family="policy_specific", top_k=config.audit.policy_specific_top_k),
+    }
+    family_map = case_manifest.set_index("case_id")["family_id"].astype(str).to_dict()
+    if not family_map:
+        return pd.DataFrame()
+
+    bootstrap_iterations = max(200, int(config.ablation.bootstrap_iterations))
+    permutation_iterations = max(200, int(config.validity.enrichment_random_trials))
+    ci_level = float(config.ablation.ci_level)
+    observed_by_view: dict[str, dict[str, float]] = {}
+    bootstrap_draws: dict[str, dict[str, list[float]]] = {}
+    permutation_draws: dict[str, dict[str, list[float]]] = {}
+
+    for view_name, matrix in views.items():
+        if matrix.empty:
+            continue
+        summary_row = observed_summary.loc[observed_summary["view_name"] == view_name]
+        if summary_row.empty:
+            continue
+        observed_by_view[view_name] = {
+            "cosine_gap": float(summary_row.iloc[0]["cosine_gap"]),
+            "jaccard_gap": float(summary_row.iloc[0]["jaccard_gap"]) if not pd.isna(summary_row.iloc[0]["jaccard_gap"]) else np.nan,
+            "retrieval_accuracy": float(summary_row.iloc[0]["retrieval_accuracy"]),
+        }
+        bootstrap_draws[view_name] = {"cosine_gap": [], "jaccard_gap": [], "retrieval_accuracy": []}
+        permutation_draws[view_name] = {"cosine_gap": [], "jaccard_gap": [], "retrieval_accuracy": []}
+
+    if not observed_by_view:
+        return pd.DataFrame()
+
+    rng = np.random.default_rng(int(config.splits.seed))
+    for _ in range(bootstrap_iterations):
+        for view_name in observed_by_view:
+            pair_subset = pairwise.loc[pairwise["view_name"] == view_name].copy()
+            retrieval_subset = retrieval.loc[retrieval["view_name"] == view_name].copy()
+            if pair_subset.empty or retrieval_subset.empty:
+                continue
+            within_cosine = pair_subset.loc[pair_subset["same_family"], "cosine_similarity"].astype(float).to_numpy()
+            between_cosine = pair_subset.loc[~pair_subset["same_family"], "cosine_similarity"].astype(float).to_numpy()
+            if within_cosine.size == 0 or between_cosine.size == 0:
+                continue
+            sampled_within_cosine = rng.choice(within_cosine, size=within_cosine.size, replace=True)
+            sampled_between_cosine = rng.choice(between_cosine, size=between_cosine.size, replace=True)
+            bootstrap_draws[view_name]["cosine_gap"].append(float(sampled_within_cosine.mean() - sampled_between_cosine.mean()))
+            retrieval_values = retrieval_subset["correct"].astype(float).to_numpy()
+            sampled_retrieval = rng.choice(retrieval_values, size=retrieval_values.size, replace=True)
+            bootstrap_draws[view_name]["retrieval_accuracy"].append(float(sampled_retrieval.mean()))
+            if not pair_subset["topk_jaccard"].isna().all():
+                within_jaccard = pair_subset.loc[pair_subset["same_family"], "topk_jaccard"].dropna().astype(float).to_numpy()
+                between_jaccard = pair_subset.loc[~pair_subset["same_family"], "topk_jaccard"].dropna().astype(float).to_numpy()
+                if within_jaccard.size and between_jaccard.size:
+                    sampled_within_jaccard = rng.choice(within_jaccard, size=within_jaccard.size, replace=True)
+                    sampled_between_jaccard = rng.choice(between_jaccard, size=between_jaccard.size, replace=True)
+                    bootstrap_draws[view_name]["jaccard_gap"].append(
+                        float(sampled_within_jaccard.mean() - sampled_between_jaccard.mean())
+                    )
+
+    case_ids = list(family_map.keys())
+    family_labels = [family_map[case_id] for case_id in case_ids]
+    for _ in range(permutation_iterations):
+        shuffled_labels = list(rng.permutation(family_labels))
+        permuted_family_map = dict(zip(case_ids, shuffled_labels))
+        for view_name, matrix in views.items():
+            if view_name not in observed_by_view:
+                continue
+            perm_metrics = _compute_discriminativeness_metrics_for_view(
+                matrix=matrix,
+                family_map=permuted_family_map,
+                topk_sets=jaccard_views.get(view_name),
+            )
+            permutation_draws[view_name]["cosine_gap"].append(float(perm_metrics["cosine_gap"]))
+            permutation_draws[view_name]["retrieval_accuracy"].append(float(perm_metrics["retrieval_accuracy"]))
+            if not math.isnan(float(perm_metrics["jaccard_gap"])):
+                permutation_draws[view_name]["jaccard_gap"].append(float(perm_metrics["jaccard_gap"]))
+
+    rows: list[dict[str, object]] = []
+    for view_name, observed in observed_by_view.items():
+        cosine_ci = _empirical_interval(bootstrap_draws[view_name]["cosine_gap"], ci_level)
+        retrieval_ci = _empirical_interval(bootstrap_draws[view_name]["retrieval_accuracy"], ci_level)
+        row = {
+            "view_name": view_name,
+            "case_count": int(len(family_map)),
+            "bootstrap_iterations": bootstrap_iterations,
+            "permutation_iterations": permutation_iterations,
+            "ci_level": ci_level,
+            "cosine_gap": float(observed["cosine_gap"]),
+            "cosine_gap_ci_low": cosine_ci[0],
+            "cosine_gap_ci_high": cosine_ci[1],
+            "cosine_gap_permutation_pvalue": _one_sided_pvalue(
+                observed_value=float(observed["cosine_gap"]),
+                null_draws=permutation_draws[view_name]["cosine_gap"],
+            ),
+            "retrieval_accuracy": float(observed["retrieval_accuracy"]),
+            "retrieval_accuracy_ci_low": retrieval_ci[0],
+            "retrieval_accuracy_ci_high": retrieval_ci[1],
+            "retrieval_accuracy_permutation_pvalue": _one_sided_pvalue(
+                observed_value=float(observed["retrieval_accuracy"]),
+                null_draws=permutation_draws[view_name]["retrieval_accuracy"],
+            ),
+            "jaccard_gap": float(observed["jaccard_gap"]),
+            "jaccard_gap_ci_low": np.nan,
+            "jaccard_gap_ci_high": np.nan,
+            "jaccard_gap_permutation_pvalue": np.nan,
+        }
+        if not math.isnan(float(observed["jaccard_gap"])):
+            jaccard_ci = _empirical_interval(bootstrap_draws[view_name]["jaccard_gap"], ci_level)
+            row["jaccard_gap_ci_low"] = jaccard_ci[0]
+            row["jaccard_gap_ci_high"] = jaccard_ci[1]
+            row["jaccard_gap_permutation_pvalue"] = _one_sided_pvalue(
+                observed_value=float(observed["jaccard_gap"]),
+                null_draws=permutation_draws[view_name]["jaccard_gap"],
+            )
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def _compute_discriminativeness_metrics_for_view(
+    matrix: pd.DataFrame,
+    family_map: dict[str, str],
+    topk_sets: dict[str, set[str]] | None,
+) -> dict[str, float]:
+    if matrix.empty:
+        return {
+            "mean_within_cosine": np.nan,
+            "mean_between_cosine": np.nan,
+            "cosine_gap": np.nan,
+            "mean_within_jaccard": np.nan,
+            "mean_between_jaccard": np.nan,
+            "jaccard_gap": np.nan,
+            "retrieval_accuracy": np.nan,
+        }
+    cosine_matrix = _cosine_similarity_matrix(matrix)
+    case_ids = matrix.index.astype(str).tolist()
+    within_cosine: list[float] = []
+    between_cosine: list[float] = []
+    within_jaccard: list[float] = []
+    between_jaccard: list[float] = []
+    for left_index, left_case in enumerate(case_ids):
+        for right_index in range(left_index + 1, len(case_ids)):
+            right_case = case_ids[right_index]
+            same_family = family_map[left_case] == family_map[right_case]
+            cosine_value = float(cosine_matrix[left_index, right_index])
+            if same_family:
+                within_cosine.append(cosine_value)
+            else:
+                between_cosine.append(cosine_value)
+            if topk_sets is not None:
+                jaccard_value = _set_jaccard(topk_sets.get(left_case, set()), topk_sets.get(right_case, set()))
+                if same_family:
+                    within_jaccard.append(jaccard_value)
+                else:
+                    between_jaccard.append(jaccard_value)
+    retrieval = _nearest_family_retrieval(matrix, family_map)
+    retrieval_accuracy = float(
+        np.mean(
+            [
+                1.0 if record["predicted_family_id"] == family_map[case_id] else 0.0
+                for case_id, record in retrieval.items()
+            ]
+        )
+    )
+    mean_within_cosine = float(np.mean(within_cosine)) if within_cosine else np.nan
+    mean_between_cosine = float(np.mean(between_cosine)) if between_cosine else np.nan
+    mean_within_jaccard = float(np.mean(within_jaccard)) if within_jaccard else np.nan
+    mean_between_jaccard = float(np.mean(between_jaccard)) if between_jaccard else np.nan
+    return {
+        "mean_within_cosine": mean_within_cosine,
+        "mean_between_cosine": mean_between_cosine,
+        "cosine_gap": mean_within_cosine - mean_between_cosine,
+        "mean_within_jaccard": mean_within_jaccard,
+        "mean_between_jaccard": mean_between_jaccard,
+        "jaccard_gap": mean_within_jaccard - mean_between_jaccard if within_jaccard and between_jaccard else np.nan,
+        "retrieval_accuracy": retrieval_accuracy,
+    }
+
+
+def _one_sided_pvalue(observed_value: float, null_draws: list[float]) -> float:
+    if not null_draws or math.isnan(observed_value):
+        return np.nan
+    exceedances = sum(1 for value in null_draws if value >= observed_value)
+    return float((exceedances + 1) / (len(null_draws) + 1))
+
+
+def _empirical_interval(values: list[float], ci_level: float) -> tuple[float, float]:
+    array = np.asarray(values, dtype=np.float64)
+    array = array[np.isfinite(array)]
+    if array.size == 0:
+        return (np.nan, np.nan)
+    lower_q = (1.0 - ci_level) / 2.0
+    upper_q = 1.0 - lower_q
+    return (float(np.quantile(array, lower_q)), float(np.quantile(array, upper_q)))
+
+
 def _build_case_feature_matrix(
     case_scores: pd.DataFrame,
     ranking_family: str | None,
@@ -522,13 +1021,50 @@ def _compute_report_robustness(
         perturbed_scores = scored.loc[scored["perturbation"] == perturbation].copy()
         if perturbed_scores.empty:
             continue
-        comparison = _compare_original_and_perturbed(
+        per_case = _compare_original_and_perturbed_casewise(
             original_scores=original_scores,
             perturbed_scores=perturbed_scores,
         )
+        comparison = _summarize_casewise_robustness(per_case)
         comparison["perturbation"] = perturbation
         summary_rows.append(comparison)
     return pd.DataFrame(summary_rows), scored
+
+
+def _compute_report_robustness_statistics(
+    config: ExperimentConfig,
+    robustness_case_scores: pd.DataFrame,
+) -> pd.DataFrame:
+    if robustness_case_scores.empty:
+        return pd.DataFrame()
+    original_scores = robustness_case_scores.loc[robustness_case_scores["perturbation"] == "original"].copy()
+    rows: list[dict[str, object]] = []
+    for perturbation in config.audit.perturbations:
+        perturbed_scores = robustness_case_scores.loc[robustness_case_scores["perturbation"] == perturbation].copy()
+        if perturbed_scores.empty:
+            continue
+        per_case = _compare_original_and_perturbed_casewise(
+            original_scores=original_scores,
+            perturbed_scores=perturbed_scores,
+        )
+        if per_case.empty:
+            continue
+        row = _summarize_casewise_robustness(per_case)
+        row["perturbation"] = perturbation
+        row["bootstrap_iterations"] = max(200, int(config.ablation.bootstrap_iterations))
+        row["ci_level"] = float(config.ablation.ci_level)
+        for metric_name in [
+            "policy_specific_jaccard",
+            "overall_jaccard",
+            "proxy_rank_spearman",
+            "layer_profile_cosine",
+        ]:
+            values = per_case[metric_name].astype(float).tolist()
+            ci_low, ci_high = bootstrap_ci(values, int(row["bootstrap_iterations"]), float(row["ci_level"]))
+            row[f"{metric_name}_ci_low"] = ci_low
+            row[f"{metric_name}_ci_high"] = ci_high
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def _build_perturbed_case_manifest(config: ExperimentConfig, case_manifest: pd.DataFrame) -> pd.DataFrame:
@@ -722,40 +1258,56 @@ def _build_variant_layer_vectors(feature_scores: pd.DataFrame) -> dict[str, dict
     return vectors
 
 
-def _compare_original_and_perturbed(
+def _compare_original_and_perturbed_casewise(
     original_scores: pd.DataFrame,
     perturbed_scores: pd.DataFrame,
-) -> dict[str, object]:
+) -> pd.DataFrame:
     original = original_scores.set_index("source_case_id")
     perturbed = perturbed_scores.set_index("source_case_id")
     common_ids = sorted(set(original.index.tolist()) & set(perturbed.index.tolist()))
-    policy_overlap: list[float] = []
-    overall_overlap: list[float] = []
-    proxy_rank_stability: list[float] = []
-    layer_profile_stability: list[float] = []
+    rows: list[dict[str, object]] = []
     for case_id in common_ids:
         orig = original.loc[case_id]
         pert = perturbed.loc[case_id]
-        policy_overlap.append(_set_jaccard(set(orig["policy_specific_feature_set"]), set(pert["policy_specific_feature_set"])))
-        overall_overlap.append(_set_jaccard(set(orig["overall_feature_set"]), set(pert["overall_feature_set"])))
-        proxy_rank_stability.append(_rank_list_spearman(orig["proxy_ranking"], pert["proxy_ranking"]))
-        layer_profile_stability.append(_dict_cosine(orig["layer_vector"], pert["layer_vector"]))
+        rows.append(
+            {
+                "source_case_id": str(case_id),
+                "policy_specific_jaccard": _set_jaccard(set(orig["policy_specific_feature_set"]), set(pert["policy_specific_feature_set"])),
+                "overall_jaccard": _set_jaccard(set(orig["overall_feature_set"]), set(pert["overall_feature_set"])),
+                "proxy_rank_spearman": _rank_list_spearman(orig["proxy_ranking"], pert["proxy_ranking"]),
+                "layer_profile_cosine": _dict_cosine(orig["layer_vector"], pert["layer_vector"]),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _summarize_casewise_robustness(frame: pd.DataFrame) -> dict[str, object]:
+    if frame.empty:
+        return {
+            "case_count": 0,
+            "mean_policy_specific_jaccard": np.nan,
+            "mean_overall_jaccard": np.nan,
+            "mean_proxy_rank_spearman": np.nan,
+            "mean_layer_profile_cosine": np.nan,
+        }
     return {
-        "case_count": len(common_ids),
-        "mean_policy_specific_jaccard": float(np.nanmean(policy_overlap)) if policy_overlap else np.nan,
-        "mean_overall_jaccard": float(np.nanmean(overall_overlap)) if overall_overlap else np.nan,
-        "mean_proxy_rank_spearman": float(np.nanmean(proxy_rank_stability)) if proxy_rank_stability else np.nan,
-        "mean_layer_profile_cosine": float(np.nanmean(layer_profile_stability)) if layer_profile_stability else np.nan,
+        "case_count": int(len(frame)),
+        "mean_policy_specific_jaccard": float(np.nanmean(frame["policy_specific_jaccard"].astype(float))),
+        "mean_overall_jaccard": float(np.nanmean(frame["overall_jaccard"].astype(float))),
+        "mean_proxy_rank_spearman": float(np.nanmean(frame["proxy_rank_spearman"].astype(float))),
+        "mean_layer_profile_cosine": float(np.nanmean(frame["layer_profile_cosine"].astype(float))),
     }
 
 
-def _rank_list_spearman(left: list[str], right: list[str]) -> float:
-    items = list(dict.fromkeys([*left, *right]))
+def _rank_list_spearman(left: list[str] | np.ndarray, right: list[str] | np.ndarray) -> float:
+    left_list = [str(item) for item in list(left)] if not isinstance(left, list) else [str(item) for item in left]
+    right_list = [str(item) for item in list(right)] if not isinstance(right, list) else [str(item) for item in right]
+    items = list(dict.fromkeys([*left_list, *right_list]))
     if not items:
         return np.nan
     default_rank = len(items) + 1
-    left_ranks = np.array([left.index(item) + 1 if item in left else default_rank for item in items], dtype=float)
-    right_ranks = np.array([right.index(item) + 1 if item in right else default_rank for item in items], dtype=float)
+    left_ranks = np.array([left_list.index(item) + 1 if item in left_list else default_rank for item in items], dtype=float)
+    right_ranks = np.array([right_list.index(item) + 1 if item in right_list else default_rank for item in items], dtype=float)
     if np.all(left_ranks == left_ranks[0]) or np.all(right_ranks == right_ranks[0]):
         return np.nan
     return float(pd.Series(left_ranks).corr(pd.Series(right_ranks), method="spearman"))
@@ -1185,31 +1737,69 @@ def _export_audit_discriminativeness_figure(
     retrieval: pd.DataFrame,
     target: Path,
 ) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.8))
-    plot_frame = pairwise.copy()
-    plot_frame["pair_type"] = plot_frame["same_family"].map({True: "within family", False: "between family"})
-    sns.barplot(
-        data=plot_frame,
-        x="view_name",
-        y="cosine_similarity",
-        hue="pair_type",
-        estimator=np.mean,
-        errorbar=None,
-        ax=axes[0],
-    )
-    axes[0].set_title("Similarity gap by audit view")
-    axes[0].set_xlabel("")
-    axes[0].set_ylabel("Mean cosine similarity")
-    axes[0].tick_params(axis="x", rotation=20)
+    if summary.empty:
+        return
 
-    sns.barplot(data=summary, x="view_name", y="retrieval_accuracy", color="#4C72B0", ax=axes[1])
-    axes[1].set_title("Nearest-family retrieval accuracy")
-    axes[1].set_xlabel("")
-    axes[1].set_ylabel("Accuracy")
-    axes[1].set_ylim(0.0, 1.0)
-    axes[1].tick_params(axis="x", rotation=20)
+    display_names = {
+        "layer_profile_view": "Layer profile",
+        "overall_view": "Overall sparse",
+        "policy_specific_view": "Policy-specific",
+    }
+    plot_frame = summary.copy()
+    plot_frame["display_name"] = plot_frame["view_name"].map(display_names).fillna(plot_frame["view_name"])
+    order = ["layer_profile_view", "overall_view", "policy_specific_view"]
+    plot_frame["view_order"] = plot_frame["view_name"].map({name: idx for idx, name in enumerate(order)})
+    plot_frame = plot_frame.sort_values("view_order").reset_index(drop=True)
 
-    plt.tight_layout()
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.2), gridspec_kw={"wspace": 0.28})
+    y = np.arange(len(plot_frame))
+    colors = ["#7A869A", "#5B7DB1", "#1F9D8A"]
+
+    axes[0].hlines(y, xmin=0.0, xmax=plot_frame["cosine_gap"], color=colors, linewidth=2.0, alpha=0.85)
+    axes[0].scatter(plot_frame["cosine_gap"], y, color=colors, s=55, zorder=3)
+    for idx, row in plot_frame.iterrows():
+        axes[0].text(
+            float(row["cosine_gap"]) + 0.004,
+            y[idx],
+            f"{float(row['cosine_gap']):.3f}",
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="#333333",
+        )
+    axes[0].set_title("Cosine gap")
+    axes[0].set_xlabel("Within minus between")
+    axes[0].set_xlim(0.0, max(0.23, float(plot_frame["cosine_gap"].max()) + 0.03))
+    axes[0].set_yticks(y)
+    axes[0].set_yticklabels(plot_frame["display_name"])
+    axes[0].grid(alpha=0.2, axis="x")
+    axes[0].invert_yaxis()
+
+    axes[1].hlines(y, xmin=0.0, xmax=plot_frame["retrieval_accuracy"], color=colors, linewidth=2.0, alpha=0.85)
+    axes[1].scatter(plot_frame["retrieval_accuracy"], y, color=colors, s=55, zorder=3)
+    for idx, row in plot_frame.iterrows():
+        axes[1].text(
+            float(row["retrieval_accuracy"]) + 0.02,
+            y[idx],
+            f"{float(row['retrieval_accuracy']):.2f}",
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="#333333",
+        )
+    axes[1].set_title("Nearest-family retrieval")
+    axes[1].set_xlabel("Accuracy")
+    axes[1].set_xlim(0.0, 1.0)
+    axes[1].set_yticks(y)
+    axes[1].set_yticklabels([])
+    axes[1].grid(alpha=0.2, axis="x")
+    axes[1].invert_yaxis()
+
+    for axis in axes:
+        axis.spines["top"].set_visible(False)
+        axis.spines["right"].set_visible(False)
+
+    plt.tight_layout(pad=0.6)
     fig.savefig(target, dpi=180, bbox_inches="tight")
     plt.close(fig)
 
@@ -1228,6 +1818,46 @@ def _export_audit_robustness_figure(summary: pd.DataFrame, target: Path) -> None
     plt.figure(figsize=(7, max(4, 0.8 * len(plot))))
     sns.heatmap(plot, cmap="crest", annot=True, fmt=".2f", linewidths=0.2)
     plt.title("Audit report robustness under perturbation")
+    plt.tight_layout()
+    plt.savefig(target, dpi=180, bbox_inches="tight")
+    plt.close()
+
+
+def _export_oracle_scaffold_figure(summary: pd.DataFrame, target: Path) -> None:
+    if summary.empty:
+        return
+    plot = summary.copy()
+    plot["display_condition"] = plot["condition"].replace(
+        {
+            AO_REAL_CONDITION: "AO real",
+            "ao_text_only": "Text only",
+            "ao_shuffled_activation": "Shuffled activation",
+        }
+    )
+    metric_frame = plot.melt(
+        id_vars=["display_condition", "unit_type", "scaffold_frame"],
+        value_vars=["regulatory_family_retention_rate", "obligation_family_retention_rate"],
+        var_name="metric",
+        value_name="value",
+    )
+    metric_frame["metric"] = metric_frame["metric"].replace(
+        {
+            "regulatory_family_retention_rate": "Regulatory family retention",
+            "obligation_family_retention_rate": "Obligation family retention",
+        }
+    )
+    plt.figure(figsize=(8.4, max(4.0, 0.75 * metric_frame["scaffold_frame"].nunique())))
+    sns.barplot(
+        data=metric_frame,
+        x="value",
+        y="scaffold_frame",
+        hue="display_condition",
+        orient="h",
+    )
+    plt.xlim(0.0, 1.0)
+    plt.xlabel("Retention rate")
+    plt.ylabel("Scaffold frame")
+    plt.title("AO scaffold retention under analyst-style prompt frames")
     plt.tight_layout()
     plt.savefig(target, dpi=180, bbox_inches="tight")
     plt.close()

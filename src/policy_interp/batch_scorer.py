@@ -10,6 +10,13 @@ import pandas as pd
 import torch
 from jinja2 import Environment, FileSystemLoader
 
+from policy_interp.activation_oracle import (
+    AO_REAL_CONDITION,
+    ActivationOracleBackend,
+    activation_oracle_skip_reason,
+    build_batch_oracle_report_summary,
+    build_oracle_requests,
+)
 from policy_interp.adapters.modeling import HuggingFaceBackboneAdapter, SaeLensAdapter
 from policy_interp.extract import run_extraction_for_segments
 from policy_interp.io import read_jsonl, read_parquet, write_parquet
@@ -25,6 +32,9 @@ class BatchScorerArtifacts:
     proxy_overlay_summary_path: str
     causal_notes_path: str
     report_path: str
+    oracle_segment_explanations_path: str | None = None
+    oracle_bundle_explanations_path: str | None = None
+    oracle_report_summary_path: str | None = None
 
 
 def run_batch_scorer(
@@ -93,12 +103,59 @@ def run_batch_scorer(
     causal_notes = _build_causal_notes(document_feature_scores, causal)
     layer_profile = _build_layer_profile_summary(document_feature_scores)
     top_feature_evidence = document_feature_scores.sort_values("pooled_activation", ascending=False).head(50).copy()
+    oracle_bundle_explanations = pd.DataFrame()
+    oracle_segment_explanations = pd.DataFrame()
+    oracle_report_summary = pd.DataFrame()
+    oracle_warning_note = ""
 
     document_feature_scores_path = write_parquet(document_feature_scores, output_root / "document_feature_scores.parquet")
     top_feature_evidence_path = write_parquet(top_feature_evidence, output_root / "top_feature_evidence.parquet")
     layer_profile_summary_path = write_parquet(layer_profile, output_root / "layer_profile_summary.parquet")
     proxy_overlay_summary_path = write_parquet(overlay_summary, output_root / "proxy_overlay_summary.parquet")
     causal_notes_path = write_parquet(causal_notes, output_root / "causal_notes.parquet")
+    oracle_segment_explanations_path = None
+    oracle_bundle_explanations_path = None
+    oracle_report_summary_path = None
+
+    if config.activation_oracle.enabled:
+        oracle_warning_note = activation_oracle_skip_reason(config) or ""
+        if not oracle_warning_note:
+            request_manifest = segments[["segment_id", "text"]].copy()
+            request_manifest["source_case_id"] = request_manifest["segment_id"].astype(str)
+            request_manifest["family_id"] = ""
+            request_manifest["family_label"] = ""
+            request_manifest["scaffold_frame"] = "raw_excerpt"
+            requests = build_oracle_requests(
+                scored_features=document_feature_scores,
+                manifest=request_manifest,
+                config=config,
+                include_controls=False,
+            )
+            backend = ActivationOracleBackend(config, [family.family_id for family in config.audit.families])
+            try:
+                predictions = backend.explain(requests)
+            finally:
+                backend.close()
+            real_predictions = predictions.loc[predictions["condition"] == AO_REAL_CONDITION].copy()
+            oracle_bundle_explanations = real_predictions.loc[real_predictions["unit_type"] == "feature_bundle"].copy()
+            oracle_segment_explanations = real_predictions.loc[real_predictions["unit_type"] == "activation_window"].copy()
+            oracle_report_summary = build_batch_oracle_report_summary(
+                bundle_predictions=oracle_bundle_explanations,
+                window_predictions=oracle_segment_explanations,
+            )
+            oracle_segment_explanations_path = str(
+                write_parquet(oracle_segment_explanations, output_root / "oracle_segment_explanations.parquet")
+            )
+            oracle_bundle_explanations_path = str(
+                write_parquet(oracle_bundle_explanations, output_root / "oracle_bundle_explanations.parquet")
+            )
+            oracle_report_summary_path = str(
+                write_parquet(oracle_report_summary, output_root / "oracle_report_summary.parquet")
+            )
+        else:
+            oracle_report_summary = pd.DataFrame(
+                [{"segment_id": "", "agreement_status": "disagree", "oracle_warning_note": oracle_warning_note}]
+            )
 
     report_path = output_root / f"batch_scorer_report.{config.report.dossier_format}"
     _render_batch_report(
@@ -110,6 +167,11 @@ def run_batch_scorer(
         layer_profile=layer_profile,
         overlay_summary=overlay_summary,
         causal_notes=causal_notes,
+        oracle_bundle_explanations=oracle_bundle_explanations,
+        oracle_segment_explanations=oracle_segment_explanations,
+        oracle_report_summary=oracle_report_summary,
+        oracle_warning_note=oracle_warning_note,
+        oracle_top_segments=int(config.activation_oracle.batch_report_top_segments),
     )
 
     return BatchScorerArtifacts(
@@ -119,6 +181,9 @@ def run_batch_scorer(
         proxy_overlay_summary_path=str(proxy_overlay_summary_path),
         causal_notes_path=str(causal_notes_path),
         report_path=str(report_path),
+        oracle_segment_explanations_path=oracle_segment_explanations_path,
+        oracle_bundle_explanations_path=oracle_bundle_explanations_path,
+        oracle_report_summary_path=oracle_report_summary_path,
     )
 
 
@@ -357,6 +422,11 @@ def _render_batch_report(
     layer_profile: pd.DataFrame,
     overlay_summary: pd.DataFrame,
     causal_notes: pd.DataFrame,
+    oracle_bundle_explanations: pd.DataFrame,
+    oracle_segment_explanations: pd.DataFrame,
+    oracle_report_summary: pd.DataFrame,
+    oracle_warning_note: str,
+    oracle_top_segments: int,
 ) -> None:
     template_dir = Path(__file__).resolve().parent / "templates"
     env = Environment(loader=FileSystemLoader(str(template_dir)))
@@ -369,5 +439,9 @@ def _render_batch_report(
         layer_profile=layer_profile.to_dict(orient="records"),
         overlay_summary=overlay_summary.head(8).to_dict(orient="records"),
         causal_notes=causal_notes.head(12).to_dict(orient="records"),
+        oracle_bundle_explanations=oracle_bundle_explanations.head(oracle_top_segments).to_dict(orient="records"),
+        oracle_segment_explanations=oracle_segment_explanations.head(oracle_top_segments).to_dict(orient="records"),
+        oracle_report_summary=oracle_report_summary.head(oracle_top_segments).to_dict(orient="records"),
+        oracle_warning_note=oracle_warning_note,
     )
     report_path.write_text(rendered, encoding="utf-8")

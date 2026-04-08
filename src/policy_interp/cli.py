@@ -5,7 +5,7 @@ from __future__ import annotations
 import typer
 
 from policy_interp.agora import load_and_prepare_agora
-from policy_interp.audit_eval import run_audit_evaluation
+from policy_interp.audit_eval import run_audit_evaluation, run_oracle_evaluation
 from policy_interp.autointerp import run_autointerp
 from policy_interp.baselines import run_baselines
 from policy_interp.batch_scorer import run_batch_scorer
@@ -162,6 +162,12 @@ def run_batch_scorer_stage(
     typer.echo(f"Layer profile summary: {artifacts.layer_profile_summary_path}")
     typer.echo(f"Proxy overlay summary: {artifacts.proxy_overlay_summary_path}")
     typer.echo(f"Causal notes: {artifacts.causal_notes_path}")
+    if artifacts.oracle_bundle_explanations_path:
+        typer.echo(f"Oracle bundle explanations: {artifacts.oracle_bundle_explanations_path}")
+    if artifacts.oracle_segment_explanations_path:
+        typer.echo(f"Oracle segment explanations: {artifacts.oracle_segment_explanations_path}")
+    if artifacts.oracle_report_summary_path:
+        typer.echo(f"Oracle report summary: {artifacts.oracle_report_summary_path}")
     typer.echo(f"Report: {artifacts.report_path}")
 
 
@@ -174,6 +180,32 @@ def run_audit_eval_stage(config_path: str) -> None:
     typer.echo(f"Audit robustness: {artifacts.robustness_summary_path}")
     typer.echo(f"AutoInterp validation: {artifacts.autointerp_validation_path}")
     typer.echo(f"Failure transparency: {artifacts.failure_transparency_path}")
+    if artifacts.oracle_predictions_path:
+        typer.echo(f"Oracle predictions: {artifacts.oracle_predictions_path}")
+    if artifacts.oracle_condition_summary_path:
+        typer.echo(f"Oracle condition summary: {artifacts.oracle_condition_summary_path}")
+    if artifacts.oracle_scaffold_summary_path:
+        typer.echo(f"Oracle scaffold summary: {artifacts.oracle_scaffold_summary_path}")
+    if artifacts.oracle_gold_labels_path:
+        typer.echo(f"Oracle gold labels: {artifacts.oracle_gold_labels_path}")
+    if artifacts.oracle_human_eval_sheet_path:
+        typer.echo(f"Oracle human eval sheet: {artifacts.oracle_human_eval_sheet_path}")
+    if artifacts.oracle_human_eval_summary_path:
+        typer.echo(f"Oracle human eval summary: {artifacts.oracle_human_eval_summary_path}")
+
+
+@app.command("run-oracle-eval")
+def run_oracle_eval_stage(config_path: str) -> None:
+    config = load_experiment_config(config_path)
+    artifacts = run_oracle_evaluation(config)
+    typer.echo(f"Oracle case manifest: {artifacts.case_manifest_path}")
+    typer.echo(f"Oracle scaffold manifest: {artifacts.scaffold_manifest_path}")
+    typer.echo(f"Oracle predictions: {artifacts.predictions_path}")
+    typer.echo(f"Oracle condition summary: {artifacts.condition_summary_path}")
+    typer.echo(f"Oracle scaffold summary: {artifacts.scaffold_summary_path}")
+    typer.echo(f"Oracle gold labels: {artifacts.gold_labels_path}")
+    typer.echo(f"Oracle human eval sheet: {artifacts.human_eval_sheet_path}")
+    typer.echo(f"Oracle human eval summary: {artifacts.human_eval_summary_path}")
 
 
 @app.command("export-reports")

@@ -214,6 +214,36 @@ class AutoInterpConfig(BaseModel):
         return value
 
 
+class ActivationOracleConfig(BaseModel):
+    enabled: bool = False
+    backend_model_name: str = "adamkarvonen/checkpoints_latentqa_cls_past_lens_addition_gemma-2-9b-it"
+    target_backbone_name: str = "google/gemma-2-9b-it"
+    target_layers: list[int] = Field(default_factory=lambda: [20, 24])
+    primary_layer: int = 20
+    input_mode: Literal["full_sequence"] = "full_sequence"
+    explanation_units: list[Literal["feature_bundle", "activation_window"]] = Field(
+        default_factory=lambda: ["feature_bundle", "activation_window"]
+    )
+    question_schema: Literal["policy_audit_v1"] = "policy_audit_v1"
+    max_new_tokens: int = 192
+    include_text_only_control: bool = True
+    include_shuffled_activation_control: bool = True
+    batch_report_top_segments: int = 3
+
+    @field_validator("target_layers", "explanation_units")
+    @classmethod
+    def _validate_non_empty_lists(cls, value: list[object]) -> list[object]:
+        if not value:
+            raise ValueError("Activation Oracle lists must be non empty")
+        return value
+
+    @model_validator(mode="after")
+    def _validate_primary_layer(self) -> "ActivationOracleConfig":
+        if self.primary_layer not in self.target_layers:
+            raise ValueError("Activation Oracle primary_layer must be included in target_layers")
+        return self
+
+
 class BaselinesConfig(BaseModel):
     sentence_embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     logistic_c: float = 1.0
@@ -296,6 +326,46 @@ class AuditFamilyConfig(BaseModel):
         return value
 
 
+class ScaffoldEvalConfig(BaseModel):
+    enabled: bool = False
+    frames: list[
+        Literal[
+            "raw_excerpt",
+            "analyst_question",
+            "compliance_memo",
+            "neutral_restatement",
+            "adversarial_bland",
+        ]
+    ] = Field(
+        default_factory=lambda: [
+            "raw_excerpt",
+            "analyst_question",
+            "compliance_memo",
+            "neutral_restatement",
+            "adversarial_bland",
+        ]
+    )
+    max_cases_per_family: int = 5
+    human_eval_cases: int = 30
+    human_eval_annotators: int = 2
+    gold_label_cases: int = 40
+
+    @field_validator("frames")
+    @classmethod
+    def _validate_frames(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("Scaffold evaluation frames must be non empty")
+        return value
+
+    @model_validator(mode="after")
+    def _validate_positive_counts(self) -> "ScaffoldEvalConfig":
+        if self.max_cases_per_family <= 0:
+            raise ValueError("Scaffold evaluation max_cases_per_family must be positive")
+        if self.human_eval_cases <= 0 or self.human_eval_annotators <= 0 or self.gold_label_cases <= 0:
+            raise ValueError("Scaffold evaluation counts must be positive")
+        return self
+
+
 class AuditConfig(BaseModel):
     enabled: bool = True
     families: list[AuditFamilyConfig] = Field(default_factory=list)
@@ -316,6 +386,7 @@ class AuditConfig(BaseModel):
     flat_proxy_margin_threshold: float = 0.02
     near_zero_kl_threshold: float = 0.001
     near_zero_paired_threshold: float = 0.01
+    scaffold_eval: ScaffoldEvalConfig = Field(default_factory=ScaffoldEvalConfig)
 
     @field_validator("families")
     @classmethod
@@ -383,6 +454,7 @@ class ExperimentConfig(BaseModel):
     labeling: LabelingConfig = Field(default_factory=LabelingConfig)
     feature_catalog: FeatureCatalogConfig = Field(default_factory=FeatureCatalogConfig)
     autointerp: AutoInterpConfig = Field(default_factory=AutoInterpConfig)
+    activation_oracle: ActivationOracleConfig = Field(default_factory=ActivationOracleConfig)
     baselines: BaselinesConfig = Field(default_factory=BaselinesConfig)
     masking: MaskingConfig = Field(default_factory=MaskingConfig)
     ablation: AblationConfig = Field(default_factory=AblationConfig)

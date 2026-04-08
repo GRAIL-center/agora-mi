@@ -102,6 +102,19 @@ autointerp:
   low_activation_quantile: 0.2
   max_new_tokens: 96
   use_proxy_overlay_context: true
+activation_oracle:
+  enabled: true
+  backend_model_name: adamkarvonen/checkpoints_latentqa_cls_past_lens_addition_gemma-2-9b-it
+  target_backbone_name: google/gemma-2-9b-it
+  target_layers: [20, 24]
+  primary_layer: 20
+  input_mode: full_sequence
+  explanation_units: [feature_bundle, activation_window]
+  question_schema: policy_audit_v1
+  max_new_tokens: 192
+  include_text_only_control: true
+  include_shuffled_activation_control: true
+  batch_report_top_segments: 3
 baselines:
   sentence_embedding_model: sentence-transformers/all-MiniLM-L6-v2
   logistic_c: 1.0
@@ -137,7 +150,7 @@ steering:
   default_alpha_if_small_dev: 1.0
   report_overlap_with_sae: true
 audit:
-  enabled: false
+  enabled: true
   families:
     - family_id: high_risk_ai_governance
       family_label: High-risk AI governance laws
@@ -170,6 +183,13 @@ audit:
   flat_proxy_margin_threshold: 0.02
   near_zero_kl_threshold: 0.001
   near_zero_paired_threshold: 0.01
+  scaffold_eval:
+    enabled: true
+    frames: [raw_excerpt, analyst_question, compliance_memo, neutral_restatement, adversarial_bland]
+    max_cases_per_family: 5
+    human_eval_cases: 30
+    human_eval_annotators: 2
+    gold_label_cases: 40
 report:
   export_dir: paper_exports
   dossier_format: md
@@ -180,6 +200,6 @@ report:
   export_batch_scorer_reports: false
   export_autointerp_reports: true
   export_autointerp_causal_reports: true
-  export_audit_reports: false
+  export_audit_reports: true
   autointerp_top_features_per_layer: 5
   autointerp_high_faithfulness_threshold: 0.6666667
