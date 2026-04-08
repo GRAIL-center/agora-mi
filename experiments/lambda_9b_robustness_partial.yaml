@@ -1,0 +1,185 @@
+name: lambda_9b_robustness_partial
+dataset:
+  base_dir: .
+  segments_csv: AGORA Data/segments.csv
+  documents_csv: AGORA Data/documents.csv
+  authorities_csv: AGORA Data/authorities.csv
+  collections_csv: AGORA Data/collections.csv
+  fulltext_dir: AGORA Data/fulltext
+  working_dir: artifacts
+splits:
+  train_ratio: 0.68
+  dev_ratio: 0.16
+  test_ratio: 0.16
+  seed: 17
+matching:
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 32
+  max_length: 256
+backbone:
+  model_name: google/gemma-2-9b
+  device: cuda
+  dtype: bfloat16
+  max_length: 512
+  trust_remote_code: false
+sae:
+  release: gemma-scope-9b-pt-res-canonical
+  sae_id: layer_24/width_16k/canonical
+  device: cuda
+extract:
+  layers: [20, 24]
+  max_segments_per_shard: 24
+  max_tokens_per_shard: 2048
+  max_layers_per_pass: 1
+  flush_every_shard: true
+  pooling_method: max
+  residual_pooling_method: mean
+  store_segment_top_features: true
+  segment_top_feature_count: 32
+  segment_top_token_positions_per_feature: 5
+  top_contexts_per_feature: 5
+  context_window: 12
+  store_positive_mean_stats: true
+  store_tail_activation_stats: true
+  store_token_span_text: true
+  store_catalog_rich_cache: true
+  catalog_activation_threshold: 0.0
+feature_catalog:
+  ranking_families: [global_dominance, policy_specific, layer_unique]
+  top_n_per_family: 50
+  top_contexts_per_feature: 5
+  top_exemplars_per_feature: 10
+  store_decoder_vectors: true
+  store_logit_attribution: true
+  logit_top_k: 50
+  store_catalog_segment_scores: true
+  layer_unique_candidate_pool: 200
+  cross_layer_similarity_threshold: 0.35
+  evidence_backfill_enabled: true
+  evidence_backfill_ranking_families: [policy_specific, layer_unique]
+  evidence_backfill_top_n_per_family: 8
+  evidence_backfill_min_positive_examples: 5
+discovery:
+  graph_metric: jaccard
+  active_feature_source: segment_top_features
+  top_ngrams_per_module: 15
+  ngram_range: [1, 3]
+validity:
+  graph_metric: jaccard
+  edge_thresholds: [0.05, 0.1, 0.15]
+  community_method: leiden
+  resolutions: [0.5, 1.0, 1.5]
+  canonical_threshold: 0.1
+  canonical_resolution: 1.0
+  min_module_size: 3
+  max_module_size: 50
+  min_presence_configs: 5
+  min_best_match_jaccard: 0.5
+  enrichment_test_method: permutation
+  enrichment_random_trials: 500
+  enrichment_alpha: 0.05
+  enrichment_correction: bh_fdr
+  enrichment_match_bins: 10
+labeling:
+  template_enabled: true
+  llm_hook_enabled: true
+  generator_model: google/gemma-2-9b-it
+  num_top_contexts: 5
+  num_exemplars: 5
+  num_negative_controls: 5
+  negative_snippet_strategy: metadata_matched_low_activation
+  max_new_tokens: 120
+autointerp:
+  enabled: true
+  ranking_families: [policy_specific, layer_unique]
+  top_n_per_family: 5
+  generation_model: google/gemma-2-9b-it
+  simulation_model: null
+  num_train_positive: 2
+  num_train_negative: 2
+  num_holdout_positive: 3
+  num_holdout_negative: 3
+  low_activation_quantile: 0.2
+  max_new_tokens: 96
+  use_proxy_overlay_context: true
+baselines:
+  sentence_embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  logistic_c: 1.0
+  max_iter: 1000
+  sparse_binarize_threshold: 0.0
+  individual_feature_top_k: 64
+  compute_feature_module_overlap: true
+masking:
+  anchor_top_k: 10
+  mask_token: "[MASK]"
+ablation:
+  target_proxies: [privacy, bias]
+  candidate_set_sizes: [1, 3, 5]
+  random_control_trials: 50
+  dense_control_type: pca_subspace
+  dense_control_rank_policy: match_sparse_cardinality
+  individual_probe_top_k: 3
+  include_autointerp_single_feature_targets: true
+  include_autointerp_feature_set_targets: true
+  autointerp_target_ranking_families: [policy_specific, layer_unique]
+  autointerp_top_features_per_layer: 1
+  autointerp_feature_set_sizes: [3]
+  autointerp_min_faithfulness: 0.5
+  evaluation_split: test
+  use_matched_negative_evaluation: true
+  bootstrap_iterations: 500
+  ci_level: 0.95
+steering:
+  enabled: false
+  alpha_grid: [0.5, 1.0, 2.0]
+  target_layers: [20, 24]
+  min_dev_positives_for_sweep: 10
+  default_alpha_if_small_dev: 1.0
+  report_overlap_with_sae: true
+audit:
+  enabled: false
+  families:
+    - family_id: high_risk_ai_governance
+      family_label: High-risk AI governance laws
+      document_ids: [757]
+      max_cases: 5
+    - family_id: algorithmic_recommendation_rules
+      family_label: Algorithmic recommendation rules
+      document_ids: [266]
+      max_cases: 5
+    - family_id: privacy_and_data_protection
+      family_label: Privacy and data protection regulation
+      document_ids: [1087, 1989]
+      max_cases: 5
+    - family_id: governance_principles_and_standards
+      family_label: Governance principles and safety frameworks
+      document_ids: [1396, 1802]
+      max_cases: 5
+  preferred_splits: [validated, test, dev, train]
+  segment_length_min: 180
+  segment_length_max: 1400
+  overall_top_k: 15
+  policy_specific_top_k: 15
+  global_anchor_count: 1
+  perturbations: [heading_removal, lexical_anchor_masking, sentence_compression]
+  perturbation_anchor_top_k: 3
+  sentence_compression_keep_sentences: 2
+  causal_concentration_cases_per_family: 1
+  causal_concentration_random_trials: 1
+  causal_concentration_bootstrap_iterations: 50
+  flat_proxy_margin_threshold: 0.02
+  near_zero_kl_threshold: 0.001
+  near_zero_paired_threshold: 0.01
+report:
+  export_dir: paper_exports
+  dossier_format: md
+  heatmap_dpi: 180
+  export_feature_catalog: true
+  export_layer_overlap: true
+  export_causal_feature_tables: true
+  export_batch_scorer_reports: false
+  export_autointerp_reports: true
+  export_autointerp_causal_reports: true
+  export_audit_reports: false
+  autointerp_top_features_per_layer: 5
+  autointerp_high_faithfulness_threshold: 0.6666667
