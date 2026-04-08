@@ -9,6 +9,7 @@ import pandas as pd
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from policy_interp.adapters.modeling import resolve_torch_dtype
 from policy_interp.feature_matrix import build_module_score_matrix
 from policy_interp.io import read_jsonl, read_parquet, write_jsonl
 from policy_interp.schemas import ExperimentConfig
@@ -67,7 +68,7 @@ def _maybe_load_generator(config: ExperimentConfig) -> dict[str, object] | None:
             tokenizer.pad_token = tokenizer.eos_token
         model = AutoModelForCausalLM.from_pretrained(
             config.labeling.generator_model,
-            torch_dtype=torch.float16 if config.backbone.dtype == "float16" else torch.float32,
+            dtype=resolve_torch_dtype(config.backbone.dtype),
         )
         model.to(config.backbone.device)
         model.eval()

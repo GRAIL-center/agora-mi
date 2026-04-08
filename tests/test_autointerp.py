@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 from transformers.tokenization_utils_base import BatchEncoding
 
+from policy_interp.adapters.modeling import resolve_torch_dtype
 from policy_interp.autointerp import (
     _build_autointerp_candidates,
     _coerce_model_inputs,
@@ -196,3 +197,7 @@ def test_coerce_model_inputs_supports_batch_encoding_object() -> None:
 
     assert torch.equal(model_inputs["input_ids"], torch.tensor([[7, 8, 9]], dtype=torch.long))
     assert torch.equal(model_inputs["attention_mask"], torch.tensor([[1, 1, 1]], dtype=torch.long))
+
+
+def test_resolve_torch_dtype_supports_bfloat16() -> None:
+    assert resolve_torch_dtype("bfloat16") == torch.bfloat16

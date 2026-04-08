@@ -12,6 +12,7 @@ import pandas as pd
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from policy_interp.adapters.modeling import resolve_torch_dtype
 from policy_interp.io import read_jsonl, read_parquet, write_jsonl, write_parquet
 from policy_interp.schemas import ExperimentConfig
 from policy_interp.utils import ensure_dir, normalize_text, set_seed
@@ -503,7 +504,7 @@ def _load_text_generator(model_name: str, config: ExperimentConfig) -> dict[str,
             tokenizer.pad_token = tokenizer.eos_token
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            torch_dtype=torch.float16 if config.backbone.dtype == "float16" else torch.float32,
+            dtype=resolve_torch_dtype(config.backbone.dtype),
         )
         model.to(config.backbone.device)
         model.eval()

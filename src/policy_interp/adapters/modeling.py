@@ -39,7 +39,7 @@ class HuggingFaceBackboneAdapter:
             tokenizer.pad_token = tokenizer.eos_token
         model = AutoModelForCausalLM.from_pretrained(
             self.config.model_name,
-            torch_dtype=resolve_torch_dtype(self.config.dtype),
+            dtype=resolve_torch_dtype(self.config.dtype),
             trust_remote_code=self.config.trust_remote_code,
         )
         model.to(self.config.device)
