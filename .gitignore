@@ -15,7 +15,9 @@ build/
 dist/
 *.egg-info/
 
-artifacts/
+artifacts/*
+!artifacts/lambda_9b_robustness_partial/
+!artifacts/lambda_9b_robustness_partial/**
 outputs/
 results/
 logs/
