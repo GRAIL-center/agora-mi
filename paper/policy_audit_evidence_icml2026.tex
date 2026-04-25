@@ -51,7 +51,7 @@ AI governance increasingly relies on audits that can be inspected by actors outs
 
 This paper therefore studies a narrow audit interface question. Given the same policy passage and audit rubric, how do black box evidence and white box evidence packages change the report produced by an independent auditor LLM? We do not frame the task as retrieval. A retrieval system may find related policy families while still failing to produce a traceable audit artifact. Our unit of analysis is the report: its findings, cited evidence ids, passage spans, confidence, and misuse of evidence. The central claim is deliberately conservative. White box evidence changes auditor evidence use and can make reports more traceable, but uptake is not validity. In our pilot, full white box evidence alone worsens grounded audit quality relative to a strong black box surface baseline, while a hybrid interface is more promising because it keeps passage evidence in control and treats internal evidence as secondary.
 
-\Cref{fig:package-design} summarizes the design. We construct 60 AGORA policy cases, generate 600 structured reports with a local auditor across ten evidence conditions, and conduct human gold review on 20 paired cases for the primary interfaces. This gives three linked contributions. First, we define a policy audit report experiment that compares evidence interfaces rather than retrieval systems. Second, we instantiate a multi tool white box package using SAE features, logit lens outputs, steering evidence, and activation explanation surrogates. Third, we show why negative controls matter: shuffled white box evidence can produce plausible reports with invalid internal citations.
+\Cref{fig:package-design} summarizes the design. We construct 60 AGORA policy cases, generate 600 structured reports with a local auditor across ten evidence conditions, and conduct human gold review on 20 paired cases for the primary interfaces. This gives three linked contributions. First, we define a policy audit report experiment that compares evidence interfaces rather than retrieval systems. Second, we instantiate a multi tool white box package using SAE features, logit lens outputs, steering evidence, and activation explanation surrogates. Third, we show why negative controls matter: shuffled white box evidence can produce plausible reports with invalid internal citations. To support anonymous review and reproducibility, we provide an anonymized artifact repository with code, prompts, evidence packages, final reports, human review files, and paper figures at \url{https://anonymous.4open.science/r/agora-mi-C473/README.md}.
 
 \begin{figure*}[t]
     \centering
@@ -477,6 +477,8 @@ The gold brief identifies a classification exception, a significant risk thresho
 \end{table}
 
 \section{Reproducibility Notes}
+
+The anonymized artifact repository for this paper is available at \url{https://anonymous.4open.science/r/agora-mi-C473/README.md}.
 
 The active report file contains 600 JSONL records, one for each condition case pair. Structural summaries are computed from the final quality check CSV. Human review summaries are computed from the diagnostic review sheet and the human review summary JSON file. The main paper reports only values that appear in those summary artifacts. The appendix case studies use the human gold brief, diagnostic review sheet, and final structured report records for the named case ids.
 
