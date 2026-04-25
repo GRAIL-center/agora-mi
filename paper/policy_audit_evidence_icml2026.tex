@@ -64,6 +64,8 @@ This paper therefore studies a narrow audit interface question. Given the same p
 
 Technical AI governance work argues that oversight institutions need tools for access, assessment, verification, and accountability rather than only post hoc descriptions of model outputs \citep{reuel2024technical,reuelbucknall2024open,ojewale2025accountability}. Related audit access work argues that black box interaction can miss information needed to test developer claims and system risks, motivating controlled access to weights, activations, development evidence, or verification channels \citep{casper2024blackbox,waiwitlikhit2024trustless,harack2025verification}. Our study takes that access argument seriously but evaluates access as an evidence interface: internal information must be packaged, cited, and tested before it can support an audit report.
 
+Audit practice also motivates the interface view. Assurance standards and regulatory audit regimes ask auditors to connect conclusions to sufficient and appropriate evidence, while early DSA audit critiques highlight that formal audit reports can remain weak when audit criteria, evidence relevance, and systemic risk tests are underspecified \citep{iaasb2013isae3000,solarova2026checkbox,holznagel2025dsa}. Access scholarship similarly warns that API and platform restrictions can create audit blind spots even when transparency mandates exist \citep{burnat2025accountability,cen2024transparency}. Stakeholder first transparency work argues that explanations should be tailored to the decision maker and use context rather than treated as generic disclosures \citep{bell2022stakeholders}. We apply these ideas to auditor facing LLM reports: the evidence package must support traceability, relevance checking, and review of how evidence was used.
+
 Mechanistic interpretability offers candidate tools for that interface, but the tools do not become valid audit evidence merely because they expose internals. Sparse autoencoders can turn residual stream activations into feature hypotheses \citep{cunningham2024sae,bricken2023monosemanticity,templeton2024scaling,lieberum2024gemmascope}; logit lens methods can summarize intermediate token directions \citep{belrose2023tunedlens}; steering and sensitivity methods can test how internal directions affect model behavior \citep{cyberey2026steering}; and automated explanation methods can convert activations into natural language hypotheses \citep{bills2023neurons,activationoracles2025}. Recent evaluation work warns that readable labels and tool outputs should be tested through downstream use, ablations, and controls rather than treated as explanations by default \citep{karvonen2025saebench,sheshadri2026auditbench}. AuditBench is closest in spirit because it evaluates multiple white box tools as audit instruments; our setting differs by moving the unit of evaluation from tool success on model behavior audits to the downstream policy report artifact, where the same passage and rubric are held fixed and the evidence interface is varied. This warning is especially important in policy text, where a report can sound correct by leaning on generic legal language while missing the actual actor, obligation, exception, or remedy.
 
 \section{Audit Task and Evidence Interfaces}
@@ -125,13 +127,13 @@ The package generator is deterministic given the selected case set. SAE items us
 
 Every response is normalized into a structured report with findings, passage spans, cited evidence ids, internal evidence use, confidence, unsupported claim flags, and repair notes. Structural checks cover parse status, duplicate condition case keys, empty finding lists, confidence format, citation validity, and evidence id validity. These checks establish that the pipeline produced inspectable reports, not that the reports are accurate.
 
-Human review has two stages: blind gold briefs from the policy passage, then diagnostic scoring of selected reports against those briefs. The pilot covers 20 paired cases under C1, C6, C7, and C9, scored for correctness, span grounding, diagnostic usefulness, and evidence misuse. Lower is better only for misuse; the appendix gives the full schema and protocol.
+Human review has two stages: blind gold briefs from the policy passage, then diagnostic scoring of selected reports against those briefs. The pilot covers 20 paired cases under C1, C6, C7, and C9, scored for correctness, span grounding, diagnostic usefulness, and evidence misuse. Lower is better only for misuse; the appendix gives the full schema and protocol. The pilot uses one adjudicated human reviewer, so we do not report inter annotator agreement and treat all inferential statistics as descriptive checks rather than confirmatory tests.
 
 Let $I$ be the reviewed case set and $K$ the four human review axes. We report axis means
 \begin{equation}
 \bar{h}_{c,k}=\frac{1}{|I|}\sum_{i\in I}h_{i,c,k},
 \end{equation}
-where $h_{i,c,k}\in\{1,\ldots,5\}$. For pairwise statements relative to C1, we count $n_k^{>}(c)=|\{i:h_{i,c,k}>h_{i,\mathrm{C1},k}\}|$, ties, and worse cases, reversing the interpretation only when discussing misuse. For structural citation uptake we report $\bar{U}_c=|\dataset|^{-1}\sum_i |Z_{i,c}|$. For the shuffled warning, we count cases satisfying $h_{i,\mathrm{C9},\mathrm{correct}}\geq4$ and $h_{i,\mathrm{C9},\mathrm{misuse}}\geq4$.
+where $h_{i,c,k}\in\{1,\ldots,5\}$. For pairwise statements relative to C1, we count $n_k^{>}(c)=|\{i:h_{i,c,k}>h_{i,\mathrm{C1},k}\}|$, ties, and worse cases, reversing the interpretation only when discussing misuse. We also report paired deltas $\Delta_{i,c,k}=h_{i,c,k}-h_{i,\mathrm{C1},k}$, percentile bootstrap confidence intervals over cases, and two sided Wilcoxon signed rank tests. For structural citation uptake we report $\bar{U}_c=|\dataset|^{-1}\sum_i |Z_{i,c}|$. For the shuffled warning, we count cases satisfying $h_{i,\mathrm{C9},\mathrm{correct}}\geq4$ and $h_{i,\mathrm{C9},\mathrm{misuse}}\geq4$.
 
 \begin{table}[H]
     \centering
@@ -159,9 +161,9 @@ The Qwen 2.5 7B auditor run completed for all 600 condition case pairs. All 600 
 
 Human review covers 20 paired cases, with ten cases from the Internet Information Service Algorithmic Recommendation Management Provisions and ten from the EU AI Act. Each case is scored under C1, C6, C7, and C9. \Cref{tab:human-results} and \cref{fig:human-review} summarize the results.
 
-C6 performs worse than C1 on the human review axes. Mean correctness drops from 4.30 to 3.85, span grounding drops from 3.75 to 2.85, and diagnostic usefulness drops from 4.30 to 3.85. The paired pattern is consistent with the averages: C6 is better than C1 on correctness in 1 case, tied in 10, and worse in 9; for span grounding it is better in 1, tied in 3, and worse in 16. Evidence misuse is higher for C6 in all 20 paired cases. The result is not that white box access is useless, but that a dense internal evidence package can distract the auditor from direct passage grounding.
+C6 performs worse than C1 on the human review axes. Mean correctness drops from 4.30 to 3.85, span grounding drops from 3.75 to 2.85, and diagnostic usefulness drops from 4.30 to 3.85. The paired pattern is consistent with the averages: C6 is better than C1 on correctness in 1 case, tied in 10, and worse in 9; for span grounding it is better in 1, tied in 3, and worse in 16. Evidence misuse is higher for C6 in all 20 paired cases. The paired deltas are negative for correctness and grounding and positive for misuse under Wilcoxon signed rank checks (\Cref{tab:paired-tests}). The result is not that white box access is useless, but that a dense internal evidence package can distract the auditor from direct passage grounding.
 
-C7 has the highest average correctness (4.55) and diagnostic usefulness (4.60), and it is adjudicated as the best condition in 13 of 20 cases. Compared with C1, C7 improves correctness in 7 cases, ties in 11, and is worse in 2. Its span grounding advantage over C1 is small: 2 better, 17 tied, and 1 worse. C7 also increases misuse relative to C1 in 10 cases and ties in 10. This pattern suggests that hybrid evidence works when surface passage cues anchor the report and internal evidence is used as a secondary signal. It does not show that white box evidence independently supplies the decisive policy interpretation.
+C7 has the highest average correctness (4.55) and diagnostic usefulness (4.60), and it is adjudicated as the best condition in 13 of 20 cases. Compared with C1, C7 improves correctness in 7 cases, ties in 11, and is worse in 2. Its span grounding advantage over C1 is small: 2 better, 17 tied, and 1 worse. C7 also increases misuse relative to C1 in 10 cases and ties in 10. The correctness and usefulness deltas are positive but not decisive at this pilot scale, while misuse increases more clearly. This pattern is consistent with the hypothesis that hybrid evidence can work when surface passage cues anchor the report and internal evidence is used as a secondary signal. It does not show that white box evidence independently supplies the decisive policy interpretation.
 
 C9 is the strongest warning. It has lower average correctness than C1 and C7, but it often remains substantively plausible because the auditor can still read the passage. Eleven of twenty C9 reports have correctness at least 4 while also receiving evidence misuse at least 4. Thus a report can be mostly right about the policy passage while invalidly citing internal evidence from another case. \Cref{fig:uptake-validity} shows the same point from another angle: citation uptake cannot be used as a quality measure. This is the failure mode that a policy audit infrastructure must catch.
 
@@ -178,6 +180,28 @@ C9 is the strongest warning. It has lower average correctness than C1 and C7, bu
         C6 full white & 3.85 & 2.85 & 3.85 & 2.55 \\
         C7 hybrid & 4.55 & 3.80 & 4.60 & 1.55 \\
         C9 shuffled & 3.55 & 2.60 & 3.55 & 4.35 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Paired deltas relative to C1 over 20 cases. Confidence intervals are case bootstrap percentile intervals. Wilcoxon tests are descriptive because the pilot has one adjudicated reviewer.}
+    \label{tab:paired-tests}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}llrr@{}}
+        \toprule
+        Comparison & Axis & Mean $\Delta$ [95\% CI] & $p$ \\
+        \midrule
+        C6 vs. C1 & Correct & $-0.45$ [$-0.75,-0.15$] & .013 \\
+        C6 vs. C1 & Ground & $-0.90$ [$-1.20,-0.60$] & $<.001$ \\
+        C6 vs. C1 & Misuse & $+1.55$ [$+1.30,+1.80$] & $<.001$ \\
+        C7 vs. C1 & Correct & $+0.25$ [$0.00,+0.50$] & .096 \\
+        C7 vs. C1 & Useful & $+0.30$ [$0.00,+0.55$] & .058 \\
+        C7 vs. C1 & Misuse & $+0.55$ [$+0.30,+0.80$] & .002 \\
+        C9 vs. C1 & Correct & $-0.75$ [$-1.00,-0.50$] & $<.001$ \\
+        C9 vs. C1 & Misuse & $+3.35$ [$+3.15,+3.55$] & $<.001$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -212,13 +236,13 @@ Across the 11 C9 reports with high correctness and high misuse, we observe three
 
 The results support a design lesson rather than a simple performance claim. Readable internal evidence can be over trusted. Human review repeatedly identifies broad SAE labels, generic logit lens directions, and non specific steering evidence as failure modes. These artifacts can be directionally related to a policy family while failing to ground the specific actor, obligation, exception, or remedy in the passage. The problem is most visible in C6, where the auditor receives internal evidence without a surface anchor and often turns tool labels into substantive legal or policy claims.
 
-The practical lesson is that anchoring matters more than volume. C7 cites less white box evidence than C6 in practice and has much lower repair burden, but it performs better because surface passage cues keep the report tied to the policy text. For audit design, this means an evidence package should first preserve the passage and black box observations, then attach internal evidence with explicit caveats and relevance checks. C9 shows why those checks are not optional. If an auditor or reviewer would accept the same style of report under shuffled evidence, the interface is producing transparency theater rather than reliable audit evidence.
+The practical hypothesis is that anchoring matters, but the current design does not isolate anchoring from evidence quantity and variety. C7 receives a larger package than C1 and C6, although it cites less white box evidence than C6 in practice and has much lower repair burden. The result is therefore best read as a design signal: surface passage cues appear to keep the report tied to the policy text, but a volume controlled hybrid condition is needed to separate anchoring from package size. For audit design, this means an evidence package should first preserve the passage and black box observations, then attach internal evidence with explicit caveats and relevance checks. C9 shows why those checks are not optional. If an auditor or reviewer would accept the same style of report under shuffled evidence, the interface is producing transparency theater rather than reliable audit evidence.
 
 The intended governance use is therefore narrow. The paper does not propose an automated legal compliance system. It proposes an evidence interface for human or institutional audit workflows: reviewers need to know which evidence was available, what was cited, and whether irrelevant evidence would have produced similar confidence. For technical AI governance, the contribution is an operationalization of access and verification: internal evidence should be packaged, cited, controlled, and scored before it supports policy audit claims. For mechanistic interpretability, the contribution is an application level evaluation of tool outputs: SAE features, logit lens, steering, and activation explanations are judged by downstream use, including negative controls.
 
 The supported contribution is not that white box evidence generally improves audits. The supported contribution is narrower: evidence access changes report behavior, full white box packages can degrade grounded review, hybrid packages are more promising, and shuffled controls reveal misuse that correctness scores can hide.
 
-The human review is a pilot over 20 cases and four conditions, so it should be read as evidence for interface behavior rather than a final benchmark. Single tool conditions C2 through C5 and raw AutoInterp C8 are structurally evaluated but not yet human scored. The target model is small, and the auditor is one local model. The activation explanation tool is a surrogate rather than a compatible real Activation Oracle. The evidence packages are compact and may omit useful context. The report normalization and repair process improves structural validity, but it could hide part of the burden a real auditor would face. Finally, AGORA policy passages support policy audit research but do not by themselves define legal compliance judgments.
+The human review is a pilot over 20 cases and four conditions, so it should be read as evidence for interface behavior rather than a final benchmark. There is no inter annotator agreement estimate because the diagnostic review uses one adjudicated reviewer. Single tool conditions C2 through C5 and raw AutoInterp C8 are structurally evaluated but not yet human scored. The target model is small, and the auditor is one local model, so auditor specific trust in labeled internal evidence may affect the results. The activation explanation tool is a surrogate rather than a compatible real Activation Oracle. We do not calibrate SAE label quality, logit lens noise, or steering direction quality, so the experiment cannot fully separate interface risk from tool noise. The evidence packages are not volume controlled; future work should add capped hybrid packages, hybrid plus shuffled white box packages, numeric only internal evidence without readable labels, and conditions where internal evidence is visible but not citable. The report normalization and repair process improves structural validity by fixing JSON and evidence id format issues only, but reviewers score repaired records, so the live burden on an auditor may be higher. Finally, AGORA policy passages support policy audit research but do not by themselves define legal compliance judgments.
 
 \section{Conclusion}
 
@@ -472,6 +496,28 @@ The gold brief identifies a classification exception, a significant risk thresho
         EU 38 & EU AI Act & 5/1 & 5/2 & 4/1 & 5/4 \\
         EU 39 & EU AI Act & 4/1 & 4/2 & 4/2 & 3/4 \\
         EU 83 & EU AI Act & 5/1 & 4/2 & 5/1 & 4/5 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Human Review Score Distributions}
+
+\Cref{tab:appendix-score-distributions} reports the score distributions behind the means. Each vector lists counts for scores 1 through 5. The distributions make the same claim boundary visible: C7 has more high correctness and usefulness scores than C1, but it also shifts misuse upward; C9 remains often plausible on correctness while all shuffled reports score 4 or 5 on misuse.
+
+\begin{table}[h]
+    \centering
+    \caption{Pilot human review score distributions. Each vector is counts for scores 1/2/3/4/5.}
+    \label{tab:appendix-score-distributions}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}lrrrr@{}}
+        \toprule
+        Condition & Correct & Ground & Useful & Misuse \\
+        \midrule
+        C1 & 0/0/1/12/7 & 0/0/5/15/0 & 0/0/1/12/7 & 20/0/0/0/0 \\
+        C6 & 0/0/6/11/3 & 0/6/11/3/0 & 0/0/6/11/3 & 0/10/9/1/0 \\
+        C7 & 0/0/2/5/13 & 0/0/4/16/0 & 0/0/2/4/14 & 10/9/1/0/0 \\
+        C9 & 0/2/7/9/2 & 0/8/12/0/0 & 0/2/7/9/2 & 0/0/0/13/7 \\
         \bottomrule
     \end{tabular}
 \end{table}
