@@ -1,0 +1,278 @@
+{
+  "created_at": "2026-04-25T05:14:54.167016Z",
+  "gold_rows": 20,
+  "diagnostic_rows": 80,
+  "bad_support_spans": [],
+  "condition_summary": [
+    {
+      "condition_id": "C1_blackbox_surface",
+      "n": 20,
+      "report_correctness_1_5_avg": 4.3,
+      "report_correctness_1_5_median": 4.0,
+      "span_grounding_1_5_avg": 3.75,
+      "span_grounding_1_5_median": 4.0,
+      "diagnostic_usefulness_1_5_avg": 4.3,
+      "diagnostic_usefulness_1_5_median": 4.0,
+      "evidence_misuse_1_5_avg": 1.0,
+      "evidence_misuse_1_5_median": 1.0
+    },
+    {
+      "condition_id": "C6_full_whitebox",
+      "n": 20,
+      "report_correctness_1_5_avg": 3.85,
+      "report_correctness_1_5_median": 4.0,
+      "span_grounding_1_5_avg": 2.85,
+      "span_grounding_1_5_median": 3.0,
+      "diagnostic_usefulness_1_5_avg": 3.85,
+      "diagnostic_usefulness_1_5_median": 4.0,
+      "evidence_misuse_1_5_avg": 2.55,
+      "evidence_misuse_1_5_median": 2.5
+    },
+    {
+      "condition_id": "C7_hybrid_blackbox_whitebox",
+      "n": 20,
+      "report_correctness_1_5_avg": 4.55,
+      "report_correctness_1_5_median": 5.0,
+      "span_grounding_1_5_avg": 3.8,
+      "span_grounding_1_5_median": 4.0,
+      "diagnostic_usefulness_1_5_avg": 4.6,
+      "diagnostic_usefulness_1_5_median": 5.0,
+      "evidence_misuse_1_5_avg": 1.55,
+      "evidence_misuse_1_5_median": 1.5
+    },
+    {
+      "condition_id": "C9_shuffled_whitebox_control",
+      "n": 20,
+      "report_correctness_1_5_avg": 3.55,
+      "report_correctness_1_5_median": 4.0,
+      "span_grounding_1_5_avg": 2.6,
+      "span_grounding_1_5_median": 3.0,
+      "diagnostic_usefulness_1_5_avg": 3.55,
+      "diagnostic_usefulness_1_5_median": 4.0,
+      "evidence_misuse_1_5_avg": 4.35,
+      "evidence_misuse_1_5_median": 4.0
+    }
+  ],
+  "case_summary": [
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_12",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "user notice; algorithmic transparency; service mechanism disclosure",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Best coverage of notice plus basic principles, purposes, motives, and mechanisms; internal evidence adds little beyond the passage cue."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_13",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "non-targeted recommendation option; recommendation switch-off right; user tag controls; explanation for major rights impacts",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Most complete condition for this case; covers opt-out, deletion of tags, and significant-rights explanation/liability."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_14",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "minor protection; beneficial content access; harmful content restriction; online addiction prevention",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Captures beneficial information and harmful-content restrictions; evidence is partly generic but not misleading."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_15",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "elderly user rights; elderly-suited smart services; telecom and online fraud protection; worker rights in dispatch services; platform labor algorithm governance",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "4",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Correctly notes elderly and worker obligations, but first finding focuses mostly on elderly-service implementation gaps."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_21",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "confidentiality in supervision; complaint and report right; complaint handling obligation",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Best result: covers confidentiality, no disclosure/sale/illegal provision, and complaint/report mechanism."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_24",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "filing fraud sanctions; filing cancellation; administrative penalties; public opinion or social mobilization services",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "4",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Correctly identifies filing fraud and penalties but does not fully capture filing cancellation after service cessation or grave unlawful situations."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_5",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "mainstream value orientation; prohibited algorithmic recommendation uses; harmful information prevention; unlawful content dissemination",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Strong surface reading of positive-orientation, prohibited harms, and harmful-information prevention duties."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_6",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "algorithmic security responsibility; governance systems and technical measures; technology ethics review; regular algorithm assessment; addiction and excessive consumption controls",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Most complete result: captures systems, technical measures, ethics review, monitoring, and regular checks."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_7",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "information security management; unlawful and harmful information database; synthetic information indicator; unlawful content takedown and reporting; records preservation",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Accurately captures marking and immediate handling of unlawful/harmful information."
+    },
+    {
+      "case_id": "chinese_algorithmic_recommendation_rules_266_9",
+      "source_name": "Internet Information Service Algorithmic Recommendation Management Provisions",
+      "gold_issue_tags": "recommendation transparency and understandability; content intervention encouragement; Internet news information permit; fake news generation ban; news source restrictions",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "3",
+      "c7_evidence_misuse": "3",
+      "c9_correctness": "2",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Useful but overstates Article 12 encouraged transparency language as a mandatory obligation and underplays news-permit/fake-news prohibitions."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_182",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "right to explanation; individual decision-making; high-risk AI deployer obligation; legal or similarly significant effects; exceptions and restrictions",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Best result: captures explanation right and the Union/national-law and otherwise-provided-for limitations."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_2",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "AI Act subject matter; harmonised AI market rules; prohibited AI practices; high-risk AI obligations; AI transparency rules; general-purpose AI model rules; governance and enforcement; SME innovation support",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "4",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Correctly treats this as a subject-matter provision, though it frames general rules as direct obligations."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_200",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "administrative fines; operator non-compliance penalties; notified body non-compliance penalties; misleading information penalties; SME fine cap",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Strong report on non-compliance fines across operators and notified bodies."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_21",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "high-risk classification exception; significant risk threshold; decision-making influence; Annex III systems; profiling always high-risk",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "3",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "2",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Correctly captures non-high-risk exceptions and the profiling carve-out, but could be clearer that this is classification criteria, not an operator duty."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_231",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "technical documentation; human oversight assessment; interpretability support for deployers; pre-determined changes documentation; validation and testing evidence; discriminatory impact metrics; cybersecurity measures",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Strong coverage of oversight assessment, technical interpretation measures, validation/testing data, metrics, logs/reports, and cybersecurity."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_28",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "risk management system; lifecycle review and updating; risk identification and analysis; foreseeable misuse evaluation; post-market monitoring feedback; targeted risk management measures",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "5",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Strong report; blackbox and whitebox both align with the main risk-management obligation."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_30",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "high-risk AI testing; targeted risk management measures; real-world testing option; pre-market testing; defined metrics and thresholds; minor and vulnerable group impact consideration",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Best coverage: targeted risk management, consistency, compliance, pre-market timing, and defined metrics/thresholds."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_38",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "human oversight design; human-machine interface; health safety and fundamental rights risk minimization; proportionate oversight measures; provider and deployer oversight responsibilities",
+      "best_condition": "C1_blackbox_surface",
+      "c7_correctness": "4",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "5",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Strongly captures effective human oversight, risk-proportionate measures, and context/autonomy calibration."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_39",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "human oversight capabilities; capacity and limitation understanding; anomaly monitoring; automation bias awareness; output interpretation; override or reverse output; safe interruption",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "4",
+      "c7_evidence_misuse": "2",
+      "c9_correctness": "3",
+      "c9_evidence_misuse": "4",
+      "adjudication_note": "Useful because it includes override output capability; should be clearer on as-appropriate/proportionate qualifier."
+    },
+    {
+      "case_id": "eu_high_risk_ai_governance_757_83",
+      "source_name": "EU AI Act",
+      "gold_issue_tags": "notified body designation restriction; certificate impact assessment; reporting to Commission and Member States; unduly issued certificate suspension or withdrawal; competent authority information sharing; risk mitigation",
+      "best_condition": "C7_hybrid_blackbox_whitebox",
+      "c7_correctness": "5",
+      "c7_evidence_misuse": "1",
+      "c9_correctness": "4",
+      "c9_evidence_misuse": "5",
+      "adjudication_note": "Best coverage of notification, certificate action, and conformity/risk-avoidance duties."
+    }
+  ]
+}
